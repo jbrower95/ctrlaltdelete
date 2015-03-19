@@ -1,7 +1,7 @@
 /**
 *  A scene to be used with the scene manager. Offers several convenient ways
 *  of constructing and manipulating a scene. Scenes contain HTML and are drawn by
-* displaying their associated HTML and executing their onPresent() methods.
+*  displaying their associated HTML and executing their onPresent() methods.
 *
 *	Scenes can interact with their managers via the .manager property. 
 *
@@ -88,7 +88,7 @@ function Scene(container, jsFile, manager) {
 	this.manager = manager;
 	this.ready = false;
 	
-	//dynamically load the dependent script using jquery
+	// dynamically load the dependent script using jquery
 	$.getScript(jsFile).done(function(){
 
 		console.log("Loaded remote scene: " + jsFile);

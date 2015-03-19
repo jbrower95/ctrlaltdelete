@@ -25,7 +25,7 @@
   *
   */
 
-//tiny JQuery extension to check to see if an element exists
+// tiny JQuery extension to check to see if an element exists
 $.fn.exists = function () {
     return this.length !== 0;
 };
@@ -90,21 +90,21 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		return;
 	} 
 
-	//setup our new scene
+	// setup our new scene
 	var newScene = document.createElement("div");
 	newScene.className = "__scene__";
 	newScene.innerHTML = scene.html;
 
-	//set some initial CSS properties of the scene.
-	//we want it positioned all the way at the right side of the screen
-	//so that we can slide it in.
+	// set some initial CSS properties of the scene.
+	// we want it positioned all the way at the right side of the screen
+	// so that we can slide it in.
 	newScene.addClass("initial");
 
 
-	//If there is a scene already in the content div, move it out
+	// If there is a scene already in the content div, move it out
 	if (this.activeScene){
-		//since we reassign this.activeScene when the next animation completes,
-		//create a copy to the reference to avoid trouble
+		// since we reassign this.activeScene when the next animation completes,
+		// create a copy to the reference to avoid trouble
 		var copy = this.activeScene;
 
 		if (this.activeScene.onDestroy) {
@@ -146,8 +146,8 @@ SceneManager.prototype.loadScene = function(sceneID) {
 	var scene = this.scenes[sceneID];
 
 	if (scene.preload) {
-		//custom preloading is available for this scene
-		//TODO: use web workers to make this REAL fast. As of right now, without threads this is useless.
+		// custom preloading is available for this scene
+		// TODO: use web workers to make this REAL fast. As of right now, without threads this is useless.
 		scene.preload();
 	}
 }
