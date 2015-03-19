@@ -63,13 +63,13 @@ function SceneManager(contentDivID, scenes) {
 			this.contentDiv.className = "__scenebox__";
 			document.body.appendChild(contentDiv);
 		} else {
-			//is it a div
-			if (existingDiv.className == "__scenebox__" && existingDiv.className == "div") {
+			// is it a div
+			if (existingDiv.className == "__scenebox__" && existingDiv.tagName == "DIV") {
 				//we found love in a hopeless place
 				this.contentDiv = existingDiv;
 			} else {
 				alert("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __scenebox__");
-				//to avoid getting into sticky situations, refuse to load the scenes.
+				// to avoid getting into sticky situations, refuse to load the scenes.
 				return;
 			}
 		}
@@ -98,9 +98,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	//set some initial CSS properties of the scene.
 	//we want it positioned all the way at the right side of the screen
 	//so that we can slide it in.
-	newScene.style.position = "absolute";
-	newScene.style.left = "100%";
-	newScene.style.top = "0";
+	newScene.addClass("initial");
 
 
 	//If there is a scene already in the content div, move it out
@@ -113,16 +111,20 @@ SceneManager.prototype.presentScene = function(sceneID) {
 			this.activeScene.onDestroy();
 		}
 
-		jQuery(copy).animate({left: '-100%'}, {
+		copy.removeClass("in");
+		copy.addClass("out");
+		copy.element.parent.removeChild(copy.element);
+		/*jQuery(copy).animate({left: '-100%'}, {
 			queue: false,
 			duration: this.ANIM_LENGTH,
 			complete: function() {
 				copy.element.parent.removeChild(copy.element);
 			}
-		});
+		});*/
 	}
 
-	jQuery(newScene).animate({left: 0}, {
+	newScene.addClass("in");
+	/*jQuery(newScene).animate({left: 0}, {
 			queue: false,
 			duration: this.ANIM_LENGTH,
 			complete: function() {
@@ -131,7 +133,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 					this.activeScene = scene;
 				}
 			}
-	});
+	});*/
 };
 
 
