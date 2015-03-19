@@ -1,2 +1,2 @@
-# killbill
-Kill Bill - Windows 95 just got personal.
+# ctrl-alt-delete
+How will you get out?
