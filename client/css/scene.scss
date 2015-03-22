@@ -1,0 +1,17 @@
+/* Scene CSS */
+$anim-time: 0.3s;
+
+.initial {
+	position: absolute;
+	left: 100%;
+	top: 0;
+	transition: left $anim-time;
+}
+
+.in {
+	left: 0;
+}
+
+.out {
+	left: -100%;
+}
