@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": ";AAGA,QAAS;EACR,QAAQ,EAAE,QAAQ;EAClB,IAAI,EAAE,IAAI;EACV,GAAG,EAAE,CAAC;EACN,UAAU,EAAE,SAAe;;AAG5B,GAAI;EACH,IAAI,EAAE,CAAC;;AAGR,IAAK;EACJ,IAAI,EAAE,KAAK",
-"sources": ["scene.scss"],
-"names": [],
-"file": "scene.css"
-}
