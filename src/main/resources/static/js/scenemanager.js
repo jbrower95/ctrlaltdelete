@@ -108,7 +108,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		var copy = this.activeScene;
 
 		if (this.activeScene.onDestroy) {
-			this.activeScene.onDestroy();
+			this.activeScene.onDestroy(this.activeScene);
 		}
 
 		copy.removeClass("in");
@@ -124,6 +124,10 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	var newSceneJquery = jQuery(newScene);
 	scene.searchContent = function(id) {
 		return $(newSceneJquery).find;
+	}
+
+	if (newScene.onPresent) {
+		newScene.onPresent(newScene);
 	}
 };
 
