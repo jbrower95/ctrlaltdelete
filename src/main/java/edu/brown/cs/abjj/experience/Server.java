@@ -1,4 +1,4 @@
-package experience;
+package edu.brown.cs.abjj.experience;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import spark.ModelAndView;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -14,9 +15,13 @@ import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+
+import edu.brown.cs.joengelm.sqldb.Database;
 
 public class Server {
 	Map<String, Experience> experiences = new HashMap<>();
+	private final static Gson GSON = new Gson();
 
 	public Server(List<String> experienceFiles) {
 		for (String experienceFile : experienceFiles) {
@@ -31,6 +36,8 @@ public class Server {
 		Spark.get("/:experience", new ExperienceMenuHandler(),
 				new FreeMarkerEngine());
 		Spark.get("/:experience/content", new ContentHandler());
+		Spark.post("/:experience/score", new PostScoreHandler());
+		Spark.get("/:experience/score", new GetScoreHandler());
 	}
 
 	/**
@@ -79,12 +86,57 @@ public class Server {
 	 */
 	public class ContentHandler implements Route {
 		@Override
-		public ModelAndView handle(Request req, Response res) {
+		public Object handle(Request req, Response res) {
 			Experience exp = experiences.get(req.params(":experience"));
 			String id = req.queryParams("id");
 
 			// exp.getContentById(id);
 			return null;
+		}
+	}
+
+	/**
+	 * Handle requests posting new scores to each experience's score database.
+	 *
+	 * @author joengelm
+	 */
+	public class PostScoreHandler implements Route {
+		@Override
+		public Object handle(Request req, Response res) {
+			Experience exp = experiences.get(req.params(":experience"));
+			QueryParamsMap qm = req.queryMap();
+
+			String name = qm.value("name");
+			String score = qm.value("score");
+
+			try {
+				double value = Double.parseDouble(score);
+				exp.db.addScore(new Score(name, value, Database.getCurrentTimestamp()));
+			} catch (NumberFormatException e) {
+				res.status(400);
+				return false;
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * Handle requests getting best scores from each experience's score database.
+	 *
+	 * @author joengelm
+	 */
+	public class GetScoreHandler implements Route {
+		@Override
+		public Object handle(Request req, Response res) {
+			Experience exp = experiences.get(req.params(":experience"));
+			String limitString = req.params("limit");
+			try {
+				int limit = Integer.parseInt(limitString);
+				return GSON.toJson(exp.db.getBestNScores(limit));
+			} catch (NumberFormatException e) {
+				res.status(400);
+				return false;
+			}
 		}
 	}
 }

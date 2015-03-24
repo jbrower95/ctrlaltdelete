@@ -1,8 +1,8 @@
-package ctrlaltdelete;
+package edu.brown.cs.abjj.ctrlaltdel;
 
 import java.util.Arrays;
 
-import experience.Server;
+import edu.brown.cs.abjj.experience.Server;
 
 public class Main {
 

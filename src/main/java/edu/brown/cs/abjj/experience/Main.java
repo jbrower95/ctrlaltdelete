@@ -1,4 +1,4 @@
-package experience;
+package edu.brown.cs.abjj.experience;
 
 import java.util.List;
 
