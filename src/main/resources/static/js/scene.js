@@ -7,9 +7,8 @@
 *
 *	Scenes can find elements in their content box by using 'searchContent(id)', which is equivalent
 *	to a jQuery .find() call on their outer __scene__ box.
-*/
-
-/**
+*
+*
 *	External Usage:
 *
 *		To use the Scene(jsFile, manager) constructor, you must make a javascript file <jsFile> that:
@@ -17,23 +16,29 @@
 *			- has a global variable of type object named 'exported_scene' that:
 *				
 *				var exported_scene = {
-*					preload : function(){},
-*					onPresent : function(){},
-*					onDestroy : function(){},
+*					preload : function(scene){},
+*					onPresent : function(scene){},
+*					onDestroy : function(scene){},
 *					getHTML : function() {return ""}
 *				};
 *
+*
+*				Some functions give you access to the scene, so that you can make calls within the context of the scene.
 *				
-*				preload: this function is called by the scene manager to tell the scene to get ready for its
+*				!preload: this function is called by the scene manager to tell the scene to get ready for its
 *						 appearance. Any assets that need to be cached / preloaded should be downloaded.
 *
-*				onPresent: called by the scene manager immediately after the scene is shown on screen.
+*				!onPresent: called by the scene manager immediately after the scene is shown on screen.
 *
-*				onDestroy: called by the scene manager right before the scene is removed
+*				!onDestroy: called by the scene manager right before the scene is removed
 *
 *				getHTML: returns the HTML content for the page. Alternatively, this can return the name
 *						 of an HTML file that the scene will load automatically in its constructor.
 *				
+*				
+*				(! = optional)
+*
+*
 *						ex: function() { return "main.html" }   ||   function() { return "<body> Ey yo! this is the scene. </body>"}
 *
 *		Sample Internal Usage:
@@ -42,7 +47,7 @@
 *
 *			or
 *
-*			var scene = new Scene(function() {return '<p>SUP</p>'}, null, function() { console.log ("presented");}, null, manager);
+*			var scene = new Scene(function() {return '<p>SUP</p>'}, null, function(scene) { console.log ("presented");}, null, manager);
 *
 *
 *		Sample Usage w/ External JS File:
@@ -63,13 +68,13 @@
 *			
 *			scenes/mainExternal.js
 *				var exported_scene = {
-*					preload: function() {
+*					preload: function(scene) {
 *						console.log("Lets load some assets!");
 *					},
-*					onPresent: function() {
+*					onPresent: function(scene) {
 *						console.log("Playing game!");
 *					},
-*					onDestroy: function() {
+*					onDestroy: function(scene) {
 *						console.log("All over!");
 *					},
 *					getHTML: function() { return "main.html"}
@@ -85,7 +90,6 @@
 *		onPresent: The function to be executed when this scene is presented.
 *		onDestroy: The function to be executed when the scene is about to be removed.
 *		manager: The associated scenemanager
-*
 *
 */
 function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
@@ -123,6 +127,11 @@ function Scene(jsFile, manager) {
 		this.onDestroy = exported_scene["onDestroy"];
 		this.html = exported_scene["getHTML"]();
 
+		if (this.html == null) {
+			alert("[Scene.js] getHTML() is not an optional method. Couldn't find declaration in " + jsFile);
+			return;
+		}
+
 		var isHTMLFile = /[^]*.html$/g;
 
 		if (isHTMLFile.exec(this.html) != null) {
@@ -135,8 +144,9 @@ function Scene(jsFile, manager) {
 		this.ready = true;
 
 	}).fail(function(){
-		alert("Couldn't load scene: " + jsFile);
+		alert("[Scene.js] Couldn't load scene: " + jsFile ". Experienced a network error.");
 	});
+
 }
 
 
