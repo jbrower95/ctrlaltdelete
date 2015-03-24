@@ -47,7 +47,7 @@ $.fn.exists = function () {
 *						- a div with this id does not exist, one will be created
 *						- a div with this id DOES exist, and the class is set to 
 							'__scenebox__', its contents will be cleared and reused by the scene manager.
-*						- a NON DIV element with this id exists, an alert() will be presented.
+*						- a NON DIV element with this id exists, an error will be written to the console.
 *
 *		scenes:
 *				A map whose keys are scene names (e.g "intro") and values are
@@ -74,13 +74,21 @@ function SceneManager(contentDivID, scenes) {
 				//we found love in a hopeless place
 				this.contentDiv = existingDiv;
 			} else {
-				alert("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __scenebox__");
+				console.log("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __scenebox__");
 				// to avoid getting into sticky situations, refuse to load the scenes.
 				return;
 			}
 		}
 
 		this.scenes = scenes;
+}
+
+SceneManager.prototype.registerScene = function(sceneID, scene) {
+	if (this.scenes[sceneID] != null) {
+		console.log("[Scene.js: NONFATAL] Error: Overwriting existing scene with id " + sceneID + ". Is this what you wanted?");
+	}
+
+	this.scenes[sceneID] = scene;
 }
 
 /*
@@ -92,7 +100,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	var scene = this.scenes[sceneID];
 
 	if (scene == null) {
-		alert("Error: Couldn't load scene " + sceneID);
+		console.log("Error: Couldn't load scene " + sceneID);
 		return;
 	} 
 

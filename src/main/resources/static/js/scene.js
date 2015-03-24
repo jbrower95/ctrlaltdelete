@@ -3,7 +3,9 @@
 *  of constructing and manipulating a scene. Scenes contain HTML and are drawn by
 *  displaying their associated HTML and executing their onPresent() methods.
 *
-*	Scenes can interact with their managers via the .manager property. 
+*	- Scenes that DONT contain HTML simply inherit their html from the active scene at the time of presentation.
+*
+*	- Scenes can interact with their managers via the .manager property. 
 *
 *	Scenes can find elements in their content box by using 'searchContent(id)', which is equivalent
 *	to a jQuery .find() call on their outer __scene__ box.
@@ -23,21 +25,21 @@
 *				};
 *
 *
-*				Some functions give you access to the scene, so that you can make calls within the context of the scene.
+*				The onPresent / onDestroy functions give you access to the scene, so that you can make calls within the context of the scene.
 *				
-*				!preload: this function is called by the scene manager to tell the scene to get ready for its
+*				*.preload: this function is called by the scene manager to tell the scene to get ready for its
 *						 appearance. Any assets that need to be cached / preloaded should be downloaded.
 *
-*				!onPresent: called by the scene manager immediately after the scene is shown on screen.
+*				*.onPresent: called by the scene manager immediately after the scene is shown on screen.
 *
-*				!onDestroy: called by the scene manager right before the scene is removed
+*				*.onDestroy: called by the scene manager right before the scene is removed
 *
-*				!getHTML: returns the HTML content for the page. Alternatively, this can return the name
+*				*.getHTML: returns the HTML content for the page. Alternatively, this can return the name
 *						 of an HTML file that the scene will load automatically in its constructor. If this is 
 *						 ommitted, the existing scene will be used, and ownership will be transferred to this scene object.
 *				
 *				
-*				(! = optional)
+*				(* = optional)
 *
 *
 *						ex: function() { return "main.html" }   ||   function() { return "<body> Ey yo! this is the scene. </body>"}
@@ -58,10 +60,10 @@
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
-*					onPresent: function() {
+*					onPresent: function(scene) {
 *						console.log("Playing game!");
 *					},
-*					onDestroy: function() {
+*					onDestroy: function(scene) {
 *						console.log("All over!");
 *					},
 *					getHTML: function() { return "<p>Hey there</p> <canvas id='game'></canvas>"}
@@ -69,7 +71,7 @@
 *			
 *			scenes/mainExternal.js
 *				var exported_scene = {
-*					preload: function(scene) {
+*					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
 *					onPresent: function(scene) {
@@ -129,7 +131,7 @@ function Scene(jsFile, manager) {
 		this.html = exported_scene["getHTML"]();
 
 		if (this.html == null) {
-			alert("[Scene.js] getHTML() is not an optional method. Couldn't find declaration in " + jsFile);
+			console.log("[Scene.js] getHTML() is not an optional method. Couldn't find declaration in " + jsFile);
 			return;
 		}
 
@@ -145,7 +147,7 @@ function Scene(jsFile, manager) {
 		this.ready = true;
 
 	}).fail(function(){
-		alert("[Scene.js] Couldn't load scene: " + jsFile ". Experienced a network error.");
+		console.log("[Scene.js] Couldn't load scene: " + jsFile ". Experienced a network error.");
 	});
 
 }
