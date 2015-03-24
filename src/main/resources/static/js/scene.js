@@ -32,8 +32,9 @@
 *
 *				!onDestroy: called by the scene manager right before the scene is removed
 *
-*				getHTML: returns the HTML content for the page. Alternatively, this can return the name
-*						 of an HTML file that the scene will load automatically in its constructor.
+*				!getHTML: returns the HTML content for the page. Alternatively, this can return the name
+*						 of an HTML file that the scene will load automatically in its constructor. If this is 
+*						 ommitted, the existing scene will be used, and ownership will be transferred to this scene object.
 *				
 *				
 *				(! = optional)

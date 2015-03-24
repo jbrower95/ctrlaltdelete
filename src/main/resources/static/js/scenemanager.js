@@ -4,9 +4,15 @@
   *		written in javascript. This allows for games to be made in a 
   *		compartmentalized way, without focusing on transitions or game flow.
   *
+  *		To avoid redundant HTML / possible unsmooth 'scene' transitions, you can omit the HTML of a scene
+  *		and the HTML of the last scene will be used. This allows you to still have discrete scenes, but 
+  *		also ones that are non-destructive.
+  *
+  *		The scene manager maintains a map of scene names to Scene objects (scene.js). The scene
+  *		manager then invokes the correct javascript and handles scope by passing around Scene instances.
+  *
   *		Relies On:
   *				- jQuery (1.6+)
-  *				- Luck
   *
   *
   *		Instance Methods:
@@ -91,33 +97,41 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	} 
 
 	// setup our new scene
-	var newScene = document.createElement("div");
-	newScene.className = "__scene__";
-	newScene.innerHTML = scene.html;
+	var sceneContents = scene.getHTML();
 
-	// set some initial CSS properties of the scene.
-	// we want it positioned all the way at the right side of the screen
-	// so that we can slide it in.
-	newScene.addClass("initial");
+	if (sceneContents != null) {
+		var newScene = document.createElement("div");
+		newScene.className = "__scene__";
+		newScene.innerHTML = sceneContents;
+
+		// set some initial CSS properties of the scene.
+		// we want it positioned all the way at the right side of the screen
+		// so that we can slide it in.
+		newScene.addClass("initial");
 
 
-	// If there is a scene already in the content div, move it out
-	if (this.activeScene){
-		// since we reassign this.activeScene when the next animation completes,
-		// create a copy to the reference to avoid trouble
-		var copy = this.activeScene;
+		// If there is a scene already in the content div, move it out
+		if (this.activeScene){
+			// since we reassign this.activeScene when the next animation completes,
+			// create a copy to the reference to avoid trouble
+			var copy = this.activeScene;
 
+			if (this.activeScene.onDestroy) {
+				this.activeScene.onDestroy(this.activeScene);
+			}
+
+			copy.removeClass("in");
+			copy.addClass("out");
+			copy.element.parent.removeChild(copy.element);
+		}
+
+		newScene.addClass("in");
+	} else {
+		//reuse the scene HTML that's in there.
 		if (this.activeScene.onDestroy) {
 			this.activeScene.onDestroy(this.activeScene);
 		}
-
-		copy.removeClass("in");
-		copy.addClass("out");
-		copy.element.parent.removeChild(copy.element);
 	}
-
-	newScene.addClass("in");
-	
 
 	//to avoid computing a jquery object on this scene over and over again, calculate it
 	//so that it's inside the closure of the scene's findElement function
@@ -142,7 +156,7 @@ SceneManager.prototype.loadScene = function(sceneID) {
 
 	if (scene.preload) {
 		// custom preloading is available for this scene
-		// TODO: use web workers to make this REAL fast. As of right now, without threads this is useless.
+		// TODO: use web workers to make this REAL fast. As of right now, without threads this is useless (amounts to single-threaded loading).
 		scene.preload();
 	}
 }
