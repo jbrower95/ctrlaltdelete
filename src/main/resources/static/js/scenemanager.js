@@ -114,26 +114,17 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		copy.removeClass("in");
 		copy.addClass("out");
 		copy.element.parent.removeChild(copy.element);
-		/*jQuery(copy).animate({left: '-100%'}, {
-			queue: false,
-			duration: this.ANIM_LENGTH,
-			complete: function() {
-				copy.element.parent.removeChild(copy.element);
-			}
-		});*/
 	}
 
 	newScene.addClass("in");
-	/*jQuery(newScene).animate({left: 0}, {
-			queue: false,
-			duration: this.ANIM_LENGTH,
-			complete: function() {
-				if (scene.onSceneLoad != null) {
-					this.onPresent();
-					this.activeScene = scene;
-				}
-			}
-	});*/
+	
+
+	//to avoid computing a jquery object on this scene over and over again, calculate it
+	//so that it's inside the closure of the scene's findElement function
+	var newSceneJquery = jQuery(newScene);
+	scene.searchContent = function(id) {
+		return $(newSceneJquery).find;
+	}
 };
 
 

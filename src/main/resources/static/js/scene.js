@@ -5,11 +5,8 @@
 *
 *	Scenes can interact with their managers via the .manager property. 
 *
-*
-*	TODO: The current model has some issues with scoping. That is, the javascript executed in an external model
-*		  can't interact with the DOM of the supplied HTML. This needs to be fixed in order for the model to
-*		  be viable.
-*
+*	Scenes can find elements in their content box by using 'searchContent(id)', which is equivalent
+*	to a jQuery .find() call on their outer __scene__ box.
 */
 
 /**
@@ -23,23 +20,35 @@
 *					preload : function(){},
 *					onPresent : function(){},
 *					onDestroy : function(){},
-*					html : ""
+*					getHTML : function() {return ""}
 *				};
 *
-*		Sample Usage:
+*				
+*				preload: this function is called by the scene manager to tell the scene to get ready for its
+*						 appearance. Any assets that need to be cached / preloaded should be downloaded.
+*
+*				onPresent: called by the scene manager immediately after the scene is shown on screen.
+*
+*				onDestroy: called by the scene manager right before the scene is removed
+*
+*				getHTML: returns the HTML content for the page. Alternatively, this can return the name
+*						 of an HTML file that the scene will load automatically in its constructor.
+*				
+*						ex: function() { return "main.html" }   ||   function() { return "<body> Ey yo! this is the scene. </body>"}
+*
+*		Sample Internal Usage:
 *			var manager = new SceneManager(...)
 *			var scene = new Scene('scenes/main.js', manager);
 *
 *			or
 *
-*			var scene = new Scene('<p>SUP</p>', null, function() { console.log ("presented");}, null, manager);
+*			var scene = new Scene(function() {return '<p>SUP</p>'}, null, function() { console.log ("presented");}, null, manager);
 *
 *
-*		Sample External JS File:
+*		Sample Usage w/ External JS File:
 *
 *			scenes/main.js
 *				var exported_scene = {
-*				
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
@@ -49,10 +58,22 @@
 *					onDestroy: function() {
 *						console.log("All over!");
 *					},
-*					html: "<p>Hey there</p> <canvas id='game'></canvas>"
+*					getHTML: function() { return "<p>Hey there</p> <canvas id='game'></canvas>"}
 *				};
-*
-*
+*			
+*			scenes/mainExternal.js
+*				var exported_scene = {
+*					preload: function() {
+*						console.log("Lets load some assets!");
+*					},
+*					onPresent: function() {
+*						console.log("Playing game!");
+*					},
+*					onDestroy: function() {
+*						console.log("All over!");
+*					},
+*					getHTML: function() { return "main.html"}
+*				};
 */
 
 
@@ -67,23 +88,23 @@
 *
 *
 */
-function Scene(container, innerHTML, preload , onPresent, onDestroy, manager) {
+function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 	this.html = innerHTML;
 	this.preload = preload;
 	this.onPresent = onPresent;
 	this.onDestroy = onDestroy;
-	this.ready = true;
 	this.manager = manager;
+	this.ready = true;
 }
 
 /**
 *	Constructs a scene from a remote javascript file.
 *
-*		The contents of the javascript file must meet the spec above.
+*		jsFile: The location of a scene javascript file 
 *
 *		Manager: The associated scene manager
 */
-function Scene(container, jsFile, manager) {
+function Scene(jsFile, manager) {
 
 	this.manager = manager;
 	this.ready = false;
@@ -100,7 +121,17 @@ function Scene(container, jsFile, manager) {
 		this.preload = exported_scene["preload"];
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
-		this.html_element 
+		this.html = exported_scene["getHTML"]();
+
+		var isHTMLFile = /[^]*.html$/g;
+
+		if (isHTMLFile.exec(this.html) != null) {
+			//we have to load this because it's the location of an html file.
+			var container = document.createElement("div");
+			$(jQuery(container)).load(this.html);
+			this.html = container.innerHTML;
+		}
+
 		this.ready = true;
 
 	}).fail(function(){
@@ -108,14 +139,9 @@ function Scene(container, jsFile, manager) {
 	});
 }
 
-/**
-*	Gets the DOM element associated with this Scene.
-*/
-Scene.prototype.getHTMLElement = function() {
 
 
 
 
-}
 
 
