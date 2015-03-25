@@ -5,10 +5,18 @@
 *
 *	- Scenes that DONT contain HTML simply inherit their html from the active scene at the time of presentation.
 *
+*			- These scenes also inherit the exportedVariables property of the active scene. 
+*			- Consequently, scenes which plan to be extended by 'phantom' scenes (scenes without HTML content)
+*			should place their relevant variables / references in this exportedVariables dictionary.
+*
 *	- Scenes can interact with their managers via the .manager property. 
 *
 *	Scenes can find elements in their content box by using 'searchContent(id)', which is equivalent
 *	to a jQuery .find() call on their outer __scene__ box.
+*
+*
+*
+*
 *
 *
 *	External Usage:
@@ -101,6 +109,7 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 	this.onPresent = onPresent;
 	this.onDestroy = onDestroy;
 	this.manager = manager;
+	this.exportedVariables = {};
 	this.ready = true;
 }
 
@@ -129,9 +138,11 @@ function Scene(jsFile, manager) {
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
 		this.html = exported_scene["getHTML"]();
+		this.exportedVariables = {};
 
 		if (this.html == null) {
-			console.log("[Scene.js] getHTML() is not an optional method. Couldn't find declaration in " + jsFile);
+			console.log("[Scene.js] loading a phantom scene, copying variables from existing scene.");
+			this.exportedVariables = manager.activeScene.exportedVariables;
 			return;
 		}
 
