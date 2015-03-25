@@ -11,8 +11,8 @@
 	</head>
 	
 	<body>
-	  <#list experiences as exp>
-  		${exp_index + 1}. <a href="/${exp}">${exp}</a>
+	  <#list expFileNames as expFileName>
+  		${expFileName_index + 1}. <a href="/${expFileName}">${expNames[expFileName_index]}</a>
   		<br/>
 		</#list>  
 	</body>

@@ -1,7 +1,5 @@
 package edu.brown.cs.abjj.ctrlaltdel;
 
-import java.util.Arrays;
-
 import edu.brown.cs.abjj.experience.Server;
 
 public class Main {
@@ -12,13 +10,18 @@ public class Main {
 			return;
 		}
 
-		new Server(Arrays.asList(args)).run();
+		try {
+			new Server(args[0]).run();
+		} catch (IllegalArgumentException e) {
+			System.out.println("ERROR: " + e.getMessage());
+			return;
+		}
 	}
 
 	private static void printUsage() {
 		StringBuilder usage = new StringBuilder();
-		usage.append("Usage:  ./run <experience1> <experience2> ...");
-		usage.append("\texperience: a folder with all files for an experience");
+		usage.append("Usage:  ./run <exp_folder>");
+		usage.append("\texp_folder: a folder with all experience directories");
 		System.out.println(usage);
 	}
 }

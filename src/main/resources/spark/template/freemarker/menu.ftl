@@ -11,7 +11,12 @@
 	</head>
 	
 	<body>
-	  <p>This is the main menu for ${title}. 
+	  <h1>${title}</h1>
+	  <br>
+	  <p>${description}</p>
+	  <br>
+	  <a href="${playLink}">Play!</a>
+	  <a href="${scoresLink}">Scores!</a>
 	</body>
 	
 </html>
