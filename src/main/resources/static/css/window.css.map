@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": ";AAEA,OAAQ;EACP,OAAO,EAAE,IAAI;;AAGd,OAAQ;EACP,QAAQ,EAAE,QAAQ",
+"sources": ["window.scss"],
+"names": [],
+"file": "window.css"
+}

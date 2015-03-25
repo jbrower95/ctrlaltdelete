@@ -59,7 +59,6 @@ $.fn.exists = function () {
 function SceneManager(contentDivID, scenes) {
 
 		this.contentDivID = contentDiv;
-		this.ANIM_LENGTH = 5;
 
 		var existingDiv = document.getElementById(this.contentDivID);
 
