@@ -1,5 +1,7 @@
 package edu.brown.cs.abjj.experience;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 import edu.brown.cs.joengelm.sqldb.Database;
 
@@ -23,9 +26,30 @@ public class Server {
 	Map<String, Experience> experiences = new HashMap<>();
 	private final static Gson GSON = new Gson();
 
-	public Server(List<String> experienceFiles) {
-		for (String experienceFile : experienceFiles) {
-			experiences.put(experienceFile, new Experience(experienceFile));
+	public Server(String experiencesDirectory) {
+		File dir = new File(experiencesDirectory);
+		File[] directoryListing = dir.listFiles();
+		if (directoryListing != null) {
+			for (File experienceFile : directoryListing) {
+				if (experienceFile.isHidden()) {
+					continue;
+				}
+				try {
+					Experience exp = new Experience(experienceFile.getPath());
+
+					experiences.put(exp.filename, exp);
+				} catch (FileNotFoundException e) {
+					System.err.println(experienceFile.getName()
+							+ " is missing its config file. It will be omitted.");
+				} catch (JsonParseException e) {
+					System.err.println(experienceFile.getName()
+							+ " has errors in its config file. It will be omitted.");
+					System.err.println(e.getMessage());
+				}
+			}
+		} else {
+			throw new IllegalArgumentException(experiencesDirectory
+					+ " is not a directory");
 		}
 	}
 
@@ -35,7 +59,7 @@ public class Server {
 		Spark.get("/", new IndexHandler(), new FreeMarkerEngine());
 		Spark.get("/:experience", new ExperienceMenuHandler(),
 				new FreeMarkerEngine());
-		Spark.get("/:experience/content", new ContentHandler());
+		Spark.get("/:experience/content/*", new ContentHandler());
 		Spark.post("/:experience/score", new PostScoreHandler());
 		Spark.get("/:experience/score", new GetScoreHandler());
 	}
@@ -49,12 +73,14 @@ public class Server {
 		@Override
 		public ModelAndView handle(Request req, Response res) {
 			List<String> experienceNames = new ArrayList<>();
+			List<String> experienceFileNames = new ArrayList<>();
 			for (Experience exp : experiences.values()) {
+				experienceFileNames.add(exp.filename);
 				experienceNames.add(exp.name);
 			}
 
-			Map<String, Object> variables = ImmutableMap.of("experiences",
-					experienceNames);
+			Map<String, Object> variables = ImmutableMap.of("expFileNames",
+					experienceFileNames, "expNames", experienceNames);
 			return new ModelAndView(variables, "index.ftl");
 		}
 	}
@@ -67,15 +93,18 @@ public class Server {
 	public class ExperienceMenuHandler implements TemplateViewRoute {
 		@Override
 		public ModelAndView handle(Request req, Response res) {
-			String experienceName = req.params(":experience");
-			if (!experiences.containsKey(experienceName)) {
+			String experienceFileName = req.params(":experience");
+			if (!experiences.containsKey(experienceFileName)) {
 				res.status(404);
 				return new ModelAndView(new HashMap<>(), "error.ftl");
 			}
-			Map<String, Object> variables = ImmutableMap.of("title",
-					req.params(":experience"));
-			return new ModelAndView(variables, "menu.ftl"); // this FTL should be from
-			// experience package
+
+			Experience exp = experiences.get(experienceFileName);
+
+			Map<String, Object> variables = ImmutableMap.of("title", exp.name,
+					"description", exp.description, "playLink", "/" + exp.filename
+							+ "/play", "scoresLink", "/" + exp.filename + "/scores");
+			return new ModelAndView(variables, "menu.ftl");
 		}
 	}
 
@@ -88,10 +117,8 @@ public class Server {
 		@Override
 		public Object handle(Request req, Response res) {
 			Experience exp = experiences.get(req.params(":experience"));
-			String id = req.queryParams("id");
 
-			// exp.getContentById(id);
-			return null;
+			return req.splat().toString();
 		}
 	}
 
