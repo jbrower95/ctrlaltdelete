@@ -125,7 +125,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 			var copy = this.activeScene;
 
 			if (this.activeScene.onDestroy) {
-				this.activeScene.onDestroy(this.activeScene);
+				this.activeScene.onDestroy();
 			}
 
 			copy.removeClass("in");
@@ -137,7 +137,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	} else {
 		//reuse the scene HTML that's in there.
 		if (this.activeScene.onDestroy) {
-			this.activeScene.onDestroy(this.activeScene);
+			this.activeScene.onDestroy();
 		}
 	}
 
@@ -149,7 +149,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	}
 
 	if (newScene.onPresent) {
-		newScene.onPresent(newScene);
+		newScene.onPresent();
 	}
 };
 

@@ -26,15 +26,16 @@
 *			- has a global variable of type object named 'exported_scene' that:
 *				
 *				var exported_scene = {
-*					preload : function(scene){},
-*					onPresent : function(scene){},
-*					onDestroy : function(scene){},
+*					preload : function(){},
+*					onPresent : function(){},
+*					onDestroy : function(){},
 *					getHTML : function() {return ""}
 *				};
 *
 *
-*				The onPresent / onDestroy functions give you access to the scene, so that you can make calls within the context of the scene.
-*				
+*				The onPresent / onDestroy functions inherently give you access to the scene via the
+*				'this' property. That is, their scope will dynamically change to be the scene at time of execution.
+*	
 *				*.preload: this function is called by the scene manager to tell the scene to get ready for its
 *						 appearance. Any assets that need to be cached / preloaded should be downloaded.
 *
@@ -58,7 +59,7 @@
 *
 *			or
 *
-*			var scene = new Scene(function() {return '<p>SUP</p>'}, null, function(scene) { console.log ("presented");}, null, manager);
+*			var scene = new Scene(function() {return '<p>SUP</p>'}, null, function() { console.log ("presented");}, null, manager);
 *
 *
 *		Sample Usage w/ External JS File:
@@ -68,10 +69,10 @@
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
-*					onPresent: function(scene) {
+*					onPresent: function() {
 *						console.log("Playing game!");
 *					},
-*					onDestroy: function(scene) {
+*					onDestroy: function() {
 *						console.log("All over!");
 *					},
 *					getHTML: function() { return "<p>Hey there</p> <canvas id='game'></canvas>"}
@@ -82,10 +83,10 @@
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
-*					onPresent: function(scene) {
+*					onPresent: function() {
 *						console.log("Playing game!");
 *					},
-*					onDestroy: function(scene) {
+*					onDestroy: function() {
 *						console.log("All over!");
 *					},
 *					getHTML: function() { return "main.html"}
