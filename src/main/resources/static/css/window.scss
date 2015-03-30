@@ -1,9 +1,12 @@
 /** Window Flavored CSS **/
 
+$move-time: 0.2s;
+
 .hidden {
 	display: none;
 }
 
 .window {
 	position: absolute;
+	transition: left $move-time, top $move-time;
 }
