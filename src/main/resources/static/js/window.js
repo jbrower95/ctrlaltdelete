@@ -65,8 +65,18 @@ Window.setTitle(new_title) {
 Window.setXHandler(x_handler) {
 	this.element.find($(".close")).click(function() {
 		if (this.cancellable) {
-
+			// Soon...
 		}
+	});
+}
+
+/**
+*	Sets the default handler for when the minimize button,
+*	which must have the "min" class, is clicked.
+*/
+Window.setMinHandler(min_handler) {
+	this.element.find($(".min")).click(function() {
+		min_handler(); // Should this be required to take a reference to element?
 	});
 }
 
