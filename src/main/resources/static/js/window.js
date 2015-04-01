@@ -36,7 +36,7 @@ function Window(element, x, y) {
 *		pos_x: The x-position to move the Window to, in pixels. (Cannot be a string.)
 *		pos_y: The y-position to move the Window to, in pixels. (Cannot be a string.)
 */
-Window.moveTo(pos_x, pos_y) {
+Window.prototype.moveTo = function(pos_x, pos_y) {
 	this.element.css({left: pos_x, top: pos_y});
 }
 
@@ -48,7 +48,7 @@ Window.moveTo(pos_x, pos_y) {
 *
 *		new_title: The title to put in the title bar of the Window.
 */
-Window.setTitle(new_title) {
+Window.prototype.setTitle = function(new_title) {
 	var title = this.element.find(".title");
 
 	// Checks if the title element was found
@@ -62,7 +62,7 @@ Window.setTitle(new_title) {
 /**
 *
 */
-Window.setXHandler(x_handler) {
+Window.prototype.setXHandler = function(x_handler) {
 	this.element.find($(".close")).click(function() {
 		if (this.cancellable) {
 			// Soon...
@@ -74,7 +74,7 @@ Window.setXHandler(x_handler) {
 *	Sets the default handler for when the minimize button,
 *	which must have the "min" class, is clicked.
 */
-Window.setMinHandler(min_handler) {
+Window.prototype.setMinHandler = function(min_handler) {
 	this.element.find($(".min")).click(function() {
 		min_handler(); // Should this be required to take a reference to element?
 	});
@@ -87,6 +87,6 @@ Window.setMinHandler(min_handler) {
 *		is_cancellable: Boolean representing if the window is able to be closed
 *					   or not.
 */
-Window.setCancellable(is_cancellable) {
+Window.prototype.setCancellable = function(is_cancellable) {
 	this.cancellable = is_cancellable;
 }

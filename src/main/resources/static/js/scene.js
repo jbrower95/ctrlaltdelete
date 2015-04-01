@@ -149,6 +149,8 @@ function Scene(jsFile, manager) {
 
 		var isHTMLFile = /[^]*.html$/g;
 
+        //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
+
 		if (isHTMLFile.exec(this.html) != null) {
 			//we have to load this because it's the location of an html file.
 			var container = document.createElement("div");
@@ -159,7 +161,7 @@ function Scene(jsFile, manager) {
 		this.ready = true;
 
 	}).fail(function(){
-		console.log("[Scene.js] Couldn't load scene: " + jsFile ". Experienced a network error.");
+		console.log("[Scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
 	});
 
 }
