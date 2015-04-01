@@ -10,3 +10,7 @@ var exported_scene = {
 		return "main.html"
 	}
 };
+
+function nextScene() {
+    exported_scene.manager.presentScene("next");
+}
