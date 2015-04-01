@@ -9,7 +9,6 @@ public class Main {
 			printUsage();
 			return;
 		}
-
 		try {
 			new Server(args[0]).run();
 		} catch (IllegalArgumentException e) {
