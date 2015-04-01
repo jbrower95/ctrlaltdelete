@@ -58,6 +58,11 @@ $.fn.exists = function () {
 */
 function SceneManager(contentDivID, scenes) {
 
+        //set the manager for each scene
+        for (var key in scenes) {
+            scenes[key].manager = this;
+        }
+
 		this.contentDivID = contentDiv;
 
 		var existingDiv = document.getElementById(this.contentDivID);

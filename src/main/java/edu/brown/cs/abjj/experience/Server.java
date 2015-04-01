@@ -161,6 +161,8 @@ public class Server {
                     res.type("image/jpeg");
                 } else if (asset.endsWith(".gif")) {
                     res.type("image/gif");
+                } else {
+                    res.type("application/octect-stream");
                 }
 
                 String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
@@ -169,8 +171,6 @@ public class Server {
                 for (String x : contents) {
                     result.append(x);
                 }
-                
-                System.out.println("Contents: " + result.toString());
                 return result.toString();
 
             } catch (Exception e) {
