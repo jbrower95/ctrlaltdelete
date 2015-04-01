@@ -71,6 +71,7 @@ public class Server {
         Spark.get("/:experience/play", new PlayHandler());
 		Spark.post("/:experience/score", new PostScoreHandler());
 		Spark.get("/:experience/score", new GetScoreHandler());
+        Spark.get("/:experience/lib/:asset", new LibHandler());
         Spark.get("/:experience/:asset", new GameHandler());
 	}
 
@@ -131,6 +132,38 @@ public class Server {
 			return req.splat().toString();
 		}
 	}
+
+    /**
+     * Handle requests directed to each experience's content database.
+     *
+     * @author joengelm
+     */
+    public class LibHandler implements Route {
+        @Override
+        public Object handle(Request req, Response res) {
+            Experience exp = experiences.get(req.params(":experience"));
+            String asset = req.params(":asset");
+
+            String path = ("src/main/resources/static/js/" + asset);
+
+            System.out.println("Serving library: " + path);
+
+            try {
+                String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
+                StringBuilder result = new StringBuilder();
+                //flatten contents
+                for (String x : contents) {
+                    result.append(x + "\n");
+                }
+                System.out.println("Library: " + result.toString());
+                return result.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+        }
+    }
+
 
     /**
      * Handle requests directed to each experience's small files.

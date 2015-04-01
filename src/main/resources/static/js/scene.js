@@ -15,10 +15,6 @@
 *	to a jQuery .find() call on their outer __scene__ box.
 *
 *
-*
-*
-*
-*
 *	External Usage:
 *
 *		To use the Scene(jsFile, manager) constructor, you must make a javascript file <jsFile> that:

@@ -43,7 +43,7 @@ function WindowManager(content_div_id) {
 *
 *		window_obj: The Window to be added.
 */
-WindowManager.addWindow(window_obj) {
+WindowManager.prototype.addWindow = function(window_obj) {
 	this.content_div.appendChild(window_obj.element);
 
 	// Add to windows hashtable
@@ -56,7 +56,7 @@ WindowManager.addWindow(window_obj) {
 *
 *		window_obj: The Window to be removed.
 */
-WindowManager.removeWindow(window_obj) {
+WindowManager.prototype.removeWindow = function(window_obj) {
 
 }
 
@@ -66,7 +66,7 @@ WindowManager.removeWindow(window_obj) {
 *
 *		window_id - The id of Window.
 */
-WindowManager.getWindowWithId(window_id) {
+WindowManager.prototype.getWindowWithId = function(window_id) {
 	// Check if windowId exists in the hashtable
 	if (!(windowId in this.windows)) {
 		console.log("[windowmanager.js] Error: Window ID doesn't exist in the manager.");
@@ -82,7 +82,7 @@ WindowManager.getWindowWithId(window_id) {
 *
 *		template - The id of the template div.
 */
-WindowManager.inflate(template) {
+WindowManager.prototype.inflate = function(template) {
 	var template_div = $("#" + template);
 
 	if (template_div == null) {
