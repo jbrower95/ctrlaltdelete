@@ -10,6 +10,8 @@ public class Main {
 			return;
 		}
 
+		// TODO refactor this package with 'experience' to eliminate redundancy
+
 		try {
 			new Server(args[0]).run();
 		} catch (IllegalArgumentException e) {
