@@ -143,13 +143,28 @@ function Scene(jsFile, sceneID, manager, onLoad) {
         //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
 
 		if (isHTMLFile.exec(this.getHTML()) != null) {
+            console.log("[scene.js] Loading HTML from external file - " + this.getHTML());
 			//we have to load this because it's the location of an html file.
 			var container = document.createElement("div");
-			$(jQuery(container)).load(this.getHTML());
+			$(jQuery(container)).load(this.getHTML(), $.proxy(function(response, status, xhr) {
+                //this code is executed asynchronously
 
-            var results = container.innerHTML;
-			this.getHTML = function() {return results};
+                if (status == "error") {
+                    console.error("[scene.js] Remote load failed.");
+                    return;
+                }
+
+                var results = container.innerHTML;
+                this.getHTML = function() {return results};
+                manager.registerScene(sceneID, this);
+                if (onLoad != null) {
+                    onLoad();
+                }
+            }, scene_reference));
+            return;
 		}
+
+        //this happens synchronously
         manager.registerScene(sceneID, this);
 
         if (onLoad != null) {

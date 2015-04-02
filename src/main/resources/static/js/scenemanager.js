@@ -118,6 +118,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
     if (!scene.preload) {
         console.error("Scene didn't have a preload() function.");
+        console.error(scene);
         return;
     }
 

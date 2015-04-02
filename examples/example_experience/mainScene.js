@@ -6,7 +6,7 @@ var exported_scene = {
 		alert("Time for the next scene!");
 	},
 	getHTML : function() {
-		return "main.html"
+		return "mainScene.html"
 	}
 };
 

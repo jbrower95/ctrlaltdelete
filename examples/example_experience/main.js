@@ -11,5 +11,6 @@ Scene.load("mainScene.js", "main", sceneManager, showMenu);
 Scene.load("nextScene.js", "next", sceneManager);
 
 function showMenu() {
+    alert("Presenting scene!");
     sceneManager.presentScene("main");
 }
