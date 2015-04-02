@@ -10,6 +10,21 @@ var exported_scene = {
 	}
 };
 
-function nextScene() {
-    exported_scene.manager.presentScene("next");
-}
+
+    var nextScene = function() {
+        console.log("KLJHSDGJKHSDKJGHSDKLG");
+        if (this.scene == null) {
+            console.error("Didn't get reference to scene.");
+        } else {
+            console.log(this.scene);
+        }
+
+        exported_scene.scene.manager.presentScene("next");
+    }
+
+
+
+
+
+
+

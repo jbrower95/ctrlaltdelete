@@ -85,6 +85,18 @@ function SceneManager(contentDivID) {
         console.log("[scenemanager.js] SceneManager setup complete.");
 }
 
+//the singleton scene manager
+var _____SCENEMANAGER = null;
+
+SceneManager.initialize = function(div) {
+    _____SCENEMANAGER = new SceneManager(div);
+};
+
+SceneManager.getSharedInstance = function() {
+    return _____SCENEMANAGER;
+}
+
+
 
 SceneManager.prototype.registerScene = function(sceneID, scene) {
 	if (this.scenes[sceneID] != null) {
@@ -125,15 +137,17 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	scene.preload();
 
 	if (!scene.isPhantom()) {
-		var newScene = document.createElement("div");
+
+        var newScene = document.createElement("div");
 		newScene.className = "__scene__";
 		newScene.innerHTML = scene.getHTML();
 
 		// set some initial CSS properties of the scene.
 		// we want it positioned all the way at the right side of the screen
 		// so that we can slide it in.
-		$(jQuery(newScene)).addClass("initial");
+
         this.contentDiv.appendChild(newScene);
+		$(jQuery(newScene)).addClass("initial");
 
 
 		// If there is a scene already in the content div, move it out
@@ -152,9 +166,10 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		}
 
 		$(jQuery(newScene)).addClass("in");
+
 	} else {
-		//reuse the scene HTML that's in there.
-        if (this.activeScene.onDestroy) {
+		//reuse the scene HTML that's in there
+        if (this.activeScene && this.activeScene.onDestroy) {
             this.activeScene.onDestroy();
         }
 	}
@@ -166,9 +181,9 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	scene.searchContent = function(id) {
 		return $(newSceneJquery).find;
 	}
-
-	if (newScene.onPresent) {
-		newScene.onPresent();
+    this.activeScene = scene;
+	if (scene.onPresent) {
+		scene.onPresent();
 	}
 };
 

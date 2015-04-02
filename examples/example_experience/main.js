@@ -5,12 +5,12 @@ var scenes = {};
 
 //Declare our scene manager
 console.log("Instantiating scene manager...");
-var sceneManager = new SceneManager("stage");
 
-Scene.load("mainScene.js", "main", sceneManager, showMenu);
-Scene.load("nextScene.js", "next", sceneManager);
+SceneManager.initialize("stage");
+Scene.load("mainScene.js", "main", showMenu);
+Scene.load("nextScene.js", "next", null);
 
 function showMenu() {
     alert("Presenting scene!");
-    sceneManager.presentScene("main");
+    SceneManager.getSharedInstance().presentScene("main");
 }

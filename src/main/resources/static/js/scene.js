@@ -116,7 +116,9 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 *      sceneID: the id of the scene
 *		Manager: The associated scene manager
 */
-function Scene(jsFile, sceneID, manager, onLoad) {
+function Scene(jsFile, sceneID, onLoad) {
+
+    var manager = SceneManager.getSharedInstance();
 
     console.log("[scene.js] Initializing scene: " + jsFile);
     var scene_reference = this;
@@ -136,7 +138,13 @@ function Scene(jsFile, sceneID, manager, onLoad) {
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
 		this.getHTML = exported_scene["getHTML"];
-		this.exportedVariables = {};
+
+        exported_scene.scene = this;
+
+        if (exported_scene["exportedVariables"]) {
+            this.exportedVariables = {};
+            jQuery.extend(this.exportedVariables, exported_scene["exportedVariables"]);
+        }
 
 		var isHTMLFile = /[^]*.html$/g;
 
@@ -171,7 +179,7 @@ function Scene(jsFile, sceneID, manager, onLoad) {
             onLoad();
         }
 	}, scene_reference)).fail($.proxy(function(){
-		console.log("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
+		console.error("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
 	}, scene_reference));
 }
 
@@ -183,8 +191,8 @@ function Scene(jsFile, sceneID, manager, onLoad) {
  * @param sceneID
  * @param manager
  */
-Scene.load = function(jsFile, sceneID, manager, onLoad) {
-    new Scene(jsFile, sceneID, manager, onLoad);
+Scene.load = function(jsFile, sceneID, onLoad) {
+    new Scene(jsFile, sceneID, onLoad);
 }
 
 
@@ -196,7 +204,13 @@ Scene.prototype.preload = function() {
     if (this.isPhantom()) {
         //copy over exported variables
         console.log("[scene.js] loading a phantom scene, copying variables from existing scene.");
-        this.exportedVariables = this.manager.activeScene.exportedVariables;
+        var manager = SceneManager.getSharedInstance();
+        if (manager.activeScene && manager.activeScene.exportedVariables) {
+            console.log("[scene.js] Variables copied.");
+            jQuery.extend(this.exportedVariables, manager.activeScene.exportedVariables);
+        } else {
+            console.log("[scene.js] No variables were copied.");
+        }
     }
 };
 

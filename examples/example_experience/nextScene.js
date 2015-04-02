@@ -7,6 +7,6 @@ var exported_scene = {
 		alert("Time for the next scene!");
 	},
 	getHTML : function() {
-		return "next.html"
+		return null;
 	}
 };
