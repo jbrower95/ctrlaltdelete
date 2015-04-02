@@ -9,19 +9,35 @@
 *			- Consequently, scenes which plan to be extended by 'phantom' scenes (scenes without HTML content)
 *			should place their relevant variables / references in this exportedVariables dictionary.
 *
-*	- Scenes can interact with their managers via the .manager property. 
+*	- Scenes can interact with the shared manager by using the singleton SceneManager.getSharedInstance()
 *
 *	Scenes can find elements in their content box by using 'searchContent(id)', which is equivalent
 *	to a jQuery .find() call on their outer __scene__ box.
 *
 *
-*	External Usage:
+*	Scene Usage:
 *
-*		To use the Scene(jsFile, manager) constructor, you must make a javascript file <jsFile> that:
-*
-*			- has a global variable of type object named 'exported_scene' that:
+ *      Scenes should be loaded using the class method 'Scene.load()'. This is
+ *      the preferred way of loading scenes.
+ *
+ *      Usage:
+ *
+ *          Scene.load(jsFile, onLoad)
+ *
+ *              jsFile: The javascript file containing an exported scene. *required
+ *             onLoad: Once the scene has been registered with the shared scenemanager,
+ *                     this function will be called in the context of the scene object.
+ *                     onLoad is an optional parameter.
+ *
+ *      Placing scenes in external files:
+ *
+ *          In order to facilitate development, you can place your scenes in
+ *          external javascript files. These files must have atleast
+ *
+*			-  a global variable of type object named 'exported_scene' like the below:
 *				
 *				var exported_scene = {
+*			            id : "exported scene 1",
 *					preload : function(){},
 *					onPresent : function(){},
 *					onDestroy : function(){},
@@ -42,7 +58,7 @@
 *				*.getHTML: returns the HTML content for the page. Alternatively, this can return the name
 *						 of an HTML file that the scene will load automatically in its constructor. If this is 
 *						 ommitted, the existing scene will be used, and ownership will be transferred to this scene object.
-*				
+*			!	    id: The unique id of the string. This can be anything that fits in a hashtable.
 *				
 *				(* = optional)
 *
@@ -62,6 +78,7 @@
 *
 *			scenes/main.js
 *				var exported_scene = {
+*			        id : "main scene",
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
@@ -76,6 +93,7 @@
 *			
 *			scenes/mainExternal.js
 *				var exported_scene = {
+*			        id : "other scene",
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
@@ -87,6 +105,18 @@
 *					},
 *					getHTML: function() { return "main.html"}
 *				};
+ *
+ *
+ *	        For a exported_scene to get a reference to its corresponding scene object
+ *          (or to the SceneManager), it can simply call on
+ *
+ *          SceneManager.getSharedInstance() (and subsequently the activeScene property)
+ *
+ *          var myScene = SceneManager.getSharedInstance().activeScene;
+ *          //do something
+ *
+ *
+ *
 */
 
 
@@ -112,11 +142,10 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 /**
 *	Constructs a scene from a remote javascript file.
 *
-*		jsFile: The location of a scene javascript file 
-*      sceneID: the id of the scene
+*		jsFile: The location of a scene javascript file
 *		Manager: The associated scene manager
 */
-function Scene(jsFile, sceneID, onLoad) {
+function Scene(jsFile, onLoad) {
 
     var manager = SceneManager.getSharedInstance();
 
@@ -138,6 +167,11 @@ function Scene(jsFile, sceneID, onLoad) {
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
 		this.getHTML = exported_scene["getHTML"];
+        this.id = exported_scene["id"];
+
+        if (!this.id) {
+            console.error("[scene.js] ERROR/fatal: The scene in " + jsFile + " is missing an id.");
+        }
 
         exported_scene.scene = this;
 
@@ -164,7 +198,7 @@ function Scene(jsFile, sceneID, onLoad) {
 
                 var results = container.innerHTML;
                 this.getHTML = function() {return results};
-                manager.registerScene(sceneID, this);
+                manager.registerScene(this);
                 if (onLoad != null) {
                     onLoad();
                 }
@@ -173,7 +207,7 @@ function Scene(jsFile, sceneID, onLoad) {
 		}
 
         //this happens synchronously
-        manager.registerScene(sceneID, this);
+        manager.registerScene(this);
 
         if (onLoad != null) {
             onLoad();
@@ -191,8 +225,8 @@ function Scene(jsFile, sceneID, onLoad) {
  * @param sceneID
  * @param manager
  */
-Scene.load = function(jsFile, sceneID, onLoad) {
-    new Scene(jsFile, sceneID, onLoad);
+Scene.load = function(jsFile, onLoad) {
+    new Scene(jsFile, onLoad);
 }
 
 

@@ -7,8 +7,8 @@ var scenes = {};
 console.log("Instantiating scene manager...");
 
 SceneManager.initialize("stage");
-Scene.load("mainScene.js", "main", showMenu);
-Scene.load("nextScene.js", "next", null);
+Scene.load("mainScene.js", showMenu);
+Scene.load("nextScene.js", null);
 
 function showMenu() {
     alert("Presenting scene!");

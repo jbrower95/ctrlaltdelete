@@ -1,4 +1,5 @@
 var exported_scene = {
+    id : "main",
 	onPresent : function() { 
 		alert("The scene happened!");
 	},

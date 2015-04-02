@@ -1,4 +1,5 @@
 var exported_scene = {
+    id : "next",
     onPresent : function() {
         var manager = SceneManager.getSharedInstance();
 
@@ -26,10 +27,6 @@ var exported_scene = {
                     opacity: (back) ? 1 : 0.5
                 }, 700, function(){pulse(!back)});
         })(false);
-    },
-    onDestroy: function() {
-
-        //var scene = SceneManager.getSharedInstance().activeScene;
     },
     getHTML : function() {
         return "nextScene.html";
