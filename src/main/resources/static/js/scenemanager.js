@@ -60,9 +60,7 @@ function SceneManager(contentDivID) {
 
         console.log("[scenemanager.js] Initializing scene manager...");
 
-		this.contentDivId = contentDivID;
-
-		var existingDiv = document.getElementById(this.contentDivID);
+		var existingDiv = document.getElementById(contentDivID);
 
 		if (existingDiv == null) {
 			//create a div
@@ -94,7 +92,7 @@ SceneManager.initialize = function(div) {
 
 SceneManager.getSharedInstance = function() {
     return _____SCENEMANAGER;
-}
+};
 
 
 
@@ -106,7 +104,7 @@ SceneManager.prototype.registerScene = function(sceneID, scene) {
 	this.scenes[sceneID] = scene;
 
     console.log("[scenemanager.js] Registered Scene: " + sceneID);
-}
+};
 
 /*
 * Loads a scene into the scenemanager's content div. If there is a scene currently loaded,
@@ -141,7 +139,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
         var newScene = document.createElement("div");
 		newScene.className = "__scene__";
 		newScene.innerHTML = scene.getHTML();
-
+        scene.element = newScene;
 		// set some initial CSS properties of the scene.
 		// we want it positioned all the way at the right side of the screen
 		// so that we can slide it in.
@@ -160,27 +158,29 @@ SceneManager.prototype.presentScene = function(sceneID) {
 				this.activeScene.onDestroy();
 			}
 
-			copy.removeClass("in");
-			copy.addClass("out");
-			copy.element.parent.removeChild(copy.element);
+            console.log(copy.element);
+
+			$(jQuery(copy.element)).removeClass("in");
+			$(jQuery(copy.element)).addClass("out");
+
+			copy.element.parentNode.removeChild(copy.element);
 		}
 
 		$(jQuery(newScene)).addClass("in");
 
 	} else {
-		//reuse the scene HTML that's in there
+		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
         if (this.activeScene && this.activeScene.onDestroy) {
             this.activeScene.onDestroy();
         }
 	}
 
-
-	//to avoid computing a jquery object on this scene over and over again, calculate it
-	//so that it's inside the closure of the scene's findElement function
-	var newSceneJquery = jQuery(newScene);
+    //make sure the new scene can easily find things inside of itself.
 	scene.searchContent = function(id) {
-		return $(newSceneJquery).find;
-	}
+        return $(jQuery(newScene)).find(id);
+    };
+
+    //pass the torch onto the new scene
     this.activeScene = scene;
 	if (scene.onPresent) {
 		scene.onPresent();
@@ -201,7 +201,7 @@ SceneManager.prototype.loadScene = function(sceneID) {
 		// TODO: use web workers to make this REAL fast. As of right now, without threads this is useless (amounts to single-threaded loading).
 		scene.preload();
 	}
-}
+};
 
 
 
