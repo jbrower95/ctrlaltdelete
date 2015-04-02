@@ -56,14 +56,11 @@ $.fn.exists = function () {
 *		initialScene:
 *				The initial scene to load. 
 */
-function SceneManager(contentDivID, scenes) {
+function SceneManager(contentDivID) {
 
-        //set the manager for each scene
-        for (var key in scenes) {
-            scenes[key].manager = this;
-        }
+        console.log("[scenemanager.js] Initializing scene manager...");
 
-		this.contentDivID = contentDiv;
+		this.contentDivId = contentDivID;
 
 		var existingDiv = document.getElementById(this.contentDivID);
 
@@ -71,7 +68,7 @@ function SceneManager(contentDivID, scenes) {
 			//create a div
 			this.contentDiv = document.createElement("div");
 			this.contentDiv.className = "__scenebox__";
-			document.body.appendChild(contentDiv);
+			document.body.appendChild(this.contentDiv);
 		} else {
 			// is it a div
 			if (existingDiv.className == "__scenebox__" && existingDiv.tagName == "DIV") {
@@ -84,7 +81,8 @@ function SceneManager(contentDivID, scenes) {
 			}
 		}
 
-		this.scenes = scenes;
+        this.scenes = {};
+        console.log("[scenemanager.js] SceneManager setup complete.");
 }
 
 SceneManager.prototype.registerScene = function(sceneID, scene) {
@@ -93,6 +91,8 @@ SceneManager.prototype.registerScene = function(sceneID, scene) {
 	}
 
 	this.scenes[sceneID] = scene;
+
+    console.log("[scenemanager.js] Registered Scene: " + sceneID);
 }
 
 /*
@@ -101,6 +101,8 @@ SceneManager.prototype.registerScene = function(sceneID, scene) {
 */
 SceneManager.prototype.presentScene = function(sceneID) {
 
+    console.log("[scenemanager.js] Presenting scene - " + sceneID);
+
 	var scene = this.scenes[sceneID];
 
 	if (scene == null) {
@@ -108,13 +110,16 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		return;
 	} 
 
-	// setup our new scene
-	var sceneContents = scene.getHTML();
+    if (!scene.getHTML) {
+        console.log("Scene didn't have a getHTML property.");
+    }
 
-	if (sceneContents != null) {
+	scene.preload();
+
+	if (!scene.isPhantom()) {
 		var newScene = document.createElement("div");
 		newScene.className = "__scene__";
-		newScene.innerHTML = sceneContents;
+		newScene.innerHTML = scene.getHTML();
 
 		// set some initial CSS properties of the scene.
 		// we want it positioned all the way at the right side of the screen
@@ -140,10 +145,11 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		newScene.addClass("in");
 	} else {
 		//reuse the scene HTML that's in there.
-		if (this.activeScene.onDestroy) {
-			this.activeScene.onDestroy();
-		}
+        if (this.activeScene.onDestroy) {
+            this.activeScene.onDestroy();
+        }
 	}
+
 
 	//to avoid computing a jquery object on this scene over and over again, calculate it
 	//so that it's inside the closure of the scene's findElement function

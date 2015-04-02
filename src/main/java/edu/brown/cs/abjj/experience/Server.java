@@ -149,13 +149,13 @@ public class Server {
             System.out.println("Serving library: " + path);
 
             try {
+                res.type("application/javascript");
                 String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
                 StringBuilder result = new StringBuilder();
                 //flatten contents
                 for (String x : contents) {
                     result.append(x + "\n");
                 }
-                System.out.println("Library: " + result.toString());
                 return result.toString();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -202,7 +202,7 @@ public class Server {
                 StringBuilder result = new StringBuilder();
                 //flatten contents
                 for (String x : contents) {
-                    result.append(x);
+                    result.append(x + '\n');
                 }
                 return result.toString();
 

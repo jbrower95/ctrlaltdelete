@@ -2,9 +2,12 @@
 //Declare our map of scenes
 var scenes = {};
 
-scenes["main"] = new Scene("main.js");
-scenes["next"] = new Scene("next.js");
 
 //Declare our scene manager
-var sceneManager = new SceneManager("mainContent", scenes);
+console.log("Instantiating scene manager...");
+var sceneManager = new SceneManager();
+
+Scene.load("mainScene.js", "main", sceneManager);
+Scene.load("nextScene.js", "next", sceneManager);
+
 sceneManager.presentScene("main");

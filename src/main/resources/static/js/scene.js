@@ -114,55 +114,87 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 *	Constructs a scene from a remote javascript file.
 *
 *		jsFile: The location of a scene javascript file 
-*
+*      sceneID: the id of the scene
 *		Manager: The associated scene manager
 */
-function Scene(jsFile, manager) {
+function Scene(jsFile, sceneID, manager) {
 
-	this.manager = manager;
+    console.log("[scene.js] Initializing scene: " + jsFile);
 	this.ready = false;
 	
 	// dynamically load the dependent script using jquery
 	$.getScript(jsFile).done(function(){
 
-		console.log("Loaded remote scene: " + jsFile);
+		console.log("[scene.js] Loaded remote scene: " + jsFile);
 
 		if (exported_scene == null) {
-			console.log("[Scene.js] Error: Couldn't load scene object from " + jsFile);
+			console.log("[scene.js] Error: Couldn't load scene object from " + jsFile);
 		}
 
 		this.preload = exported_scene["preload"];
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
-		this.html = exported_scene["getHTML"]();
+		this.getHTML = exported_scene["getHTML"];
 		this.exportedVariables = {};
-
-		if (this.html == null) {
-			console.log("[Scene.js] loading a phantom scene, copying variables from existing scene.");
-			this.exportedVariables = manager.activeScene.exportedVariables;
-			return;
-		}
 
 		var isHTMLFile = /[^]*.html$/g;
 
         //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
 
-		if (isHTMLFile.exec(this.html) != null) {
+		if (isHTMLFile.exec(this.getHTML()) != null) {
 			//we have to load this because it's the location of an html file.
 			var container = document.createElement("div");
-			$(jQuery(container)).load(this.html);
-			this.html = container.innerHTML;
-		}
+			$(jQuery(container)).load(this.getHTML());
 
+            var results = container.innerHTML;
+			this.getHTML = function() {return results};
+		}
+        manager.registerScene(sceneID, this);
 		this.ready = true;
 
 	}).fail(function(){
-		console.log("[Scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
+		console.log("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
 	});
+}
 
+/**
+ * Loads a scene, without burdening you with a reference to the scene.
+ *
+ * Constructor parameters are equivalent to the params for a scene.
+ * @param jsFile
+ * @param sceneID
+ * @param manager
+ */
+Scene.load = function(jsFile, sceneID, manager) {
+    new Scene(jsFile, sceneID, manager);
 }
 
 
+/**
+ * Preloads the scene. This should always be called before presenting a scene,
+ * as it allows phantom scenes to function.
+ */
+Scene.prototype.preload = function() {
+    if (this.isPhantom()) {
+        //copy over exported variables
+        console.log("[scene.js] loading a phantom scene, copying variables from existing scene.");
+        this.exportedVariables = this.manager.activeScene.exportedVariables;
+    }
+};
+
+/**
+ * Returns true if the scene is a phantom scene. (has no HTML)
+ * @returns {boolean}
+ */
+Scene.prototype.isPhantom = function() {
+
+    if (this.getHTML == null) {
+        console.log("[scene.js] [FATAL] scene didn't have a getHTML function.");
+        return;
+    }
+
+    return (this.getHTML() == null);
+}
 
 
 
