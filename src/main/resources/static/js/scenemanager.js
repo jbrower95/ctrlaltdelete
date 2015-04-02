@@ -46,7 +46,7 @@ $.fn.exists = function () {
 *					If: 
 *						- a div with this id does not exist, one will be created
 *						- a div with this id DOES exist, and the class is set to 
-							'__scenebox__', its contents will be cleared and reused by the scene manager.
+							'__stage__', its contents will be cleared and reused by the scene manager.
 *						- a NON DIV element with this id exists, an error will be written to the console.
 *
 *		scenes:
@@ -67,15 +67,15 @@ function SceneManager(contentDivID) {
 		if (existingDiv == null) {
 			//create a div
 			this.contentDiv = document.createElement("div");
-			this.contentDiv.className = "__scenebox__";
+			this.contentDiv.className = "__stage__";
 			document.body.appendChild(this.contentDiv);
 		} else {
 			// is it a div
-			if (existingDiv.className == "__scenebox__" && existingDiv.tagName == "DIV") {
+			if (existingDiv.className == "__stage__" && existingDiv.tagName == "DIV") {
 				//we found love in a hopeless place
 				this.contentDiv = existingDiv;
 			} else {
-				console.log("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __scenebox__");
+				console.log("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __stage__");
 				// to avoid getting into sticky situations, refuse to load the scenes.
 				return;
 			}
@@ -84,6 +84,7 @@ function SceneManager(contentDivID) {
         this.scenes = {};
         console.log("[scenemanager.js] SceneManager setup complete.");
 }
+
 
 SceneManager.prototype.registerScene = function(sceneID, scene) {
 	if (this.scenes[sceneID] != null) {
@@ -106,12 +107,18 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	var scene = this.scenes[sceneID];
 
 	if (scene == null) {
-		console.log("Error: Couldn't load scene " + sceneID);
+		console.error("Error: Couldn't load scene " + sceneID);
 		return;
 	} 
 
     if (!scene.getHTML) {
-        console.log("Scene didn't have a getHTML property.");
+        console.error("Scene didn't have a getHTML property. This function is non optional, but can return null.");
+        return;
+    }
+
+    if (!scene.preload) {
+        console.error("Scene didn't have a preload() function.");
+        return;
     }
 
 	scene.preload();
@@ -124,7 +131,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		// set some initial CSS properties of the scene.
 		// we want it positioned all the way at the right side of the screen
 		// so that we can slide it in.
-		newScene.addClass("initial");
+		$(jQuery(newScene)).addClass("initial");
+        this.contentDiv.appendChild(newScene);
 
 
 		// If there is a scene already in the content div, move it out
@@ -142,7 +150,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 			copy.element.parent.removeChild(copy.element);
 		}
 
-		newScene.addClass("in");
+		$(jQuery(newScene)).addClass("in");
 	} else {
 		//reuse the scene HTML that's in there.
         if (this.activeScene.onDestroy) {

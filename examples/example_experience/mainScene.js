@@ -1,5 +1,4 @@
 var exported_scene = {
-	preload : null,
 	onPresent : function() { 
 		alert("The scene happened!");
 	},

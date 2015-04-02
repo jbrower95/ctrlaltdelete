@@ -107,7 +107,6 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 	this.onDestroy = onDestroy;
 	this.manager = manager;
 	this.exportedVariables = {};
-	this.ready = true;
 }
 
 /**
@@ -117,13 +116,12 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 *      sceneID: the id of the scene
 *		Manager: The associated scene manager
 */
-function Scene(jsFile, sceneID, manager) {
+function Scene(jsFile, sceneID, manager, onLoad) {
 
     console.log("[scene.js] Initializing scene: " + jsFile);
-	this.ready = false;
-	
+    var scene_reference = this;
 	// dynamically load the dependent script using jquery
-	$.getScript(jsFile).done(function(){
+	$.getScript(jsFile).done($.proxy(function(){
 
 		console.log("[scene.js] Loaded remote scene: " + jsFile);
 
@@ -131,7 +129,10 @@ function Scene(jsFile, sceneID, manager) {
 			console.log("[scene.js] Error: Couldn't load scene object from " + jsFile);
 		}
 
-		this.preload = exported_scene["preload"];
+		if (exported_scene["preload"]) {
+            this.preload = exported_scene["preload"];
+        }
+
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
 		this.getHTML = exported_scene["getHTML"];
@@ -150,11 +151,13 @@ function Scene(jsFile, sceneID, manager) {
 			this.getHTML = function() {return results};
 		}
         manager.registerScene(sceneID, this);
-		this.ready = true;
 
-	}).fail(function(){
+        if (onLoad != null) {
+            onLoad();
+        }
+	}, scene_reference)).fail($.proxy(function(){
 		console.log("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
-	});
+	}, scene_reference));
 }
 
 /**
@@ -165,8 +168,8 @@ function Scene(jsFile, sceneID, manager) {
  * @param sceneID
  * @param manager
  */
-Scene.load = function(jsFile, sceneID, manager) {
-    new Scene(jsFile, sceneID, manager);
+Scene.load = function(jsFile, sceneID, manager, onLoad) {
+    new Scene(jsFile, sceneID, manager, onLoad);
 }
 
 
