@@ -1,0 +1,22 @@
+<html>
+<head>
+</head>
+<body>
+	<div id="meow">
+		<div id="windowTemplate" style="left: 50px; top: 50px; height: 200px; width: 200px; border: 1px solid black;">
+			<div class="title">Old</div>
+			Hello!
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="windowmanager.js"></script>
+	<script src="window.js"></script>
+	<script>
+		var wm = new WindowManager("meow");
+		console.log(wm);
+		var win = wm.inflate("windowTemplate");
+		win.setTitle("New");
+		wm.addWindow(win);
+	</script>
+</body>
+</html>

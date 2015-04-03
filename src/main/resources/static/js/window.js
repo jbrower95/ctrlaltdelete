@@ -26,7 +26,7 @@ function Window(element, x, y) {
 	this.cancellable = true;
 
 	// Make sure to initialize with the window class
-	if (!this.element.hasClass("window")) {
+	if (!$(this.element).hasClass("window")) {
 		this.element.classList.add("window");
 	}
 }
@@ -49,7 +49,7 @@ Window.prototype.moveTo = function(pos_x, pos_y) {
 *		new_title: The title to put in the title bar of the Window.
 */
 Window.prototype.setTitle = function(new_title) {
-	var title = this.element.find(".title");
+	var title = $(this.element).find(".title");
 
 	// Checks if the title element was found
 	if(title.length > 0) {
