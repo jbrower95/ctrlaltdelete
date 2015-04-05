@@ -18,24 +18,24 @@
 function WindowManager(content_div_id) {
 	var existing_div = document.getElementById(content_div_id);
 
-	if (existing_div == null) {
+	if (existing_div === null) {
 		// Create a div
 		this.content_div = document.createElement("div");
 		document.body.appendChild(content_div);
 	} else {
 		// Is it a div?
 		if (existing_div.tagName == "DIV") {
-			this.contentDiv = existing_div;
+			this.content_div = existing_div;
 		} else {
 			// Don't load if not a div
 			console.log("[windowmanager.js] Error: Couldn't load content div - tag must be a div");
-			return false;
+			return null;
 		}
 	}
 
 	// Initialize hashtable
 	this.windows = {};
-	return true;
+	return this;
 }
 
 /**
@@ -47,7 +47,7 @@ WindowManager.prototype.addWindow = function(window_obj) {
 	this.content_div.appendChild(window_obj.element);
 
 	// Add to windows hashtable
-	this.windows[window_obj.element.attr("id")] = window_obj.element;
+	this.windows[window_obj.element.id] = window_obj.element;
 }
 
 /**
@@ -76,14 +76,14 @@ WindowManager.prototype.getWindowWithId = function(window_id) {
 }
 
 /*
-*		Searches the div for a template of ID ‘templateName’ whose
+*		Searches the div for a template of ID ‘template’ whose
 *		class is set to ‘windowTemplate’. This is then copied and instantiated
 *		and returned as a Window object.
 *
 *		template - The id of the template div.
 */
 WindowManager.prototype.inflate = function(template) {
-	var template_div = $("#" + template);
+	var template_div = document.getElementById(template);
 
 	if (template_div == null) {
 		console.log("[windowmanager.js] Error: Couldn't find a template div.");
@@ -91,11 +91,11 @@ WindowManager.prototype.inflate = function(template) {
 	}
 
 	// Sets class to 'windowTemplate', if not already there
-	if (!template_div.hasClass("windowTemplate")) {
-		template_div.addClass("windowTemplate");
+	if (!$(template_div).hasClass("windowTemplate")) {
+		$(template_div).addClass("windowTemplate");
 	}
 
-	var copy = template.cloneNode(true);
+	var copy = template_div.cloneNode(true);
 
 	// Default position of (0,0)
 	return new Window(copy, 0, 0);
