@@ -1,12 +1,18 @@
 var exported_scene = {
-	preload : null,
+    id : "main",
 	onPresent : function() { 
 		alert("The scene happened!");
 	},
 	onDestroy: function() {
-		alert("Time for the next scene!");
 	},
 	getHTML : function() {
-		return "main.html"
+		return "mainScene.html"
 	}
 };
+
+
+
+
+
+
+

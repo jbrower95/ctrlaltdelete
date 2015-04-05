@@ -1,4 +1,4 @@
-/** SceneManager:
+/**  SceneManager:
   *
   *		A very simple HTML-injection based scene transition manager
   *		written in javascript. This allows for games to be made in a 
@@ -15,6 +15,20 @@
   *				- jQuery (1.6+)
   *
   *
+  *      There is only ONE scene manager. This makes accessing it a bit less painful throughout scenes.
+  *      To get a reference to the shared manager, you MUST call
+  *
+  *          SceneManager.initialize(div)
+  *
+  *      atleast once. If you don't call this, you will receive a null manager.
+  *      After performing the initialization methods, you can receive the manager by calling
+  *
+  *          SceneManager.getSharedInstance()
+  *
+  *     This is the preferred way of instigating scene changes from within scenes (and for
+  *     accessing the current running scene from within a scene's javascript).
+  *
+  *
   *		Instance Methods:
   *			  # Presents a scene object with the given scene ID.
   *			- (void) presentScene(SceneID)
@@ -23,8 +37,19 @@
   *			  # Preloads a scene. This is essentially moot until Web Workers
   * 		  # are implemented for background loading.
   *			- (void) loadScene(Scene scene)
-  *		
-  *		Constructors:
+  *
+  *     Class Methods:
+  *
+  *          + (void) SceneManager.initialize(div)
+  *              Initializes the scene manager to operate with a specified div.
+  *
+  *                      - Div can be an HTML DOM element, the ID of a div, or the
+  *                        id of a div to be created. If the div doesn't exist, it will be created.
+  *                        If it does (and has class __stage__) it will be used by the stage manager.
+  *
+  *          + (SceneManager) SceneManager.getSharedInstance()
+  *             Returns the shared scenemanager.
+  *		Constructors [DO NOT USE]:
   *
   *			  # SceneManager(contentDivID, scenes)
   *			  [see below for documentation]
@@ -46,7 +71,7 @@ $.fn.exists = function () {
 *					If: 
 *						- a div with this id does not exist, one will be created
 *						- a div with this id DOES exist, and the class is set to 
-							'__scenebox__', its contents will be cleared and reused by the scene manager.
+							'__stage__', its contents will be cleared and reused by the scene manager.
 *						- a NON DIV element with this id exists, an error will be written to the console.
 *
 *		scenes:
@@ -56,39 +81,71 @@ $.fn.exists = function () {
 *		initialScene:
 *				The initial scene to load. 
 */
-function SceneManager(contentDivID, scenes) {
+function SceneManager(contentDivID) {
 
-		this.contentDivID = contentDiv;
+        console.log("[scenemanager.js] Initializing scene manager...");
 
-		var existingDiv = document.getElementById(this.contentDivID);
+		var existingDiv = document.getElementById(contentDivID);
 
 		if (existingDiv == null) {
 			//create a div
 			this.contentDiv = document.createElement("div");
-			this.contentDiv.className = "__scenebox__";
-			document.body.appendChild(contentDiv);
+			this.contentDiv.className = "__stage__";
+			document.body.appendChild(this.contentDiv);
 		} else {
 			// is it a div
-			if (existingDiv.className == "__scenebox__" && existingDiv.tagName == "DIV") {
+			if (existingDiv.className == "__stage__" && existingDiv.tagName == "DIV") {
 				//we found love in a hopeless place
 				this.contentDiv = existingDiv;
 			} else {
-				console.log("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __scenebox__");
+				console.error("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __stage__");
 				// to avoid getting into sticky situations, refuse to load the scenes.
 				return;
 			}
 		}
 
-		this.scenes = scenes;
+        this.scenes = {};
+        console.log("[scenemanager.js] SceneManager setup complete.");
 }
 
-SceneManager.prototype.registerScene = function(sceneID, scene) {
-	if (this.scenes[sceneID] != null) {
+//the singleton scene manager. To avoid polluting the global namespace, lots of underscores are used.
+var _____SCENEMANAGER = null;
+
+/**
+ * Initializes the shared scenemanager.
+ * @param div The div for the scenemanager to operate on.
+ *          This can be
+ *                      - the id of an existing div (string),
+ *                      - the id of a div you wish to be created (string)
+ *                      - an HTML element that represents a div you want to use (DOM element / object)
+ *           When using a preexisting object, the class must be set to "__stage__". This is to prevent
+ *           accidental assignment of divs, and to offer future customization of stages.
+ */
+SceneManager.initialize = function(div) {
+    _____SCENEMANAGER = new SceneManager(div);
+};
+
+/**
+ * Returns a reference to the shared scenemanager. Call at your will.
+ */
+SceneManager.getSharedInstance = function() {
+    return _____SCENEMANAGER;
+};
+
+
+/**
+ * Adds a scene to the scenemanager's list of available scenes. The scene is indexed on its 'id' property.
+ * @param scene The scene to add.
+ */
+SceneManager.prototype.registerScene = function(scene) {
+	if (this.scenes[scene.id] != null) {
 		console.log("[Scene.js: NONFATAL] Error: Overwriting existing scene with id " + sceneID + ". Is this what you wanted?");
 	}
 
-	this.scenes[sceneID] = scene;
-}
+	this.scenes[scene.id] = scene;
+
+    console.log("[scenemanager.js] Registered Scene: " + scene.id);
+};
 
 /*
 * Loads a scene into the scenemanager's content div. If there is a scene currently loaded,
@@ -96,25 +153,40 @@ SceneManager.prototype.registerScene = function(sceneID, scene) {
 */
 SceneManager.prototype.presentScene = function(sceneID) {
 
+    console.log("[scenemanager.js] Presenting scene - " + sceneID);
+
 	var scene = this.scenes[sceneID];
 
 	if (scene == null) {
-		console.log("Error: Couldn't load scene " + sceneID);
+		console.error("[scenemanager.js] Error: Couldn't load scene " + sceneID);
 		return;
 	} 
 
-	// setup our new scene
-	var sceneContents = scene.getHTML();
+    if (!scene.getHTML) {
+        console.error("[scenemanager.js] Scene didn't have a getHTML property. This function is non optional, but can return null.");
+        return;
+    }
 
-	if (sceneContents != null) {
-		var newScene = document.createElement("div");
+    if (!scene.preload) {
+        console.error("[scenemanager.js] Scene didn't have a preload() function. This is most likely an internal error.");
+        console.error(scene);
+        return;
+    }
+
+	scene.preload();
+
+	if (!scene.isPhantom()) {
+
+        var newScene = document.createElement("div");
 		newScene.className = "__scene__";
-		newScene.innerHTML = sceneContents;
-
+		newScene.innerHTML = scene.getHTML();
+        scene.element = newScene;
 		// set some initial CSS properties of the scene.
 		// we want it positioned all the way at the right side of the screen
 		// so that we can slide it in.
-		newScene.addClass("initial");
+
+        this.contentDiv.appendChild(newScene);
+		$(jQuery(newScene)).addClass("initial");
 
 
 		// If there is a scene already in the content div, move it out
@@ -127,28 +199,32 @@ SceneManager.prototype.presentScene = function(sceneID) {
 				this.activeScene.onDestroy();
 			}
 
-			copy.removeClass("in");
-			copy.addClass("out");
-			copy.element.parent.removeChild(copy.element);
+            console.log(copy.element);
+
+			$(jQuery(copy.element)).removeClass("in");
+			$(jQuery(copy.element)).addClass("out");
+
+			copy.element.parentNode.removeChild(copy.element);
 		}
 
-		newScene.addClass("in");
+		$(jQuery(newScene)).addClass("in");
+
 	} else {
-		//reuse the scene HTML that's in there.
-		if (this.activeScene.onDestroy) {
-			this.activeScene.onDestroy();
-		}
+		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
+        if (this.activeScene && this.activeScene.onDestroy) {
+            this.activeScene.onDestroy();
+        }
 	}
 
-	//to avoid computing a jquery object on this scene over and over again, calculate it
-	//so that it's inside the closure of the scene's findElement function
-	var newSceneJquery = jQuery(newScene);
+    //make sure the new scene can easily find things inside of itself.
 	scene.searchContent = function(id) {
-		return $(newSceneJquery).find;
-	}
+        return $(jQuery(newScene)).find(id);
+    };
 
-	if (newScene.onPresent) {
-		newScene.onPresent();
+    //pass the torch onto the new scene
+    this.activeScene = scene;
+	if (scene.onPresent) {
+		scene.onPresent();
 	}
 };
 
@@ -166,7 +242,7 @@ SceneManager.prototype.loadScene = function(sceneID) {
 		// TODO: use web workers to make this REAL fast. As of right now, without threads this is useless (amounts to single-threaded loading).
 		scene.preload();
 	}
-}
+};
 
 
 

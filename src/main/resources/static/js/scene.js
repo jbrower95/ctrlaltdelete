@@ -9,23 +9,35 @@
 *			- Consequently, scenes which plan to be extended by 'phantom' scenes (scenes without HTML content)
 *			should place their relevant variables / references in this exportedVariables dictionary.
 *
-*	- Scenes can interact with their managers via the .manager property. 
+*	- Scenes can interact with the shared manager by using the singleton SceneManager.getSharedInstance()
 *
 *	Scenes can find elements in their content box by using 'searchContent(id)', which is equivalent
 *	to a jQuery .find() call on their outer __scene__ box.
 *
 *
+*	Scene Usage:
 *
-*
-*
-*
-*	External Usage:
-*
-*		To use the Scene(jsFile, manager) constructor, you must make a javascript file <jsFile> that:
-*
-*			- has a global variable of type object named 'exported_scene' that:
+ *      Scenes should be loaded using the class method 'Scene.load()'. This is
+ *      the preferred way of loading scenes.
+ *
+ *      Usage:
+ *
+ *          Scene.load(jsFile, onLoad)
+ *
+ *              jsFile: The javascript file containing an exported scene. *required
+ *             onLoad: Once the scene has been registered with the shared scenemanager,
+ *                     this function will be called in the context of the scene object.
+ *                     onLoad is an optional parameter.
+ *
+ *      Placing scenes in external files:
+ *
+ *          In order to facilitate development, you can place your scenes in
+ *          external javascript files. These files must have atleast
+ *
+*			-  a global variable of type object named 'exported_scene' like the below:
 *				
 *				var exported_scene = {
+*			            id : "exported scene 1",
 *					preload : function(){},
 *					onPresent : function(){},
 *					onDestroy : function(){},
@@ -46,7 +58,7 @@
 *				*.getHTML: returns the HTML content for the page. Alternatively, this can return the name
 *						 of an HTML file that the scene will load automatically in its constructor. If this is 
 *						 ommitted, the existing scene will be used, and ownership will be transferred to this scene object.
-*				
+*			!	    id: The unique id of the string. This can be anything that fits in a hashtable.
 *				
 *				(* = optional)
 *
@@ -66,6 +78,7 @@
 *
 *			scenes/main.js
 *				var exported_scene = {
+*			        id : "main scene",
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
@@ -80,6 +93,7 @@
 *			
 *			scenes/mainExternal.js
 *				var exported_scene = {
+*			        id : "other scene",
 *					preload: function() {
 *						console.log("Lets load some assets!");
 *					},
@@ -91,6 +105,18 @@
 *					},
 *					getHTML: function() { return "main.html"}
 *				};
+ *
+ *
+ *	        For a exported_scene to get a reference to its corresponding scene object
+ *          (or to the SceneManager), it can simply call on
+ *
+ *          SceneManager.getSharedInstance() (and subsequently the activeScene property)
+ *
+ *          var myScene = SceneManager.getSharedInstance().activeScene;
+ *          //do something
+ *
+ *
+ *
 */
 
 
@@ -111,60 +137,130 @@ function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
 	this.onDestroy = onDestroy;
 	this.manager = manager;
 	this.exportedVariables = {};
-	this.ready = true;
 }
 
 /**
 *	Constructs a scene from a remote javascript file.
 *
-*		jsFile: The location of a scene javascript file 
-*
+*		jsFile: The location of a scene javascript file
 *		Manager: The associated scene manager
 */
-function Scene(jsFile, manager) {
+function Scene(jsFile, onLoad) {
 
-	this.manager = manager;
-	this.ready = false;
-	
+    var manager = SceneManager.getSharedInstance();
+
+    console.log("[scene.js] Initializing scene: " + jsFile);
+    var scene_reference = this;
 	// dynamically load the dependent script using jquery
-	$.getScript(jsFile).done(function(){
+	$.getScript(jsFile).done($.proxy(function(){
 
-		console.log("Loaded remote scene: " + jsFile);
+		console.log("[scene.js] Loaded remote scene: " + jsFile);
 
 		if (exported_scene == null) {
-			console.log("[Scene.js] Error: Couldn't load scene object from " + jsFile);
+			console.log("[scene.js] Error: Couldn't load scene object from " + jsFile);
 		}
 
-		this.preload = exported_scene["preload"];
+		if (exported_scene["preload"]) {
+            this.preload = exported_scene["preload"];
+        }
+
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
-		this.html = exported_scene["getHTML"]();
-		this.exportedVariables = {};
+		this.getHTML = exported_scene["getHTML"];
+        this.id = exported_scene["id"];
 
-		if (this.html == null) {
-			console.log("[Scene.js] loading a phantom scene, copying variables from existing scene.");
-			this.exportedVariables = manager.activeScene.exportedVariables;
-			return;
-		}
+        if (!this.id) {
+            console.error("[scene.js] ERROR/fatal: The scene in " + jsFile + " is missing an id.");
+        }
+
+        exported_scene.scene = this;
+
+        if (exported_scene["exportedVariables"]) {
+            this.exportedVariables = {};
+            jQuery.extend(this.exportedVariables, exported_scene["exportedVariables"]);
+        }
 
 		var isHTMLFile = /[^]*.html$/g;
 
-		if (isHTMLFile.exec(this.html) != null) {
+        //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
+
+		if (isHTMLFile.exec(this.getHTML()) != null) {
+            console.log("[scene.js] Loading HTML from external file - " + this.getHTML());
 			//we have to load this because it's the location of an html file.
 			var container = document.createElement("div");
-			$(jQuery(container)).load(this.html);
-			this.html = container.innerHTML;
+			$(jQuery(container)).load(this.getHTML(), $.proxy(function(response, status, xhr) {
+                //this code is executed asynchronously
+
+                if (status == "error") {
+                    console.error("[scene.js] Remote load failed.");
+                    return;
+                }
+
+                var results = container.innerHTML;
+                this.getHTML = function() {return results};
+                manager.registerScene(this);
+                if (onLoad != null) {
+                    onLoad();
+                }
+            }, scene_reference));
+            return;
 		}
 
-		this.ready = true;
+        //this happens synchronously
+        manager.registerScene(this);
 
-	}).fail(function(){
-		console.log("[Scene.js] Couldn't load scene: " + jsFile ". Experienced a network error.");
-	});
+        if (onLoad != null) {
+            onLoad();
+        }
+	}, scene_reference)).fail($.proxy(function(){
+		console.error("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
+	}, scene_reference));
+}
 
+/**
+ * Loads a scene, without burdening you with a reference to the scene.
+ *
+ * Constructor parameters are equivalent to the params for a scene.
+ * @param jsFile
+ * @param sceneID
+ * @param manager
+ */
+Scene.load = function(jsFile, onLoad) {
+    new Scene(jsFile, onLoad);
 }
 
 
+/**
+ * Preloads the scene. This should always be called before presenting a scene,
+ * as it allows phantom scenes to function.
+ */
+Scene.prototype.preload = function() {
+    if (this.isPhantom()) {
+        //copy over exported variables
+        console.log("[scene.js] loading a phantom scene, copying variables from existing scene.");
+        var manager = SceneManager.getSharedInstance();
+        if (manager.activeScene && manager.activeScene.exportedVariables) {
+            console.log("[scene.js] Variables copied.");
+            jQuery.extend(this.exportedVariables, manager.activeScene.exportedVariables);
+        } else {
+            console.log("[scene.js] No variables were copied.");
+        }
+    }
+};
+
+/**
+ * Returns true if the scene is a phantom scene. (has no HTML)
+ * @returns {boolean}
+ */
+Scene.prototype.isPhantom = function() {
+
+    if (this.getHTML == null) {
+        console.log("[scene.js] [FATAL] scene didn't have a getHTML function.");
+        return;
+    }
+
+    return (this.getHTML() == null);
+}
 
 
 
