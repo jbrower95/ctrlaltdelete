@@ -1,13 +1,18 @@
 var exported_scene = {
     id : "copyright",
 	onPresent : function() { 
-        this.searchContent(".btn").hide();
+        this.searchContent(".btn").css("opacity","0");
         var p = this.searchContent("p");
         var sceneRef = this;
         var times = 0;
         var done = false;
         function animate(_color, _duration) {
             times++;
+
+            if (done) {
+                return;
+            }
+
             console.log("Times: " + times);
                 p.animate({color: _color}, {
                     duration: _duration,
@@ -20,12 +25,11 @@ var exported_scene = {
                     }
                 });
             if (times > 3 && !done) {
-                console.log(this);
-                this.searchContent(".btn").show();
+                this.searchContent(".btn").animate({opacity: "1"});
                 this.searchContent(".btn").click(function() {
+                    done = true;
                    SceneManager.getSharedInstance().presentScene("mainMenu");
                 });
-                done = true;
             }
         }
 

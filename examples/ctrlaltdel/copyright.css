@@ -29,6 +29,7 @@ h1 {
 
 #background {
     background-color: black;
+    display: table;
     text-align: center;
     width: 100%;
     height: 100%;
@@ -42,7 +43,7 @@ p {
     padding-right: 20px;
 }
 
-.content {
-
+#contentDiv {
+    vertical-align: middle;
     background-color: black;
 }
