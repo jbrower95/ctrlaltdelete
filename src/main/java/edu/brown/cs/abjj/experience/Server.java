@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
 import edu.brown.cs.joengelm.sqldb.Database;
-
+import com.google.gson.JsonPrimitive;
 public class Server {
 	Map<String, Experience> experiences = new HashMap<>();
 	private final static Gson GSON = new Gson();
@@ -172,13 +172,17 @@ public class Server {
      */
     public class GameHandler implements Route {
         @Override
-        public Object handle(Request req, Response res) {
+        public Object handle(Request req, Response res) throws IllegalArgumentException {
             Experience exp = experiences.get(req.params(":experience"));
             String asset = req.params(":asset");
 
             String path = (exp.directory + "/" + asset);
 
             System.out.println("Trying to get asset: " + asset);
+
+            if (!exp.files.contains(new JsonPrimitive(asset))) {
+                throw new IllegalArgumentException("Error: Can't access asset " + asset + " -  Not declared in manifest.");
+            }
 
             System.out.println("Experience: " + exp.directory);
 
