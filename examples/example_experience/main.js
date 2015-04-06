@@ -7,7 +7,7 @@ var scenes = {};
 console.log("Instantiating scene manager...");
 
 SceneManager.initialize("stage");
-Scene.load("mainScene.js", showMenu);
+Scene.load("copyright.js", showMenu);
 Scene.load("nextScene.js", null);
 
 function showMenu() {

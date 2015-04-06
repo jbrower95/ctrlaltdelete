@@ -186,6 +186,8 @@ public class Server {
 
                 if (asset.endsWith(".html") || asset.endsWith(".htm")) {
                     res.type("text/html");
+                } else if (asset.endsWith(".css")) {
+                  res.type("text/css");
                 } else if (asset.endsWith(".js")) {
                     res.type("application/javascript");
                 } else if (asset.endsWith(".png")) {

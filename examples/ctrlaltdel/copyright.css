@@ -1,0 +1,48 @@
+h1 {
+    color: white;
+    font-family: Verdana;
+    font-size: 30pt;
+    padding: 20px;
+    text-align: center;
+}
+
+.btn {
+    font-family: Verdana;
+    color: #000000;
+    font-size: 20px;
+    background: #ffffff;
+    padding: 10px 20px 10px 20px;
+    margin: auto;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+
+#background {
+    background-color: black;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+p {
+    color: white;
+    font-family: Verdana;
+    font-size: 15pt;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.content {
+
+    background-color: black;
+}
