@@ -8,9 +8,10 @@ console.log("Instantiating scene manager...");
 
 SceneManager.initialize("stage");
 Scene.load("copyright.js", showMenu);
+Scene.load("mainMenu.js", null);
 Scene.load("credits.js", null);
 
 function showMenu() {
     alert("Presenting scene!");
-    SceneManager.getSharedInstance().presentScene("main");
+    SceneManager.getSharedInstance().presentScene("copyright");
 }

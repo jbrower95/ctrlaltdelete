@@ -214,6 +214,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
         if (this.activeScene && this.activeScene.onDestroy) {
             this.activeScene.onDestroy();
         }
+
+        scene.element = this.activeScene.element;
 	}
 
     //make sure the new scene can easily find things inside of itself.

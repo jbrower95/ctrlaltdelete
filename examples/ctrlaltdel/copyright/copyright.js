@@ -38,7 +38,7 @@ var exported_scene = {
 	onDestroy: function() {
 	},
 	getHTML : function() {
-		return "copyright.html"
+		return "copyright/copyright.html"
 	}
 };
 

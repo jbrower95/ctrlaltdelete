@@ -3,13 +3,11 @@
 var scenes = {};
 
 
-//Declare our scene manager
-console.log("Instantiating scene manager...");
-
 SceneManager.initialize("content");
-Scene.load("copyright.js", null);
-Scene.load("credits.js", startGame);
+Scene.load("copyright/copyright.js", startGame);
+Scene.load("credits/credits.js", null);
+Scene.load("mainMenu/mainMenu.js", null);
 
 function startGame() {
-    SceneManager.getSharedInstance().presentScene("credits");
+    SceneManager.getSharedInstance().presentScene("copyright");
 }

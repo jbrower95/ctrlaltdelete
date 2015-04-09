@@ -29,7 +29,7 @@ var exported_scene = {
 	onDestroy: function() {
 	},
 	getHTML : function() {
-		return "mainMenu.html"
+		return "mainMenu/mainMenu.html"
 	}
 };
 
