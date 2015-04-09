@@ -1,13 +1,15 @@
 package edu.brown.cs.abjj.experience;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.net.MediaType;
+import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
+import jdk.net.SocketFlow;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -23,6 +25,10 @@ import com.google.gson.JsonParseException;
 
 import edu.brown.cs.joengelm.sqldb.Database;
 import com.google.gson.JsonPrimitive;
+import spark.utils.IOUtils;
+
+import javax.servlet.ServletOutputStream;
+
 public class Server {
 	Map<String, Experience> experiences = new HashMap<>();
 	private final static Gson GSON = new Gson();
@@ -187,7 +193,7 @@ public class Server {
             System.out.println("Experience: " + exp.directory);
 
             try {
-
+                boolean doBytes = false;
                 if (asset.endsWith(".html") || asset.endsWith(".htm")) {
                     res.type("text/html");
                 } else if (asset.endsWith(".css")) {
@@ -200,17 +206,45 @@ public class Server {
                     res.type("image/jpeg");
                 } else if (asset.endsWith(".gif")) {
                     res.type("image/gif");
+                } else if (asset.endsWith(".mp4")) {
+                    System.out.println("Serving an MP4");
+                    res.type("video/mp4");
+                    doBytes = true;
+                } else if (asset.endsWith(".webm")) {
+                    res.type("video/webm");
+                    doBytes = true;
                 } else {
-                    res.type("application/octect-stream");
+                    res.type("application/octet-stream");
+                    doBytes = true;
                 }
 
-                String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
-                StringBuilder result = new StringBuilder();
-                //flatten contents
-                for (String x : contents) {
-                    result.append(x + '\n');
+                if (!doBytes) {
+                    String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
+                    StringBuilder result = new StringBuilder();
+                    //flatten contents
+                    for (String x : contents) {
+                        result.append(x + '\n');
+                    }
+                    return result.toString();
+                } else {
+
+                    final FileInputStream in = new FileInputStream(path);
+
+                    Response response = res;
+                    byte[] contents = Files.readAllBytes(Paths.get(path));
+                    System.out.println("Serving asset: " + asset);
+                    response.header("Content-Disposition", String.format("attachment; filename=\"%s\"", asset));
+                    //response.type(Files.probeContentType(Paths.get(path)));
+                    response.raw().setContentLength(contents.length);
+                    final OutputStream os = response.raw().getOutputStream();
+                    //spark.utils.IOUtils.copy(in, new OutputStreamWriter(os));
+                    os.write(contents);
+                    in.close();
+                    //os.write(contents);
+                    os.close();
+
+                    return null;
                 }
-                return result.toString();
 
             } catch (Exception e) {
                 e.printStackTrace();

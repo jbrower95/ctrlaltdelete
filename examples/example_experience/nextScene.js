@@ -29,6 +29,6 @@ var exported_scene = {
         })(false);
     },
     getHTML : function() {
-        return "nextScene.html";
+        return "credits.html";
     }
 };

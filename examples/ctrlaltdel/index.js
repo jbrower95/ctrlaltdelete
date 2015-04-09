@@ -7,9 +7,9 @@ var scenes = {};
 console.log("Instantiating scene manager...");
 
 SceneManager.initialize("content");
-Scene.load("copyright.js", startGame);
-Scene.load("mainMenu.js", null);
+Scene.load("copyright.js", null);
+Scene.load("credits.js", startGame);
 
 function startGame() {
-    SceneManager.getSharedInstance().presentScene("copyright");
+    SceneManager.getSharedInstance().presentScene("credits");
 }
