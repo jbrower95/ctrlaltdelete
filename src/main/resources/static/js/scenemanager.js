@@ -178,15 +178,9 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
 	if (!scene.isPhantom()) {
 
-        var newScene = document.createElement("div");
-		newScene.className = "__scene__";
-		newScene.innerHTML = scene.getHTML();
-        scene.element = newScene;
-		// set some initial CSS properties of the scene.
-		// we want it positioned all the way at the right side of the screen
-		// so that we can slide it in.
 
-        this.contentDiv.appendChild(scene.element);
+
+
 		//$(jQuery(newScene)).addClass("initial");
 
 
@@ -206,13 +200,22 @@ SceneManager.prototype.presentScene = function(sceneID) {
             if (this.activeScene.element == null) {
                 console.error("[scenemanager] Existing scene was null..");
             }
-
+-
             console.log("jQuery element: " + jQuery(copy.element));
-
-            $(copy.element).remove();
+            this.contentDiv.removeChild(this.activeScene.element);
+            this.contentDiv.innerHTML = "";
         }
 
-		//$(jQuery(newScene)).addClass("in");
+        var newScene = document.createElement("div");
+        newScene.className = "__scene__";
+        newScene.innerHTML = scene.getHTML();
+
+        scene.element = newScene;
+        this.contentDiv.appendChild(scene.element);
+        // this shouldn't be necessary, but it is.
+
+
+        //$(jQuery(newScene)).addClass("in");
 
 	} else {
 		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
