@@ -25,8 +25,37 @@ var exported_scene = {
         }
 
         video.style.width = '100%';
+        video.autoPlay = "autoplay";
+        video.play();
 
-        video.autoPlay = true;
+        var state = -1;
+
+        var runCredits = function() {
+            state = state + 1;
+            if (state == 0) {
+                console.log("showing credits 1..");
+                $("#credit1").show();
+                setTimeout(runCredits, 5000);
+            } else if (state == 1) {
+                console.log("showing credits 2..");
+                $("#credit1").hide();
+                $("#credit2").show();
+                setTimeout(runCredits, 5000);
+            } else if (state == 2) {
+                console.log("showing credits 3..");
+                $("#credit2").hide();
+                $("#credit3").show();
+                setTimeout(runCredits, 5000);
+            } else if (state == 3) {
+
+                console.log("showing credits 4..");
+                $("#credit3").hide();
+                $("#credit4").show();
+                setTimeout(runCredits, 5000);
+            }
+        };
+
+        runCredits();
         scene.searchContent("#container").append(video);
     },
     getHTML : function() {

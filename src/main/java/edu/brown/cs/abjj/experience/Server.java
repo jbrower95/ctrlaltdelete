@@ -78,6 +78,7 @@ public class Server {
 
 
         for (Experience exp : experiences.values()) {
+            Spark.get("/:experience/play", new PlayHandler());
             Spark.get("/:experience/:asset", new GameHandler());
             Spark.get("/:experience/lib/:asset", new LibHandler());
             Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
@@ -86,7 +87,7 @@ public class Server {
 
 
 
-        Spark.get("/:experience/play", new PlayHandler());
+
 		Spark.post("/:experience/score", new PostScoreHandler());
 		Spark.get("/:experience/score", new GetScoreHandler());
 
@@ -214,10 +215,13 @@ public class Server {
                     res.type("application/javascript");
                 } else if (asset.endsWith(".png")) {
                     res.type("image/png");
+                    doBytes = true;
                 } else if (asset.endsWith(".jpg") || asset.endsWith(".jpeg")) {
                     res.type("image/jpeg");
+                    doBytes = true;
                 } else if (asset.endsWith(".gif")) {
                     res.type("image/gif");
+                    doBytes = true;
                 } else if (asset.endsWith(".mp4")) {
                     System.out.println("Serving an MP4");
                     res.type("video/mp4");
