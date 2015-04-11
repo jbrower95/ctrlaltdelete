@@ -7,10 +7,11 @@ var scenes = {};
 console.log("Instantiating scene manager...");
 
 SceneManager.initialize("stage");
-Scene.load("mainScene.js", showMenu);
-Scene.load("nextScene.js", null);
+Scene.load("copyright.js", showMenu);
+Scene.load("mainMenu.js", null);
+Scene.load("credits.js", null);
 
 function showMenu() {
     alert("Presenting scene!");
-    SceneManager.getSharedInstance().presentScene("main");
+    SceneManager.getSharedInstance().presentScene("copyright");
 }

@@ -6,7 +6,7 @@ var exported_scene = {
 	onDestroy: function() {
 	},
 	getHTML : function() {
-		return "mainScene.html"
+		return "copyright.html"
 	}
 };
 

@@ -164,12 +164,13 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
     if (!scene.getHTML) {
         console.error("[scenemanager.js] Scene didn't have a getHTML property. This function is non optional, but can return null.");
+        console.error("[scenemanager.js] object: " + scene);
         return;
     }
 
     if (!scene.preload) {
         console.error("[scenemanager.js] Scene didn't have a preload() function. This is most likely an internal error.");
-        console.error(scene);
+        console.error("[scenemanager.js] object: " + scene);
         return;
     }
 
@@ -177,16 +178,10 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
 	if (!scene.isPhantom()) {
 
-        var newScene = document.createElement("div");
-		newScene.className = "__scene__";
-		newScene.innerHTML = scene.getHTML();
-        scene.element = newScene;
-		// set some initial CSS properties of the scene.
-		// we want it positioned all the way at the right side of the screen
-		// so that we can slide it in.
 
-        this.contentDiv.appendChild(newScene);
-		$(jQuery(newScene)).addClass("initial");
+
+
+		//$(jQuery(newScene)).addClass("initial");
 
 
 		// If there is a scene already in the content div, move it out
@@ -199,21 +194,36 @@ SceneManager.prototype.presentScene = function(sceneID) {
 				this.activeScene.onDestroy();
 			}
 
-            console.log(copy.element);
+			//$(jQuery(copy.element)).removeClass("in");
+			//$(jQuery(copy.element)).addClass("out");
 
-			$(jQuery(copy.element)).removeClass("in");
-			$(jQuery(copy.element)).addClass("out");
+            if (this.activeScene.element == null) {
+                console.error("[scenemanager] Existing scene was null..");
+            }
+-
+            console.log("jQuery element: " + jQuery(copy.element));
+            this.contentDiv.removeChild(this.activeScene.element);
+            this.contentDiv.innerHTML = "";
+        }
 
-			copy.element.parentNode.removeChild(copy.element);
-		}
+        var newScene = document.createElement("div");
+        newScene.className = "__scene__";
+        newScene.innerHTML = scene.getHTML();
 
-		$(jQuery(newScene)).addClass("in");
+        scene.element = newScene;
+        this.contentDiv.appendChild(scene.element);
+        // this shouldn't be necessary, but it is.
+
+
+        //$(jQuery(newScene)).addClass("in");
 
 	} else {
 		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
         if (this.activeScene && this.activeScene.onDestroy) {
             this.activeScene.onDestroy();
         }
+
+        scene.element = this.activeScene.element;
 	}
 
     //make sure the new scene can easily find things inside of itself.
