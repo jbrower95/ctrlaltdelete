@@ -8,3 +8,7 @@
     left: 50%;
     top: 50%;
 }
+
+video {
+    z-index: 0;
+}

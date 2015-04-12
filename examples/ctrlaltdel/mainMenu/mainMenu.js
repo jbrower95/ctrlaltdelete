@@ -43,6 +43,7 @@ var exported_scene = {
         move();
 	},
 	onDestroy: function() {
+        this.searchContent("#backgroundMusic").stop();
 	},
 	getHTML : function() {
 		return "mainMenu/mainMenu.html"

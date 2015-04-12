@@ -201,8 +201,9 @@ SceneManager.prototype.presentScene = function(sceneID) {
                 console.error("[scenemanager] Existing scene was null..");
             }
 -
-            console.log("jQuery element: " + jQuery(copy.element));
-            this.contentDiv.removeChild(this.activeScene.element);
+            console.log("Element to remove: " + copy.element.innerHTML);
+            console.log("Current contentDiv: " + this.contentDiv.innerHTML);
+            console.log("[scenemanager.js] Clearing content div...");
             this.contentDiv.innerHTML = "";
         }
 
@@ -212,7 +213,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
         scene.element = newScene;
         this.contentDiv.appendChild(scene.element);
-        // this shouldn't be necessary, but it is.
 
 
         //$(jQuery(newScene)).addClass("in");
