@@ -6,7 +6,7 @@ var exported_scene = {
         var options = this.searchContent("#options");
 
         this.searchContent("#start").click(function() {
-            SceneManager.getSharedInstance().presentScene("main");
+            SceneManager.getSharedInstance().presentScene("introcut");
         });
 
         this.searchContent("#load").click(function() {
