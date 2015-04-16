@@ -200,11 +200,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
             if (this.activeScene.element == null) {
                 console.error("[scenemanager] Existing scene was null..");
             }
--
-            console.log("Element to remove: " + copy.element.innerHTML);
-            console.log("Current contentDiv: " + this.contentDiv.innerHTML);
-            console.log("[scenemanager.js] Clearing content div...");
-            this.contentDiv.innerHTML = "";
+
+            $(this.contentDiv).empty();
         }
 
         var newScene = document.createElement("div");

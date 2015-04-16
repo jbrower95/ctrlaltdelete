@@ -1,5 +1,5 @@
 var exported_scene = {
-    id : "mainMenu",
+    id : "main",
 	onPresent : function() { 
 
 	},

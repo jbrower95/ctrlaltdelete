@@ -6,7 +6,7 @@ var exported_scene = {
         var options = this.searchContent("#options");
 
         this.searchContent("#start").click(function() {
-            alert("unimplmeneted.");
+            SceneManager.getSharedInstance().presentScene("main");
         });
 
         this.searchContent("#load").click(function() {
@@ -43,10 +43,11 @@ var exported_scene = {
         move();
 	},
 	onDestroy: function() {
+        document.body.style.backgroundImage = "";
         this.searchContent("#backgroundMusic").stop();
 	},
 	getHTML : function() {
-		return "mainMenu/main.html"
+		return "mainMenu/mainMenu.html"
 	}
 };
 
