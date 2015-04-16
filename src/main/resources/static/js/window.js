@@ -51,7 +51,7 @@ Window.prototype.setId = function(newId) {
 * Runs the close handler.
 */
 Window.prototype.xHandler = function() {
-	if (cancellable) {
+	if (this.cancellable) {
 		this.x(this);
 	}
 }
