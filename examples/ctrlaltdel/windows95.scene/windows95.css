@@ -1,6 +1,40 @@
+#desktop {
+	background-color: #2E5994;
+	width: 100%;
+	height: 100%;
+}
+
 #taskManager {
-	width: 400px; 
-	height: 350px; 
-	position: relative; 
-	border: 1px solid black;
+	width: auto; 
+	height: auto; 
+	position: relative;
+}
+
+#taskbar {
+	clear: both;
+    position: absolute;
+    z-index: 10;
+    height: 27px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #CAC6BC;
+}
+
+#taskbarAccent {
+	height: 1px;
+	width: 100%;
+	background-color: white;
+}
+
+.taskbarItem {
+	display: inline-block;
+}
+
+#startButton {
+	float: left;
+}
+
+#clock {
+	float: right;
 }
