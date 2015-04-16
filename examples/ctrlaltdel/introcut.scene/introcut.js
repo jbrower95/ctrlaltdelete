@@ -23,7 +23,7 @@ var exported_scene = {
 
         function transition(){
             $(this.searchContent("#introCut")).animate({"left" : "-100%"}, 200, $.proxy(function() {
-                SceneManager.getSharedInstance().presentScene("windows95");
+                SceneManager.getSharedInstance().presentScene("gabeshouse");
             }, this));
         }
 
