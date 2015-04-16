@@ -46,7 +46,7 @@ var exported_scene = {
         this.searchContent("#backgroundMusic").stop();
 	},
 	getHTML : function() {
-		return "mainMenu/mainMenu.html"
+		return "mainMenu/main.html"
 	}
 };
 
