@@ -35,7 +35,7 @@ var exported_scene = {
         var move = function() {
             statue.animate({bottom: "0"}, 500, function() {
                 statue.animate({bottom: "500"}, 500, function() {
-                    move()
+                    move();
                 })});
         };
 
@@ -45,10 +45,14 @@ var exported_scene = {
 	onDestroy: function() {
         console.log("Stopping audio...");
         document.body.style.backgroundImage = "";
-        this.searchContent("#backgroundMusic").stop();
+        var sound = document.getElementById("backgroundMusic");
+        sound.pause();
+        sound.currentTime = 0;
+        sound.src = "";
+
 	},
 	getHTML : function() {
-		return "mainMenu.scene/mainMenu.html"
+		return "mainmenu.scene/mainMenu.html"
 	}
 };
 
