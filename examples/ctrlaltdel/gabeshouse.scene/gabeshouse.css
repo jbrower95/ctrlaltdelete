@@ -30,4 +30,6 @@ h1 {
     position: absolute;
     bottom: 0;
     left: 10%;
+    width: 15%;
+    height: auto;
 }
