@@ -6,7 +6,7 @@ var exported_scene = {
         var options = this.searchContent("#options");
 
         this.searchContent("#start").click(function() {
-            SceneManager.getSharedInstance().presentScene("windows95");
+            SceneManager.getSharedInstance().presentScene("main");
         });
 
         this.searchContent("#load").click(function() {
