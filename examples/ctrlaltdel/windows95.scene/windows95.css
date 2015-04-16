@@ -1,1 +1,6 @@
-
+#taskManager {
+	width: 400px; 
+	height: 350px; 
+	position: relative; 
+	border: 1px solid black;
+}
