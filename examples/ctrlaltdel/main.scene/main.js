@@ -9,7 +9,7 @@ var exported_scene = {
 
 	},
 	getHTML : function() {
-		return "main/main.html"
+		return "main.scene/main.html"
 	}
 };
 

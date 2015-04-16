@@ -4,10 +4,10 @@ var scenes = {};
 
 
 SceneManager.initialize("content");
-Scene.load("copyright/copyright.js", startGame);
-Scene.load("credits/credits.js", null);
-Scene.load("mainMenu/mainMenu.js", null);
-Scene.load("main/main.js");
+Scene.load("copyright.scene/copyright.js", startGame);
+Scene.load("credits.scene/credits.js");
+Scene.load("mainMenu.scene/mainMenu.js");
+Scene.load("main.scene/main.js");
 
 function startGame() {
     SceneManager.getSharedInstance().presentScene("copyright");

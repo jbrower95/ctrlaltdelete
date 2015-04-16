@@ -59,6 +59,6 @@ var exported_scene = {
         scene.searchContent("#container").append(video);
     },
     getHTML : function() {
-        return "credits/credits.html";
+        return "credits.scene/credits.html";
     }
 };
