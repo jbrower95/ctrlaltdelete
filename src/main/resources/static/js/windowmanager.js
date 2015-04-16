@@ -16,6 +16,7 @@
 *						- a NON DIV element with this id exists, an error will be written to the console.
 */
 function WindowManager(content_div_id) {
+	this.idCount = 0;
 	var existing_div = document.getElementById(content_div_id);
 
 	if (existing_div === null) {
@@ -49,7 +50,7 @@ WindowManager.prototype.addWindow = function(window_obj) {
 	$(window_obj.element).removeClass("hidden");
 
 	// Add to windows hashtable
-	this.windows[window_obj.element.id] = window_obj.element;
+	this.windows[window_obj.winId] = window_obj.element;
 }
 
 /**
@@ -59,9 +60,8 @@ WindowManager.prototype.addWindow = function(window_obj) {
 *		window_obj: The Window to be removed.
 */
 WindowManager.prototype.removeWindow = function(window_obj) {
-	console.log("removing");
-	delete this.windows[window_obj.element.id];
-	$(window_obj).addClass("hidden");
+	delete this.windows[window_obj.winId];
+	$(window_obj.element).addClass("hidden");
 }
 
 /*
@@ -103,7 +103,8 @@ WindowManager.prototype.inflate = function(template) {
 
 	// Default position of (0,0)
 	var win = new Window(copy, 0, 0);
-	//win.setXHandler($.proxy(this.removeWindow, this));
+	win.setId(this.idCount);
+	win.setXHandler($.proxy(this.removeWindow, this));
 
 	return win;
 }
