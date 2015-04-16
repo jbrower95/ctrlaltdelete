@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17e5ff33-56e5-47a7-8036-3e55f2356271" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/background.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/ctrlaltdel/.config" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/ctrlaltdel/index.js" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.css" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.html" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ctrlaltdel.iws" />
@@ -33,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="mainMenu.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="mainMenu.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/mainmenu.scene/mainMenu.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="327" max-vertical-offset="1050">
-              <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.48469388" vertical-offset="105" max-vertical-offset="1395">
+              <caret line="26" column="27" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -106,10 +101,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.35714287" vertical-offset="0" max-vertical-offset="588">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
               <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
               <folding />
             </state>
@@ -191,11 +186,11 @@
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/main.scene/main.html" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainmenu.scene/mainMenu.html" />
-        <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainmenu.scene/mainMenu.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/.config" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.html" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.css" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/index.js" />
+        <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainmenu.scene/mainMenu.js" />
       </list>
     </option>
   </component>
@@ -470,6 +465,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="fracktheratty" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdelete" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="example_experience" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -885,7 +898,7 @@
       <workItem from="1428686226955" duration="4235000" />
       <workItem from="1428797265539" duration="392000" />
       <workItem from="1429157795584" duration="370000" />
-      <workItem from="1429161293368" duration="6879000" />
+      <workItem from="1429161293368" duration="7962000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed some errors in window.js. I don't really remember what happened to scene.js tho.">
       <created>1427854725208</created>
@@ -1067,15 +1080,21 @@
       <option name="project" value="LOCAL" />
       <updated>1429207292410</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="moved shit around">
+      <created>1429210483269</created>
+      <option name="number" value="00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1429210483269</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57441000" />
+    <option name="totallyTimeSpent" value="58524000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="218" y="23" width="1354" height="987" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1099,7 +1118,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19350074" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32897604" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32897604" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1124,7 +1143,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="i have made a change&#10;to the project that we will&#10;someday have to make" />
     <MESSAGE value="there is so much room&#10;for improvement on this very&#10;important project" />
     <MESSAGE value="I reccomend rereading a lot of the js for complete understanding. A lot has changed." />
     <MESSAGE value="GOT OUR FIRST SCENE TO APPEAR. THIS IS THE BEGINNING OF A BEAUTIFUL PROJECT" />
@@ -1149,7 +1167,8 @@
     <MESSAGE value="refactor refactor refactor refactor refactor refactor" />
     <MESSAGE value="fix fix fix fix" />
     <MESSAGE value="typo" />
-    <option name="LAST_COMMIT_MESSAGE" value="typo" />
+    <MESSAGE value="moved shit around" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved shit around" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1488,14 +1507,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/mainmenu.scene/mainMenu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="327" max-vertical-offset="1050">
-          <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/introcut.scene/introcut.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
@@ -1533,8 +1544,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35714287" vertical-offset="0" max-vertical-offset="588">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
           <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/mainmenu.scene/mainMenu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48469388" vertical-offset="105" max-vertical-offset="1395">
+          <caret line="26" column="27" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
           <folding />
         </state>
       </provider>
