@@ -29,7 +29,7 @@ function Window(element, x, y) {
 	this.cancellable = true;
 
 	// Windows x-handler, to be called on close
-	this.x = function(w){};
+	this.xOut = function(w){};
 
 	// xHandler when close is clicked
 	$(this.element).find(".close").click($.proxy(this.xHandler, this));
@@ -38,6 +38,39 @@ function Window(element, x, y) {
 	if (!$(this.element).hasClass("window")) {
 		this.element.classList.add("window");
 	}
+
+	// Dragging
+	this.mouse_offset_x = 0;
+	this.mouse_offset_y = 0;
+	this.dragbar = $(this.element).find(".dragbar");
+	this.dragbar.mousedown($.proxy(this.mouseDown, this));
+	$(window).mouseup($.proxy(this.mouseUp, this));
+}
+
+/**
+* Mouse up for unbinding mouse move!
+*/
+Window.prototype.mouseUp = function() {
+	$(window).unbind('mousemove', $.proxy(this.moveWindow, this));
+}
+
+/**
+* Mouse down for window move!
+*/
+Window.prototype.mouseDown = function(e) {
+	this.mouse_offset_x = e.pageX - this.x;
+	this.mouse_offset_y = e.pageY - this.y;
+	$(window).bind("mousemove", $.proxy(this.moveWindow, this));
+}
+
+/**
+* Move window!
+*/
+Window.prototype.moveWindow = function(e) {
+	this.x = (e.pageX - this.mouse_offset_x);
+	this.y = (e.pageY - this.mouse_offset_y);
+	$(this.element).css('top', this.y + 'px');
+	$(this.element).css('left', this.x + 'px');
 }
 
 /**
@@ -52,7 +85,7 @@ Window.prototype.setId = function(newId) {
 */
 Window.prototype.xHandler = function() {
 	if (this.cancellable) {
-		this.x(this);
+		this.xOut(this);
 	}
 }
 
@@ -88,7 +121,7 @@ Window.prototype.setTitle = function(new_title) {
 *
 */
 Window.prototype.setXHandler = function(x_handler) {
-	this.x = x_handler;
+	this.xOut = x_handler;
 }
 
 /**
