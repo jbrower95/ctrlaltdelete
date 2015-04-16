@@ -16,6 +16,7 @@
 *		   div, and that the 0-position is the topmost edge of that div.
 */
 function Window(element, x, y) {
+	this.winId = 0;
 	this.element = element;
 	this.close = null;
 	this.min = null;
@@ -28,7 +29,7 @@ function Window(element, x, y) {
 	this.cancellable = true;
 
 	// Windows x-handler, to be called on close
-	this.x = function(){};
+	this.x = function(w){};
 
 	// xHandler when close is clicked
 	$(this.element).find(".close").click($.proxy(this.xHandler, this));
@@ -39,8 +40,20 @@ function Window(element, x, y) {
 	}
 }
 
+/**
+* Set id of the window object.
+*/
+Window.prototype.setId = function(newId) {
+	this.winId = newId;
+}
+
+/**
+* Runs the close handler.
+*/
 Window.prototype.xHandler = function() {
-	this.x();
+	if (cancellable) {
+		this.x(this);
+	}
 }
 
 /**
