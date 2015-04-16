@@ -17,6 +17,8 @@
 */
 function Window(element, x, y) {
 	this.element = element;
+	this.close = null;
+	this.min = null;
 	this.x = x;
 	this.y = y;
 	this.element.style.left = this.x;
@@ -25,10 +27,20 @@ function Window(element, x, y) {
 	// Window can be closed by default
 	this.cancellable = true;
 
+	// Windows x-handler, to be called on close
+	this.x = function(){};
+
+	// xHandler when close is clicked
+	$(this.element).find(".close").click($.proxy(this.xHandler, this));
+
 	// Make sure to initialize with the window class
 	if (!$(this.element).hasClass("window")) {
 		this.element.classList.add("window");
 	}
+}
+
+Window.prototype.xHandler = function() {
+	this.x();
 }
 
 /**
@@ -55,7 +67,7 @@ Window.prototype.setTitle = function(new_title) {
 	if(title.length > 0) {
 		title.html(new_title);
 	} else {
-		console.log("[window.js] Error: No title element found in given Window.");
+		console.error("[window.js] No title element found in given Window.");
 	}
 }
 
@@ -63,11 +75,7 @@ Window.prototype.setTitle = function(new_title) {
 *
 */
 Window.prototype.setXHandler = function(x_handler) {
-	this.element.find($(".close")).click(function() {
-		if (this.cancellable) {
-			// Soon...
-		}
-	});
+	this.x = x_handler;
 }
 
 /**
