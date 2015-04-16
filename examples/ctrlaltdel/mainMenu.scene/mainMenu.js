@@ -33,15 +33,11 @@ var exported_scene = {
                 sound.currentTime = 0;
                 sound.src = "";
 
-                SceneManager.getSharedInstance().presentScene("main");
+                SceneManager.getSharedInstance().presentScene("introcut");
             });
         }, this));
 
         this.searchContent("#load").click(function() {
-            alert("unimplemented.");
-        });
-
-        this.searchContent("#highScores").click(function() {
             alert("unimplemented.");
         });
 
