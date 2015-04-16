@@ -1,15 +1,17 @@
 package edu.brown.cs.abjj.experience;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import com.google.common.net.MediaType;
-import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
-import jdk.net.SocketFlow;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -18,25 +20,49 @@ import spark.Route;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
-import java.nio.file.Paths;
+
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 
 import edu.brown.cs.joengelm.sqldb.Database;
-import com.google.gson.JsonPrimitive;
-import spark.utils.IOUtils;
 
-import javax.servlet.ServletOutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 public class Server {
 	Map<String, Experience> experiences = new HashMap<>();
 	private final static Gson GSON = new Gson();
 
+	private final static Map<String, String> contentTypes = getContentTypes();
+	private final static Set<String> typesWithoutBytes = ImmutableSet.of(
+			"text/html", "text/css", "application/javascript");
+
+	public static Map<String, String> getContentTypes() {
+		Map<String, String> types = new HashMap<>();
+
+		// typical web files
+		types.put("html", "text/html");
+		types.put("htm", "text/html");
+		types.put("css", "text/css");
+		types.put("js", "application/javascript");
+
+		// media (image)
+		types.put("png", "image/png");
+		types.put("jpg", "image/jpeg");
+		types.put("jpeg", "image/jpeg");
+		types.put("gif", "image/gif");
+
+		// media (video)
+		types.put("mp4", "video/mp4");
+		types.put("webm", "video/webm");
+
+		return types;
+	}
+
 	public Server(String experiencesDirectory) {
-        System.out.println("[server] Binding file directory: " + experiencesDirectory);
-        Spark.externalStaticFileLocation(experiencesDirectory);
+		System.out.println("[server] Binding file directory: "
+				+ experiencesDirectory);
+		Spark.externalStaticFileLocation(experiencesDirectory);
 		File dir = new File(experiencesDirectory);
 		File[] directoryListing = dir.listFiles();
 		if (directoryListing != null) {
@@ -48,9 +74,11 @@ public class Server {
 					Experience exp = new Experience(experienceFile.getPath());
 
 					experiences.put(exp.filename, exp);
-                    System.out.println("[server] Binding directory for experience: " + experienceFile.getPath());
-                    Spark.externalStaticFileLocation(experienceFile.getPath());
-                    System.out.println("Successfully loaded experience: " + experienceFile.getName());
+					System.out.println("[server] Binding directory for experience: "
+							+ experienceFile.getPath());
+					Spark.externalStaticFileLocation(experienceFile.getPath());
+					System.out.println("Successfully loaded experience: "
+							+ experienceFile.getName());
 				} catch (FileNotFoundException e) {
 					System.err.println(experienceFile.getName()
 							+ " is missing its config file. It will be omitted.");
@@ -59,8 +87,8 @@ public class Server {
 							+ " has errors in its config file. It will be omitted.");
 					System.err.println(e.getMessage());
 				} catch (IllegalArgumentException e) {
-                    System.err.println(experienceFile.getName() + " - " + e.getMessage());
-                }
+					System.err.println(experienceFile.getName() + " - " + e.getMessage());
+				}
 			}
 		} else {
 			throw new IllegalArgumentException(experiencesDirectory
@@ -70,28 +98,18 @@ public class Server {
 
 	public void run() {
 		Spark.externalStaticFileLocation("src/main/resources/static");
-		//Spark.externalStaticFileLocation("/Users/joeengelman/Desktop");
 		Spark.get("/", new IndexHandler(), new FreeMarkerEngine());
 		Spark.get("/:experience", new ExperienceMenuHandler(),
 				new FreeMarkerEngine());
 		Spark.get("/:experience/content/*", new ContentHandler());
 
-
-        for (Experience exp : experiences.values()) {
-            Spark.get("/:experience/play", new PlayHandler());
-            Spark.get("/:experience/:asset", new GameHandler());
-            Spark.get("/:experience/lib/:asset", new LibHandler());
-            Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
-        }
-
-
-
-
+		Spark.get("/:experience/play", new PlayHandler());
+		Spark.get("/:experience/:asset", new GameHandler());
+		Spark.get("/:experience/lib/:asset", new LibHandler());
+		Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
 
 		Spark.post("/:experience/score", new PostScoreHandler());
 		Spark.get("/:experience/score", new GetScoreHandler());
-
-        //Spark.get("/:experience/:asset", new GameHandler());
 	}
 
 	/**
@@ -133,7 +151,7 @@ public class Server {
 
 			Map<String, Object> variables = ImmutableMap.of("title", exp.name,
 					"description", exp.description, "playLink", "/" + exp.filename
-							+ "/play", "scoresLink", "/" + exp.filename + "/scores");
+					+ "/play", "scoresLink", "/" + exp.filename + "/scores");
 			return new ModelAndView(variables, "menu.ftl");
 		}
 	}
@@ -146,241 +164,185 @@ public class Server {
 	public class ContentHandler implements Route {
 		@Override
 		public Object handle(Request req, Response res) {
-			Experience exp = experiences.get(req.params(":experience"));
-            //TODO: fix content handler
+			// TODO idek
 			return req.splat().toString();
 		}
 	}
 
-    /**
-     * Handle requests directed to each experience's content database.
-     *
-     * @author joengelm
-     */
-    public class LibHandler implements Route {
-        @Override
-        public Object handle(Request req, Response res) {
-            Experience exp = experiences.get(req.params(":experience"));
-            String asset = req.params(":asset");
+	/**
+	 * Handle requests directed to each experience's content database.
+	 *
+	 * @author joengelm
+	 */
+	public class LibHandler implements Route {
+		@Override
+		public Object handle(Request req, Response res) {
+			String asset = req.params(":asset");
 
-            String path = ("src/main/resources/static/js/" + asset);
+			String path = ("src/main/resources/static/js/" + asset);
 
-            System.out.println("Serving library: " + path);
+			System.out.println("Serving library: " + path);
 
-            try {
-                res.type("application/javascript");
-                String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
-                StringBuilder result = new StringBuilder();
-                //flatten contents
-                for (String x : contents) {
-                    result.append(x + "\n");
-                }
-                return result.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return e.getMessage();
-            }
-        }
-    }
+			try {
+				res.type("application/javascript");
+				String[] contents = Files.readAllLines(Paths.get(path)).toArray(
+						new String[1]);
+				StringBuilder result = new StringBuilder();
+				// flatten contents
+				for (String x : contents) {
+					result.append(x + "\n");
+				}
+				return result.toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		}
+	}
 
+	/**
+	 * Handle requests directed to each experience's small files.
+	 *
+	 * @author joengelm
+	 */
+	public class GameHandler implements Route {
+		@Override
+		public Object handle(Request req, Response res)
+				throws IllegalArgumentException {
+			Experience exp = experiences.get(req.params(":experience"));
+			String asset = req.params(":asset");
 
-    /**
-     * Handle requests directed to each experience's small files.
-     *
-     * @author joengelm
-     */
-    public class GameHandler implements Route {
-        @Override
-        public Object handle(Request req, Response res) throws IllegalArgumentException {
-            Experience exp = experiences.get(req.params(":experience"));
-            String asset = req.params(":asset");
+			String path = (exp.directory + "/" + asset);
 
-            String path = (exp.directory + "/" + asset);
+			System.out.println("Trying to get asset: " + asset);
 
-            System.out.println("Trying to get asset: " + asset);
+			if (!exp.files.contains(new JsonPrimitive(asset))) {
+				throw new IllegalArgumentException("Error: Can't access asset " + asset
+						+ " -  Not declared in manifest.");
+			}
 
-            if (!exp.files.contains(new JsonPrimitive(asset))) {
-                throw new IllegalArgumentException("Error: Can't access asset " + asset + " -  Not declared in manifest.");
-            }
+			System.out.println("Experience: " + exp.directory);
 
-            System.out.println("Experience: " + exp.directory);
+			try {
+				String[] assetParts = asset.split("[.]");
+				String type = contentTypes.getOrDefault(
+						assetParts[assetParts.length - 1], "application/octet-stream");
+				if (typesWithoutBytes.contains(type)) {
+					String[] contents = Files.readAllLines(Paths.get(path)).toArray(
+							new String[1]);
+					StringBuilder result = new StringBuilder();
+					// flatten contents
+					for (String x : contents) {
+						result.append(x + '\n');
+					}
+					return result.toString();
+				} else {
+					final FileInputStream in = new FileInputStream(path);
+					Response response = res;
+					byte[] contents = Files.readAllBytes(Paths.get(path));
+					System.out.println("Serving asset: " + asset);
+					response.header("Content-Disposition",
+							String.format("attachment; filename=\"%s\"", asset));
+					response.header("Connection", "close");
+					response.raw().setContentLength(contents.length);
 
-            try {
-                boolean doBytes = false;
-                if (asset.endsWith(".html") || asset.endsWith(".htm")) {
-                    res.type("text/html");
-                } else if (asset.endsWith(".css")) {
-                  res.type("text/css");
-                } else if (asset.endsWith(".js")) {
-                    res.type("application/javascript");
-                } else if (asset.endsWith(".png")) {
-                    res.type("image/png");
-                    doBytes = true;
-                } else if (asset.endsWith(".jpg") || asset.endsWith(".jpeg")) {
-                    res.type("image/jpeg");
-                    doBytes = true;
-                } else if (asset.endsWith(".gif")) {
-                    res.type("image/gif");
-                    doBytes = true;
-                } else if (asset.endsWith(".mp4")) {
-                    System.out.println("Serving an MP4");
-                    res.type("video/mp4");
-                    doBytes = true;
-                } else if (asset.endsWith(".webm")) {
-                    res.type("video/webm");
-                    doBytes = true;
-                } else {
-                    res.type("application/octet-stream");
-                    doBytes = true;
-                }
+					final OutputStream os = response.raw().getOutputStream();
 
-                if (!doBytes) {
-                    String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
-                    StringBuilder result = new StringBuilder();
-                    //flatten contents
-                    for (String x : contents) {
-                        result.append(x + '\n');
-                    }
-                    return result.toString();
-                } else {
+					for (byte b : contents) {
+						os.write(b);
+					}
 
-                    final FileInputStream in = new FileInputStream(path);
-                    Response response = res;
-                    byte[] contents = Files.readAllBytes(Paths.get(path));
-                    System.out.println("Serving asset: " + asset);
-                    response.header("Content-Disposition", String.format("attachment; filename=\"%s\"", asset));
-                    response.header("Connection", "close");
-                    //response.type(Files.probeContentType(Paths.get(path)));
-                    response.raw().setContentLength(contents.length);
+					in.close();
+					os.close();
 
-                    final OutputStream os = response.raw().getOutputStream();
-                    //spark.utils.IOUtils.copy(in, new OutputStreamWriter(os));
+					return null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "Error: Couldn't load asset.";
+			}
+		}
+	}
 
-                    for (byte b : contents) {
-                        os.write(b);
-                    }
-                    //os.write(contents);
+	/**
+	 * Handle requests directed to each experience's small files.
+	 *
+	 * @author joengelm
+	 */
+	public class SceneContentHandler implements Route {
+		@Override
+		public Object handle(Request req, Response res)
+				throws IllegalArgumentException {
+			Experience exp = experiences.get(req.params(":experience"));
+			String scene = req.params(":scene");
+			String asset = req.params(":asset");
 
+			String path = (exp.directory + "/" + scene + "/" + asset);
 
-                    in.close();
-                    //os.write(contents);
-                    os.close();
+			System.out.println("Trying to get asset: " + asset);
 
-                    return null;
-                }
+			if (!exp.files.contains(new JsonPrimitive(scene + "/" + asset))) {
+				throw new IllegalArgumentException("Error: Can't access asset " + asset
+						+ " -  Not declared in manifest.");
+			}
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Error: Couldn't load asset.";
-            }
-        }
-    }
+			System.out.println("Experience: " + exp.directory);
 
+			try {
+				String[] assetParts = asset.split("[.]");
+				String type = contentTypes.getOrDefault(
+						assetParts[assetParts.length - 1], "application/octet-stream");
+				System.out.println("Asset: " + asset + " is of type: " + type);
+				if (typesWithoutBytes.contains(type)) {
+					String[] contents = Files.readAllLines(Paths.get(path)).toArray(
+							new String[1]);
+					StringBuilder result = new StringBuilder();
+					// flatten contents
+					for (String x : contents) {
+						result.append(x + '\n');
+					}
+					return result.toString();
+				} else {
+					final FileInputStream in = new FileInputStream(path);
+					Response response = res;
+					byte[] contents = Files.readAllBytes(Paths.get(path));
+					System.out.println("Serving asset: " + asset);
+					response.header("Content-Disposition",
+							String.format("attachment; filename=\"%s\"", asset));
+					response.header("Connection", "close");
+					response.raw().setContentLength(contents.length);
 
+					final OutputStream os = response.raw().getOutputStream();
 
-    /**
-     * Handle requests directed to each experience's small files.
-     *
-     * @author joengelm
-     */
-    public class SceneContentHandler implements Route {
-        @Override
-        public Object handle(Request req, Response res) throws IllegalArgumentException {
-            Experience exp = experiences.get(req.params(":experience"));
-            String scene = req.params(":scene");
-            String asset = req.params(":asset");
+					for (byte b : contents) {
+						os.write(b);
+					}
 
-            String path = (exp.directory + "/" + scene + "/" + asset);
+					in.close();
+					os.close();
 
-            System.out.println("Trying to get asset: " + asset);
+					return null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "Error: Couldn't load asset.";
+			}
+		}
+	}
 
-            if (!exp.files.contains(new JsonPrimitive(scene + "/" + asset))) {
-                throw new IllegalArgumentException("Error: Can't access asset " + asset + " -  Not declared in manifest.");
-            }
-
-            System.out.println("Experience: " + exp.directory);
-
-            try {
-                boolean doBytes = false;
-                if (asset.endsWith(".html") || asset.endsWith(".htm")) {
-                    res.type("text/html");
-                } else if (asset.endsWith(".css")) {
-                    res.type("text/css");
-                } else if (asset.endsWith(".js")) {
-                    res.type("application/javascript");
-                } else if (asset.endsWith(".png")) {
-                    res.type("image/png");
-                } else if (asset.endsWith(".jpg") || asset.endsWith(".jpeg")) {
-                    res.type("image/jpeg");
-                } else if (asset.endsWith(".gif")) {
-                    res.type("image/gif");
-                } else if (asset.endsWith(".mp4")) {
-                    System.out.println("Serving an MP4");
-                    res.type("video/mp4");
-                    doBytes = true;
-                } else if (asset.endsWith(".webm")) {
-                    res.type("video/webm");
-                    doBytes = true;
-                } else {
-                    res.type("application/octet-stream");
-                    doBytes = true;
-                }
-
-                if (!doBytes) {
-                    String[] contents = Files.readAllLines(Paths.get(path)).toArray(new String[1]);
-                    StringBuilder result = new StringBuilder();
-                    //flatten contents
-                    for (String x : contents) {
-                        result.append(x + '\n');
-                    }
-                    return result.toString();
-                } else {
-
-                    final FileInputStream in = new FileInputStream(path);
-                    Response response = res;
-                    byte[] contents = Files.readAllBytes(Paths.get(path));
-                    System.out.println("Serving asset: " + asset);
-                    response.header("Content-Disposition", String.format("attachment; filename=\"%s\"", asset));
-                    response.header("Connection", "close");
-                    //response.type(Files.probeContentType(Paths.get(path)));
-                    response.raw().setContentLength(contents.length);
-
-                    final OutputStream os = response.raw().getOutputStream();
-                    //spark.utils.IOUtils.copy(in, new OutputStreamWriter(os));
-
-                    for (byte b : contents) {
-                        os.write(b);
-                    }
-                    //os.write(contents);
-
-
-                    in.close();
-                    //os.write(contents);
-                    os.close();
-
-                    return null;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Error: Couldn't load asset.";
-            }
-        }
-    }
-
-    /**
-     * Handle requests directed to each experience's content database.
-     *
-     * @author joengelm
-     */
-    public class PlayHandler implements Route {
-        @Override
-        public Object handle(Request req, Response res) {
-            Experience exp = experiences.get(req.params(":experience"));
-            res.redirect(exp.mainFile);
-            return res;
-        }
-    }
+	/**
+	 * Handle requests directed to each experience's content database.
+	 *
+	 * @author joengelm
+	 */
+	public class PlayHandler implements Route {
+		@Override
+		public Object handle(Request req, Response res) {
+			Experience exp = experiences.get(req.params(":experience"));
+			res.redirect(exp.mainFile);
+			return res;
+		}
+	}
 
 	/**
 	 * Handle requests posting new scores to each experience's score database.
