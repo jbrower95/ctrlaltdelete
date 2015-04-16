@@ -2,7 +2,7 @@ var exported_scene = {
     id : "windows95",
 	onPresent : function() {
 		var manager = new WindowManager("desktop");
-		var win = manager.inflate("example");
+		var win = manager.inflate("taskManager");
 		manager.addWindow(win);
 	},
 	onDestroy: function() {
