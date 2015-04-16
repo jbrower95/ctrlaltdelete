@@ -43,6 +43,7 @@ var exported_scene = {
         move();
 	},
 	onDestroy: function() {
+        console.log("Stopping audio...");
         document.body.style.backgroundImage = "";
         this.searchContent("#backgroundMusic").stop();
 	},
