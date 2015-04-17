@@ -4,11 +4,19 @@ var exported_scene = {
 		var manager = new WindowManager("desktop");
 		var win = manager.inflate("taskManager");
 		manager.addWindow(win);
+		
+		setTimeout(function() {
 		 clippy.load('Clippy', function(agent) {
 		        agent.show();
 		        agent.moveTo(200,200);
-		        agent.speak('Test');
+		        agent.speak('Looks like your stuck inside a computer!');
+		        agent.animate();
+		        
+		        
+		        
+		        
 		    });
+		}, 800);
 	},
 	onDestroy: function() {
 
