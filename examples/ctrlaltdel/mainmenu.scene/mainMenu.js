@@ -74,7 +74,7 @@ var exported_scene = {
 
 	},
 	getHTML : function() {
-		return "mainmenu.scene/mainMenu.html"
+		return "mainMenu.scene/mainMenu.html"
 	}
 
 };
