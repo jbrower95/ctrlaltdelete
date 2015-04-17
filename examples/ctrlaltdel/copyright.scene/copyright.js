@@ -13,8 +13,7 @@ var exported_scene = {
                 return;
             }
 
-            console.log("Times: " + times);
-                p.animate({color: _color}, {
+            p.animate({color: _color}, {
                     duration: _duration,
                     complete: function () {
                         if (_color == "white") {
