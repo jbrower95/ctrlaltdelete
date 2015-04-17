@@ -16,7 +16,6 @@
 	  <p>${description}</p>
 	  <br>
 	  <a href="${playLink}">Play!</a>
-	  <a href="${scoresLink}">Scores!</a>
 	</body>
 	
 </html>

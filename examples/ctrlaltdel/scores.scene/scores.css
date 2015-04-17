@@ -1,0 +1,16 @@
+#scores {
+	margin: auto;
+	background-color: white;
+	text-align: center;
+	width: 40%;
+	margin-top: 20%;
+	border: 3px solid black;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+p {
+	font-size: 16px;
+	font-weight: bold;
+	font-family: "MS Sans Serif";
+}

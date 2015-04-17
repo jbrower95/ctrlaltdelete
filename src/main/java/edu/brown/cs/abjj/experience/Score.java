@@ -16,15 +16,17 @@ public class Score {
   }
 
   /**
-   * Check that the scorer's name is between 1 and 6 characters (inclusive)
+   * Check that the scorer's name is between 1 and 20 characters (inclusive)
    *
    * @param name
    *          the name to check
    * @return up to the first 6 characters of name
    */
   private static String checkName(String name) {
-    if (name.length() == 0 || name.length() > 6) {
-      name = name.substring(0, 6);
+    if (name.length() < 1) {
+      name = "Anonymous";
+    } else if (name.length() > 20) {
+      name = name.substring(0, 20);
     }
     return name;
   }

@@ -8,7 +8,10 @@ var exported_scene = {
                 var parsed = JSON.parse(scores);
                 console.log(parsed);
                 for (var i = 0; i < parsed.length; i++) {
-                    console.log("[scores] " + parsed[i]);
+                    var name = parsed[i].name;
+                    var value = parsed[i].value;
+                    var el = "<p>" + name + " -> " + value + "</p>";
+                    $("#scores").append(el);
                 }
             });
         }

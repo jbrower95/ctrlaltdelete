@@ -74,6 +74,7 @@ public class ExperienceDatabase extends Database {
       }
       return null;
     });
+    System.out.println("[server] Returning scores...");
     return bestNScores;
   }
 }
