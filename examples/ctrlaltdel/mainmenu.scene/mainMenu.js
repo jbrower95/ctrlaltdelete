@@ -41,6 +41,10 @@ var exported_scene = {
             alert("unimplemented.");
         });
 
+        this.searchContent("#scores").click(function() {
+            SceneManager.getSharedInstance().presentScene("scores");
+        });
+
         this.searchContent("#credits").click(function() {
             SceneManager.getSharedInstance().presentScene("credits");
         });
@@ -70,7 +74,7 @@ var exported_scene = {
 
 	},
 	getHTML : function() {
-		return "mainmenu.scene/mainMenu.html"
+		return "mainMenu.scene/mainMenu.html"
 	}
 
 };
