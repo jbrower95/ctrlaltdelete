@@ -178,12 +178,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
 	if (!scene.isPhantom()) {
 
-
-
-
-		//$(jQuery(newScene)).addClass("initial");
-
-
 		// If there is a scene already in the content div, move it out
 		if (this.activeScene){
 			// since we reassign this.activeScene when the next animation completes,
@@ -211,9 +205,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
         scene.element = newScene;
         this.contentDiv.appendChild(scene.element);
 
-
-        //$(jQuery(newScene)).addClass("in");
-
 	} else {
 		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
         if (this.activeScene && this.activeScene.onDestroy) {
@@ -235,6 +226,38 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	}
 };
 
+
+/**
+ * Performs a sequence of functions with the specified array of timeouts.
+ * 
+ * funcs: An array of functions to call.
+ * 
+ * timeouts: An array of timeouts. That is, the i-th member of timeouts
+ * represents the delay before performing function i
+ * 
+ * ex:
+ * 
+ * 	SceneManager.performSequence([doFirstAnim, moveCharacter, doSecondAnim], [100, 200, 300]);
+ * 
+ * 	(wait 100ms) -> perform 'doFirstAnim()' -> wait 200ms -> 'perform moveCharacter()' -> wait 300ms
+ * -> perform 'doSecondAnim()'
+ */
+SceneManager.performSequence = function(funcs, timeouts, context) {
+	
+	if (!funcs || !timeouts || funcs.length == 0  || timeouts.length == 0) {
+		return;
+	}
+	
+	//if context isn't supplied, default to the caller.
+	context = context || this;
+	
+	var timeout = timeouts.shift();
+	setTimeout($.proxy(function() {
+		//get the first function, call it, and recur.
+		(funcs.shift())();
+		SceneManager.performSequence(funcs, timeouts, context);
+		}, context), timeout);
+};
 
 
 /**
