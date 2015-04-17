@@ -3,6 +3,10 @@
   display: none; }
 
 .window {
-  position: absolute; }
+  position: absolute;
+  -webkit-transition: left 0.2s, top 0.2s;
+          transition: left 0.2s, top 0.2s;
+  background-color: #bdbdbd;
+  border: 2px solid #bdbdbd; }
 
 /*# sourceMappingURL=window.css.map */

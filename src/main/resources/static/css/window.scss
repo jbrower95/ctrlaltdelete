@@ -1,6 +1,7 @@
 /** Window Flavored CSS **/
 
 $move-time: 0.2s;
+$bg-color: #bdbdbd;
 
 .hidden {
 	display: none;
@@ -9,4 +10,6 @@ $move-time: 0.2s;
 .window {
 	position: absolute;
 	transition: left $move-time, top $move-time;
+	background-color: $bg-color;
+	border: 2px solid $bg-color;
 }
