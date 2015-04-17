@@ -2,13 +2,30 @@
 
 
 <style>
+body {
+  overflow: hidden;
+}
+
 .hidden {
     display: none;
+}
+
+.dragbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+}
+
+.dragbar:hover {
+  cursor: pointer;
 }
 </style>
 
 <div id="desktop">
-    <div id="taskManager" class="hidden dragbar">
+    <div id="taskManager" class="hidden">
+        <div class="dragbar"></div>
         <img src="taskmanager.png">
     </div>
 
