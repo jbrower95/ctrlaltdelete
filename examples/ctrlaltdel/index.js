@@ -5,6 +5,7 @@ var scenes = {};
 
 SceneManager.initialize("content");
 Scene.load("copyright.scene/copyright.js", startGame);
+Scene.load("scores.scene/scores.js");
 Scene.load("credits.scene/credits.js");
 Scene.load("mainmenu.scene/mainMenu.js");
 Scene.load("introcut.scene/introcut.js");
