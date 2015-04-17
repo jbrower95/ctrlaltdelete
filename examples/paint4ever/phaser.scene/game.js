@@ -8,6 +8,7 @@ var exported_scene = {
 		    game.load.image('redBlock', 'phaser.scene/small-red-block.png');
 		    game.load.image('blueBlock', 'phaser.scene/small-blue-block.png');
 		    game.load.image('ladderBlock', 'phaser.scene/ladder-block.png');
+		    game.load.image('window', 'phaser.scene/windows.png');
 		    game.load.spritesheet('gebu', 'phaser.scene/gabe_front.png',85, 125);
 		}
 		
@@ -15,6 +16,7 @@ var exported_scene = {
 		var player;
 		var cursors;
 		var ladder;
+		var windows;
 		
 		function create() {
 			game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -47,6 +49,22 @@ var exported_scene = {
 				ladder1.body.immovable = true;
 			}
 			
+			// Windows
+			windows = game.add.group();
+			windows.enableBody = true;
+			
+		//  Here we'll create 12 of them evenly spaced apart
+		    for (var i = 0; i < 5; i++)
+		    {
+		        var window = windows.create(i * 150, 0, 'window');
+
+		        //  Let gravity do its thing
+		        window.body.gravity.y = 500;
+
+		        //  This just gives each star a slightly random bounce value
+		        window.body.bounce.y = 0.1 + Math.random() * 0.2;
+		    }
+			
 			// Player
 			player = game.add.sprite(32, game.world.height - 200, 'gebu');
 			game.physics.arcade.enable(player);
@@ -62,7 +80,9 @@ var exported_scene = {
 		
 		function update() {
 			game.physics.arcade.collide(player, platforms);
+			game.physics.arcade.collide(windows, platforms);
 			game.physics.arcade.overlap(player, ladder, upLadder, null, this);
+			game.physics.arcade.overlap(player, windows, collectWindow, null, this);
 			
 			//  Reset the players velocity (movement)
 		    player.body.velocity.x = 0;
@@ -100,6 +120,10 @@ var exported_scene = {
 			if (cursors.up.isDown) {
 				player.body.velocity.y = -300;
 			}
+		}
+		
+		function collectWindow(player, window) {
+			window.kill();
 		}
 	},
 	onDestroy: function() {
