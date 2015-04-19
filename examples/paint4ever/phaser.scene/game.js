@@ -9,7 +9,7 @@ var exported_scene = {
 		    game.load.image('blueBlock', 'phaser.scene/small-blue-block.png');
 		    game.load.image('ladderBlock', 'phaser.scene/ladder-block.png');
 		    game.load.image('window', 'phaser.scene/windows.png');
-		    game.load.spritesheet('gebu', 'phaser.scene/gabe_front.png',85, 125);
+		    game.load.spritesheet('gebu', 'phaser.scene/gebusheet.png',71, 79);
 		}
 		
 		var platforms;
@@ -53,9 +53,8 @@ var exported_scene = {
 			windows = game.add.group();
 			windows.enableBody = true;
 			
-		//  Here we'll create 12 of them evenly spaced apart
-		    for (var i = 0; i < 5; i++)
-		    {
+			//  Here we'll create 12 of them evenly spaced apart
+		    for (var i = 0; i < 5; i++) {
 		        var window = windows.create(i * 150, 0, 'window');
 
 		        //  Let gravity do its thing
@@ -71,11 +70,28 @@ var exported_scene = {
 			player.body.bounce.y = 0.2;
 		    player.body.gravity.y = 300;
 		    player.body.collideWorldBounds = true;
-		   // player.animations.add('left', [0, 1, 2, 3], 10, true);
-		   // player.animations.add('right', [0, 1, 2, 3], 10, true);
+		    player.animations.add('left', [0, 1, 2, 3], 10, true);
+		    player.animations.add('right', [5, 6, 7, 8], 10, true);
+		    player.animations.add('climb', [9, 10, 11, 12], 10, true);
 		    
 		    //  Our controls.
 		    cursors = game.input.keyboard.createCursorKeys();
+		}
+		
+		function upLadder(player, ladder) {
+			if (cursors.up.isDown) {
+				player.animations.play('climb');
+				player.body.velocity.y = -300;
+			} else if (cursors.down.isDown) {
+				player.animations.play('climb');
+				player.body.velocity.y = 300;
+			} else {
+				player.body.velocity.y = -5;
+			}
+		}
+		
+		function collectWindow(player, window) {
+			window.kill();
 		}
 		
 		function update() {
@@ -87,44 +103,32 @@ var exported_scene = {
 			//  Reset the players velocity (movement)
 		    player.body.velocity.x = 0;
 
-		    if (cursors.left.isDown)
-		    {
+		    if (cursors.left.isDown) {
 		        //  Move to the left
 		        player.body.velocity.x = -150;
 
-		        //player.animations.play('left');
+		        player.animations.play('left');
 		    }
-		    else if (cursors.right.isDown)
-		    {
+		    else if (cursors.right.isDown) {
 		        //  Move to the right
 		        player.body.velocity.x = 150;
 
-		        //player.animations.play('right');
+		        player.animations.play('right');
 		    }
-		    else
-		    {
+		    else if (!(cursors.up.isDown || cursors.down.isDown)) {
 		        //  Stand still
-		        //player.animations.stop();
+		        player.animations.stop();
 
-		        //player.frame = 4;
+		        player.frame = 4;
 		    }
 		    
 		    //  Allow the player to jump if they are touching the ground.
-		    if (cursors.up.isDown && player.body.touching.down)
-		    {
+		    if (cursors.up.isDown && player.body.touching.down) {
 		        player.body.velocity.y = -350;
 		    }
 		}
 		
-		function upLadder(player, ladder) {
-			if (cursors.up.isDown) {
-				player.body.velocity.y = -300;
-			}
-		}
 		
-		function collectWindow(player, window) {
-			window.kill();
-		}
 	},
 	onDestroy: function() {
 	},
