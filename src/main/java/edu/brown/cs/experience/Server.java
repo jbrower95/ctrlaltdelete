@@ -1,4 +1,4 @@
-package edu.brown.cs.abjj.experience;
+package edu.brown.cs.experience;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -390,7 +390,7 @@ public class Server {
       } catch (NumberFormatException e) {
         limit = 10;
       }
-      return GSON.toJson(exp.db.getBestNScores(limit));
+      return GSON.toJson(exp.db.getNBestScores(limit));
     }
   }
 }

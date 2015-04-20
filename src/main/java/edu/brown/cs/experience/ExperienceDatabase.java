@@ -1,4 +1,4 @@
-package edu.brown.cs.abjj.experience;
+package edu.brown.cs.experience;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +26,6 @@ public class ExperienceDatabase extends Database {
    */
   public ExperienceDatabase(String dbFileName, boolean orderScoresHighToLow) {
     super(dbFileName);
-    System.out.println("[server] Initializing meta.db: " + dbFileName);
     this.scoreOrder = orderScoresHighToLow ? "DESC" : "ASC";
     execute(conn -> {
       String command = "CREATE TABLE IF NOT EXISTS score(name TEXT, value FLOAT, time TEXT);";
@@ -54,13 +53,21 @@ public class ExperienceDatabase extends Database {
     });
   }
 
-  public List<Score> getBestNScores(int n) {
+  /**
+   * Find the best scores for this experience, and limit the results to n
+   * scores.
+   * 
+   * @param n
+   *          the number of scores to return
+   * @return an ordered list of the n best scores (best first)
+   */
+  public List<Score> getNBestScores(int n) {
     if (n < 0) {
       throw new IllegalArgumentException(
         "n must be greater than or equal to zero");
     }
 
-    List<Score> bestNScores = new ArrayList<>();
+    List<Score> nBestScores = new ArrayList<>();
     execute(conn -> {
       String query = "SELECT name, value, time FROM score ORDER BY value "
         + scoreOrder + " LIMIT ?;";
@@ -69,12 +76,11 @@ public class ExperienceDatabase extends Database {
       ResultSet rs = prep.executeQuery();
 
       while (rs.next()) {
-        bestNScores.add(new Score(rs.getString(1), rs.getDouble(2), rs
+        nBestScores.add(new Score(rs.getString(1), rs.getDouble(2), rs
           .getString(3)));
       }
       return null;
     });
-    System.out.println("[server] Returning scores...");
-    return bestNScores;
+    return nBestScores;
   }
 }

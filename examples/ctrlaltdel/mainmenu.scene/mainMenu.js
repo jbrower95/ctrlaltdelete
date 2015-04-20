@@ -57,9 +57,6 @@ var exported_scene = {
             options.animate({opacity: 1});
         });
 
-        document.body.style.backgroundImage = "url(https://lh5.ggpht.com/IDBoc7HlkfauHstRiEyJlp5MQL0oRZ3xbVYv8DNtQoCbogm42bSjYhIZCRu1uSHQ3RQ=h900)";
-        document.body.style.backgroundSize = "100%";
-
         var move = function() {
             statue.animate({bottom: "0"}, 500, function() {
                 statue.animate({bottom: "500"}, 500, function() {

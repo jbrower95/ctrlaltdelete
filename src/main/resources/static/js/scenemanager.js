@@ -147,10 +147,10 @@ SceneManager.prototype.registerScene = function(scene) {
     console.log("[scenemanager.js] Registered Scene: " + scene.id);
 };
 
-/*
-* Loads a scene into the scenemanager's content div. If there is a scene currently loaded,
-* the scene will be ejected using a left to right animation.
-*/
+/**
+ * Loads a scene into the scenemanager's content div. If there is a scene currently loaded,
+ * the scene will be ejected using a left to right animation.
+ */
 SceneManager.prototype.presentScene = function(sceneID) {
 
     console.log("[scenemanager.js] Presenting scene - " + sceneID);

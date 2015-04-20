@@ -6,6 +6,10 @@ target/
 *.war
 *.ear
 
+# Maven #
+#########
+*.mvn-classpath
+
 # OS junk #
 ###########
 .DS_Store

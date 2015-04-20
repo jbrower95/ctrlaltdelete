@@ -1,4 +1,4 @@
-package edu.brown.cs.abjj.experience;
+package edu.brown.cs.experience;
 
 import java.sql.Timestamp;
 import java.util.Objects;

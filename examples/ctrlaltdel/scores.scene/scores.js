@@ -16,6 +16,10 @@ var exported_scene = {
             });
         }
         getScores();
+
+        $("#back").click(function() {
+            SceneManager.getSharedInstance().presentScene("mainMenu");
+        });
 	},
 	onDestroy: function() {
 

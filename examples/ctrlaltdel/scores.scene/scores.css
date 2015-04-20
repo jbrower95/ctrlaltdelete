@@ -1,3 +1,16 @@
+html {
+    background: url(https://lh5.ggpht.com/IDBoc7HlkfauHstRiEyJlp5MQL0oRZ3xbVYv8DNtQoCbogm42bSjYhIZCRu1uSHQ3RQ=h900) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#content {
+	width: 100%;
+	text-align: center;
+}
+
 #scores {
 	margin: auto;
 	background-color: white;
@@ -13,4 +26,9 @@ p {
 	font-size: 16px;
 	font-weight: bold;
 	font-family: "MS Sans Serif";
+}
+
+#back {
+	width: 80px;
+	margin: auto;
 }
