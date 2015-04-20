@@ -45,7 +45,7 @@ function WindowManager(content_div_id) {
 *		window_obj: The Window to be added.
 */
 WindowManager.prototype.addWindow = function(window_obj) {
-	this.content_div.appendChild(window_obj.element);
+	$(this.content_div).prepend(window_obj.element);
 
 	$(window_obj.element).removeClass("hidden");
 
