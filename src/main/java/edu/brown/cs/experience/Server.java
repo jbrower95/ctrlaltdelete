@@ -212,7 +212,7 @@ public class Server {
       System.out.println("GameHandler");
       Experience exp = experiences.get(req.params(":experience"));
       String asset = req.params(":asset");
-
+      System.out.println(req.params(":experience") + ", " + req.params(":asset"));
       String path = (exp.directory + "/" + asset);
 
       System.out.println("Trying to get asset: " + asset);
