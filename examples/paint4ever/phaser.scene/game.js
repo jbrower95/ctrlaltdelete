@@ -14,9 +14,11 @@ var exported_scene = {
         			function preload() {
         				game.load.image('redBlock', 'phaser.scene/small-red-block.png');
         				game.load.image('blueBlock', 'phaser.scene/small-blue-block.png');
+        				game.load.image('bigBlueBlock', 'phaser.scene/blue-block.png');
         				game.load.image('ladderBlock', 'phaser.scene/ladder-block.png');
         				game.load.image('window', 'phaser.scene/windows.png');
         				game.load.spritesheet('gebu', 'phaser.scene/gebusheet.png',71, 79);
+        				game.load.tilemap('map', 'phaser.scene/paint.json', null, Phaser.Tilemap.TILED_JSON);
         			}
 
         			var platforms;
@@ -24,37 +26,21 @@ var exported_scene = {
         			var cursors;
         			var ladder;
         			var windows;
+        			var blueBlocks;
+        			var map;
+        			var base;
 
         			function create() {
         				game.physics.startSystem(Phaser.Physics.ARCADE);
+        				game.stage.backgroundColor = "#ffffff";
 
-        				platforms = game.add.group();
-        				platforms.enableBody = true;
-
-        				var ground;
-        				for (var i = 0; i < game.world.width/20; i++) {
-        					ground = platforms.create(i*20, game.world.height - 50, 'redBlock');
-        					ground.body.immovable = true;
-        				}
-
-        				var ledge;
-
-        				for (i = 0; i < game.world.width/(20*5); i++) {
-        					ledge = platforms.create(400 + i*20,350,'redBlock');
-        					ledge.body.immovable = true;
-        				}
-        				for (i = 0; i < game.world.width/(20*5); i++) {
-        					ledge = platforms.create(i*20, 250, 'redBlock');
-        					ledge.body.immovable = true;
-        				}
-
-        				// Ladder
-        				ladder = game.add.group();
-        				ladder.enableBody = true;
-        				for (var i = 0; i < game.world.height - 50; i++) {
-        					ladder1 = ladder.create(game.world.width - 30, i*25, 'ladderBlock');
-        					ladder1.body.immovable = true;
-        				}
+						// Set up the tilemap
+        				map = game.add.tilemap('map');
+        				map.addTilesetImage('small-red-block', 'redBlock');
+        				base = map.createLayer('Base Layer');
+        				base.enableBody = true;
+        				base.resizeWorld();
+        				map.setCollision(1);
 
         				// Windows
         				windows = game.add.group();
@@ -67,12 +53,19 @@ var exported_scene = {
         					//  Let gravity do its thing
         					window.body.gravity.y = 500;
 
-        					//  This just gives each star a slightly random bounce value
+        					//  Bouncing windows
         					window.body.bounce.y = 0.1 + Math.random() * 0.2;
         				}
 
+        				// Blue Blocks
+						blueBlocks = game.add.group();
+						blueBlocks.enableBody = true;
+
+						var b = blueBlocks.create(450, 0, 'bigBlueBlock');
+						b.body.gravity.y = 500;
+
         				// Player
-        				player = game.add.sprite(32, game.world.height - 200, 'gebu');
+        				player = game.add.sprite(250, game.world.height - 300, 'gebu');
         				game.physics.arcade.enable(player);
         				player.body.bounce.y = 0.2;
         				player.body.gravity.y = 300;
@@ -80,6 +73,7 @@ var exported_scene = {
         				player.animations.add('left', [0, 1, 2, 3], 10, true);
         				player.animations.add('right', [5, 6, 7, 8], 10, true);
         				player.animations.add('climb', [9, 10, 11, 12], 10, true);
+        				game.camera.follow(player);
 
         				//  Our controls.
         				cursors = game.input.keyboard.createCursorKeys();
@@ -102,8 +96,9 @@ var exported_scene = {
         			}
 
         			function update() {
-        				game.physics.arcade.collide(player, platforms);
-        				game.physics.arcade.collide(windows, platforms);
+        				game.physics.arcade.collide(player, base);
+        				game.physics.arcade.collide(windows, base);
+        				game.physics.arcade.collide(blueBlocks, base);
         				game.physics.arcade.overlap(player, ladder, upLadder, null, this);
         				game.physics.arcade.overlap(player, windows, collectWindow, null, this);
 
@@ -130,7 +125,7 @@ var exported_scene = {
         				}
 
         				//  Allow the player to jump if they are touching the ground.
-        				if (cursors.up.isDown && player.body.touching.down) {
+        				if (cursors.up.isDown && player.body.blocked.down) {
         					player.body.velocity.y = -350;
         				}
         			}
