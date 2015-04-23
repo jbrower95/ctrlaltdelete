@@ -1,9 +1,5 @@
 html {
-    background: url(https://lh5.ggpht.com/IDBoc7HlkfauHstRiEyJlp5MQL0oRZ3xbVYv8DNtQoCbogm42bSjYhIZCRu1uSHQ3RQ=h900) no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background-color: #222128;
 }
 
 #content {
@@ -12,6 +8,7 @@ html {
 }
 
 #scores {
+	font-family: 
 	margin: auto;
 	background-color: white;
 	text-align: center;
