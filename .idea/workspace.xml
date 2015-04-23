@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="17e5ff33-56e5-47a7-8036-3e55f2356271" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/js/assetmanager.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/assetmanager.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ctrlaltdel.iws" />
@@ -26,20 +28,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/paint4ever/phaser.scene/game.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="100" column="70" selection-start-line="100" selection-start-column="70" selection-end-line="100" selection-end-column="70" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="index.ftl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-0.0">
               <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
               <folding />
             </state>
@@ -106,7 +98,7 @@
         <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="73" selection-start-line="20" selection-start-column="73" selection-end-line="20" selection-end-column="73" />
+              <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -115,18 +107,18 @@
       <file leaf-file-name="assetmanager.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/assetmanager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.5357143">
-              <caret line="43" column="16" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.53571427">
+              <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="paint.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/paint4ever/phaser.scene/paint.json">
+      <file leaf-file-name="scenemanager.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="14" selection-start-line="0" selection-start-column="14" selection-end-line="0" selection-end-column="14" />
+              <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -146,7 +138,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainMenu.html" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainMenu.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainMenu.css" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/copyright.js" />
@@ -166,7 +157,6 @@
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/main/main.css" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/main/main.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/mainMenu/mainMenu.js" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/credits.scene/credits.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/copyright.scene/copyright.js" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/copyright.scene/copyright.html" />
@@ -196,6 +186,8 @@
         <option value="$PROJECT_DIR$/src/main/resources/static/css/index.css" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/index.html" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/.config" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js" />
+        <option value="$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js" />
         <option value="$PROJECT_DIR$/src/main/resources/static/js/assetmanager.js" />
       </list>
     </option>
@@ -225,7 +217,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="4" />
+    <option name="x" value="197" />
     <option name="y" value="23" />
     <option name="width" value="1382" />
     <option name="height" value="744" />
@@ -732,7 +724,7 @@
       <workItem from="1428797265539" duration="392000" />
       <workItem from="1429157795584" duration="370000" />
       <workItem from="1429161293368" duration="13986000" />
-      <workItem from="1429810850840" duration="1462000" />
+      <workItem from="1429810850840" duration="2442000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed some errors in window.js. I don't really remember what happened to scene.js tho.">
       <created>1427854725208</created>
@@ -944,14 +936,20 @@
       <option name="project" value="LOCAL" />
       <updated>1429812259392</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="made the asset manager do things">
+      <created>1429812955571</created>
+      <option name="number" value="00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1429812955571</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66010000" />
+    <option name="totallyTimeSpent" value="66990000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1382" height="744" extended-state="0" />
+    <frame x="197" y="23" width="1382" height="744" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -964,7 +962,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32897604" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288889" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32897604" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -998,7 +996,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added really creepy example experience to weird out gabe" />
     <MESSAGE value="Added a back button to the second scene of the example experience" />
     <MESSAGE value="Moved some stuff around and changed type signatures to make more sense. Also added a significant amount more of documentation to scene/scenemanager." />
     <MESSAGE value="Slight changes to example experience." />
@@ -1023,7 +1020,8 @@
     <MESSAGE value="anus anus anusanus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus anus" />
     <MESSAGE value="anus" />
     <MESSAGE value="Added sounds and also buzz library for HTML5 audio" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added sounds and also buzz library for HTML5 audio" />
+    <MESSAGE value="made the asset manager do things" />
+    <option name="LAST_COMMIT_MESSAGE" value="made the asset manager do things" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1034,17 +1032,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/examples/paint4ever/.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="107" selection-start-line="6" selection-start-column="107" selection-end-line="6" selection-end-column="107" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/window.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1098,13 +1085,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="15" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="196" column="12" selection-start-line="196" selection-start-column="12" selection-end-line="196" selection-end-column="12" />
         </state>
       </provider>
     </entry>
@@ -1268,6 +1248,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1308,7 +1289,7 @@
     <entry file="file://$PROJECT_DIR$/examples/paint4ever/phaser.scene/game.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="100" column="70" selection-start-line="100" selection-start-column="70" selection-end-line="100" selection-end-column="70" />
+          <caret line="99" column="60" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
           <folding />
         </state>
       </provider>
@@ -1389,14 +1370,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="73" selection-start-line="20" selection-start-column="73" selection-end-line="20" selection-end-column="73" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/windowmanager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1405,10 +1378,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/phaser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.3">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/assetmanager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.5357143">
-          <caret line="43" column="16" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.53571427">
+          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
           <folding />
         </state>
       </provider>

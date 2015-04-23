@@ -181,9 +181,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		// If there is a scene already in the content div, move it out
 		if (this.activeScene){
 			// since we reassign this.activeScene when the next animation completes,
-			// create a copy to the reference to avoid trouble
-			var copy = this.activeScene;
-
 			if (this.activeScene.onDestroy) {
 				this.activeScene.onDestroy();
 			}

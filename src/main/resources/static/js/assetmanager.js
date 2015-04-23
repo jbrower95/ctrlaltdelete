@@ -26,6 +26,14 @@ function AssetManager() {
 }
 
 /**
+ * Preloads a specific sound
+ * @param id
+ */
+AssetManager.prototype.preload = function(id) {
+    this.sounds[id].load();
+};
+
+/**
  * Returns the shared asset manager.
  * @returns {AssetManager}
  */
