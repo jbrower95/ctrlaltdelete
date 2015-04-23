@@ -50,22 +50,11 @@ var exported_scene = {
         });
 
         var sound = this.searchContent("#backgroundMusic");
-        statue.animate({left: "500px"}, 300, function() {
+        statue.animate({opacity: "1"}, 300, function() {
             sound.trigger('play');
-            console.log("Animating statue..");
            //make our options appear
             options.animate({opacity: 1});
         });
-
-        var move = function() {
-            statue.animate({bottom: "0"}, 500, function() {
-                statue.animate({bottom: "500"}, 500, function() {
-                    move();
-                })});
-        };
-
-
-        move();
 	},
 	onDestroy: function() {
 
