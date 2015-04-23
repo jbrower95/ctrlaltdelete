@@ -116,6 +116,35 @@
  *          //do something
  *
  *
+ *          If a scene is a phantom scene (that is, the getHTML() function returns null), it is inherently assuming something
+ *          about it's context. To make sure that the phantom scene knows what its display context will be, it can add a
+ *
+ *          'requires'
+ *
+ *          tag to indicate that the specified scene must precede it. In the case of arbitrarily jumping to this scene, if the required scene
+ *          is not currently being presented, then a chain of required scenes will be presented and then immediately changed to simulate the flow of time, up to the
+ *          requested scene.
+ *
+ *          EX: Consider the three following scenes.
+ *
+ *
+ *          { id: 'main', getHTML : function() { return 'index.html' } }
+ *
+ *
+ *          { id: 'secondary', getHTML : function() { return null }, requires : 'main' }
+ *
+ *
+ *          { id: 'third', getHTML: function() { return null }, requires : 'secondary' }
+ *
+ *
+ *
+ *          If 'main' is currently being displayed, and the scenemanager requests a jump to 'third', what should happen?
+ *          Jumping directly to third would leave third with the impression that 'secondary' had been loaded before it, when in fact it hadn't.
+ *
+ *          In this case, the scene manager will trace back the 'requires' path to the first non phantom scene (the first independent scene) and then
+ *          automatically trigger transitions.
+ *
+ *          In this particular example, 'secondary' will be displayed, and then immediately after 'third' will be displayed.
  *
 */
 
@@ -130,12 +159,11 @@
 *		manager: The associated scenemanager
 *
 */
-function Scene(innerHTML, preload , onPresent, onDestroy, manager) {
+function Scene(innerHTML, preload , onPresent, onDestroy) {
 	this.html = innerHTML;
 	this.preload = preload;
 	this.onPresent = onPresent;
 	this.onDestroy = onDestroy;
-	this.manager = manager;
 	this.exportedVariables = {};
 }
 
@@ -168,6 +196,10 @@ function Scene(jsFile, onLoad) {
 		this.onDestroy = exported_scene["onDestroy"];
 		this.getHTML = exported_scene["getHTML"];
         this.id = exported_scene["id"];
+
+        if (this.isPhantom()) {
+            this.requires = exported_scene["requires"];
+        }
 
         if (!this.id) {
             console.error("[scene.js] ERROR/fatal: The scene in " + jsFile + " is missing an id.");

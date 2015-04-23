@@ -207,8 +207,49 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
 	} else {
 		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
+
+
+        //resolve our dependencies
+        var requiredScenes = [];
+
+        //make sure we don't hit a cycle. If we do, this is a fatal error and the programmer should be alerted.
+        var visitedScenes = [];
+        visitedScenes.append(scene.id);
+
+        var current_requirement = scene.requires;
+
+        while (current_requirement != null) {
+
+            var current_required_scene = this.getScene(current_requirement);
+
+            if (this.activeScene && current_required_scene.id == this.activeScene.id) {
+                //we've hit our current scene in the dependency graph. That means, everything we've accumulated up until now is all we need to present this scene.
+                return;
+            }
+
+            if (visitedScenes.indexOf(current_required_scene.id)>-1) {
+                console.error("[scenemanager.js/loader]Error:(1/2) You have a cyclic dependency in your scene graph. That is, the scene " + current_required_scene.id + " is required in a cyclic manner.");
+                console.error("[scenemanager.js/loader](2/2)Please review your phantom scene 'requires' statements.");
+            }
+
+            visitedScenes.append(current_required_scene.id);
+            requiredScenes.append(current_required_scene.id);
+
+            current_requirement = current_required_scene.requires;
+        }
+
+        var numRequirements = requiredScenes.length;
+
+        // destroy whatever scene is currently on screen
         if (this.activeScene && this.activeScene.onDestroy) {
             this.activeScene.onDestroy();
+        }
+
+        // present the sequence of scenes that lead up until
+        var i = 0;
+        while (i < numRequirements) {
+            this.presentScene(requiredScenes.pop());
+            i++;
         }
 
         scene.element = this.activeScene.element;
@@ -275,4 +316,10 @@ SceneManager.prototype.loadScene = function(sceneID) {
 };
 
 
+/**
+ * Returns the Scene instance associated with a given name
+ */
+SceneManager.prototype.getScene = function(sceneID) {
+    return this.scenes[sceneID];
+};
 
