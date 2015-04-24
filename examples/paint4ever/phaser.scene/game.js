@@ -9,7 +9,6 @@ var exported_scene = {
 
 		var game = new Phaser.Game(618, 411, Phaser.AUTO, 'holder', { preload: preload, create: create, update: update });
 
-
 		function preload() {
 			game.load.image('redBlock', 'phaser.scene/small-red-block.png');
 			game.load.image('blueBlock', 'phaser.scene/small-blue-block.png');
@@ -101,7 +100,7 @@ var exported_scene = {
 			game.physics.arcade.collide(blueBlocks, base);
 			game.physics.arcade.collide(clippy, base);
 			game.physics.arcade.collide(clippy, blueBlocks);
-			game.physics.arcade.overlap(windows, blueBlocks, killWindow null, this);
+			game.physics.arcade.overlap(windows, blueBlocks, killWindow, null, this);
 			game.physics.arcade.overlap(player, ladder, upLadder, null, this);
 
 			//  Reset the players velocity (movement)
