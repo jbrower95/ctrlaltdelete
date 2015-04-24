@@ -8,25 +8,32 @@ var exported_scene = {
 		var clippyAgent;
 
 		AssetManager.getSharedInstance().preload(1);
-		AssetManager.getSharedInstance().preload(2);
+		AssetManager.getSharedInstance().preload(3);
 
-		var showClippy = function() {
-			 clippy.load('Clippy', function(agent) {
+		if (!this.exportedVariables) {
+			this.exportedVariables = {};
+		}
+
+		var showClippy = $.proxy(function() {
+			 clippy.load('Clippy', $.proxy(function(agent) {
 			        clippyAgent = agent;
+					this.exportedVariables.clippy = agent;
 				 	clippyAgent.show();
 			        clippyAgent.moveTo(200,200);
+				 	console.log("Playing sound 1");
 				 	clippyAgent.speak('Looks like your stuck inside a computer!');
 				 	AssetManager.getSharedInstance().play(1);
 				 	clippyAgent.animate();
-			    });
-		};
+			    }, this));
+		}, this);
 		
 		var clickTheX = function() {
 			clippyAgent.speak("Your windows are frozen! Click the x's!");
-			AssetManager.getSharedInstance().play(2);
+			console.log("Playing sound 2");
+			AssetManager.getSharedInstance().play(3);
 		};
 		
-		SceneManager.performSequence([showClippy, clickTheX], [300, 900]);
+		SceneManager.performSequence([showClippy, clickTheX], [300, 8000]);
 	},
 	onDestroy: function() {
 

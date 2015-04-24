@@ -28,34 +28,38 @@ var exported_scene = {
         video.autoPlay = "autoplay";
         video.play();
 
-        var state = -1;
-
-        var runCredits = function() {
-            state = state + 1;
-            if (state == 0) {
-                console.log("showing credits 1..");
-                $("#credit1").show();
-                setTimeout(runCredits, 5000);
-            } else if (state == 1) {
-                console.log("showing credits 2..");
-                $("#credit1").hide();
-                $("#credit2").show();
-                setTimeout(runCredits, 5000);
-            } else if (state == 2) {
-                console.log("showing credits 3..");
-                $("#credit2").hide();
-                $("#credit3").show();
-                setTimeout(runCredits, 5000);
-            } else if (state == 3) {
-
-                console.log("showing credits 4..");
-                $("#credit3").hide();
-                $("#credit4").show();
-                setTimeout(runCredits, 5000);
-            }
+        var showCredit1 = function() {
+            $("#credit1").show();
         };
 
-        runCredits();
+        var showCredit2 = function() {
+            $("#credit1").hide();
+            $("#credit2").show();
+        };
+
+        var showCredit3 = function() {
+            $("#credit2").hide();
+            $("#credit3").show();
+        };
+
+        var showCredit4 = function() {
+            $("#credit3").hide();
+            $("#credit4").show();
+        };
+
+        var exit = function() {
+          SceneManager.getSharedInstance().presentScene("mainMenu");
+        };
+
+        console.log("Hiding credits...");
+        $("#credit1").hide();
+        $("#credit2").hide();
+        $("#credit3").hide();
+        $("#credit4").hide();
+        console.log("Done.");
+
+        SceneManager.performSequence([showCredit1, showCredit2, showCredit3, showCredit4, exit], [5000, 10000, 10000, 10000, 20000], this);
+
         scene.searchContent("#container").append(video);
     },
     getHTML : function() {

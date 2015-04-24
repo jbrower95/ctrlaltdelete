@@ -30,7 +30,7 @@ function AssetManager() {
  * @param id
  */
 AssetManager.prototype.preload = function(id) {
-    this.sounds[id].load();
+    this.sounds[id-1].load();
 };
 
 /**
@@ -51,5 +51,5 @@ var __asset_manager = null;
 
 //plays a sound.
 AssetManager.prototype.play = function(soundID) {
-    this.sounds[soundID].play();
+    this.sounds[soundID-1].play();
 };
