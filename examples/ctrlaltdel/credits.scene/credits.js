@@ -29,26 +29,30 @@ var exported_scene = {
         video.play();
 
         var showCredit1 = function() {
-            $("#credit1").show();
+            $("#credit1").show({duration: 2000});
         };
 
         var showCredit2 = function() {
-            $("#credit1").hide();
-            $("#credit2").show();
+            $("#credit1").hide({duration: 200});
+            $("#credit2").show({duration: 2000});
         };
 
         var showCredit3 = function() {
-            $("#credit2").hide();
-            $("#credit3").show();
+            $("#credit2").hide({duration: 200});
+            $("#credit3").show({duration: 2000});
         };
 
         var showCredit4 = function() {
-            $("#credit3").hide();
-            $("#credit4").show();
+            $("#credit3").hide({duration: 200});
+            $("#credit4").show({duration: 2000});
         };
 
         var exit = function() {
-          SceneManager.getSharedInstance().presentScene("mainMenu");
+            //do that sweet fade
+            $("video").hide(1000, function() {
+                $("video").trigger("stop");
+                SceneManager.getSharedInstance().presentScene("mainMenu");
+            });
         };
 
         console.log("Hiding credits...");
