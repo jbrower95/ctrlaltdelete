@@ -5,6 +5,7 @@ var exported_scene = {
 		var win = manager.inflate("taskManager");
 		manager.addWindow(win);
 		
+		console.log(manager.windows)
 		var clippyAgent;
 
 		AssetManager.getSharedInstance().preload(1);

@@ -1,7 +1,11 @@
 
-//Declare our map of scenes
+// Declare the map of scenes.
 var scenes = {};
 
+// Prevent users from accidentally refreshing the page and losing progress.
+window.onbeforeunload = function() {
+    return "You're about to lose your progress. Don't leave!";
+}
 
 SceneManager.initialize("content");
 Scene.load("copyright.scene/copyright.js", startGame);
