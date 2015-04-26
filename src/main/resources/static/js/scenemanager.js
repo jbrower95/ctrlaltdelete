@@ -152,9 +152,7 @@ SceneManager.prototype.registerScene = function(scene) {
  * the scene will be ejected using a left to right animation.
  */
 SceneManager.prototype.presentScene = function(sceneID) {
-
-    console.log("[scenemanager.js] Presenting scene - " + sceneID);
-
+  console.log("[scenemanager.js] Presenting scene - " + sceneID);
 	var scene = this.scenes[sceneID];
 
 	if (scene == null) {
@@ -162,106 +160,114 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		return;
 	} 
 
-    if (!scene.getHTML) {
-        console.error("[scenemanager.js] Scene didn't have a getHTML property. This function is non optional, but can return null.");
-        console.error("[scenemanager.js] object: " + scene);
-        return;
-    }
+  if (!scene.getHTML) {
+    console.error("[scenemanager.js] Scene didn't have a getHTML property. This function is non optional, but can return null.");
+    console.error("[scenemanager.js] object: " + scene);
+    return;
+  }
 
-    if (!scene.preload) {
-        console.error("[scenemanager.js] Scene didn't have a preload() function. This is most likely an internal error.");
-        console.error("[scenemanager.js] object: " + scene);
-        return;
-    }
+  if (!scene.preload) {
+    console.error("[scenemanager.js] Scene didn't have a preload() function. This is most likely an internal error.");
+    console.error("[scenemanager.js] object: " + scene);
+    return;
+  }
 
 	scene.preload();
 
 	if (!scene.isPhantom()) {
-
 		// If there is a scene already in the content div, move it out
-		if (this.activeScene){
+		if (this.activeScene) {
 			// since we reassign this.activeScene when the next animation completes,
 			if (this.activeScene.onDestroy) {
 				this.activeScene.onDestroy();
 			}
+      if (this.activeScene.element == null) {
+          console.error("[scenemanager] Existing scene was null..");
+      }
+      $(this.contentDiv).empty();
+    }
+    var newScene = document.createElement("div");
+    newScene.className = "__scene__";
+    newScene.innerHTML = scene.getHTML();
 
-			//$(jQuery(copy.element)).removeClass("in");
-			//$(jQuery(copy.element)).addClass("out");
-
-            if (this.activeScene.element == null) {
-                console.error("[scenemanager] Existing scene was null..");
-            }
-
-            $(this.contentDiv).empty();
-        }
-
-        var newScene = document.createElement("div");
-        newScene.className = "__scene__";
-        newScene.innerHTML = scene.getHTML();
-
-        scene.element = newScene;
-        this.contentDiv.appendChild(scene.element);
-
+    scene.element = newScene;
+    this.contentDiv.appendChild(scene.element);
 	} else {
-		//reuse the scene HTML that's in there. just tell the active scene it's being destroyed
+		// reuse the scene HTML that's in there. just tell the active scene it's being destroyed
+    // resolve our dependencies
+    var requiredScenes = [];
 
+    // make sure we don't hit a cycle. If we do, this is a fatal error and the programmer should be alerted.
+    var visitedScenes = [];
+    visitedScenes.push(scene.id);
 
-        //resolve our dependencies
-        var requiredScenes = [];
+    var current_requirement = scene.requires;
 
-        //make sure we don't hit a cycle. If we do, this is a fatal error and the programmer should be alerted.
-        var visitedScenes = [];
-        visitedScenes.append(scene.id);
+    if (current_requirement == null) {
+      console.error("[scenemanager.js] No required scene provided for this phantom scene.")
+    }
 
-        var current_requirement = scene.requires;
+    while (current_requirement != null) {
+      console.log("[scenemanager.js] Resolving requirement: " + current_requirement);
+      var current_required_scene = this.getScene(current_requirement);
 
-        while (current_requirement != null) {
+      if (this.activeScene && current_required_scene.id == this.activeScene.id) {
+          // We've hit our current scene in the dependency graph. That means, all content
+          //   we've accumulated up until now is all we need to present this scene.
+          // make sure the new scene can easily find things inside of itself.
+          scene.searchContent = function(id) {
+            return $(newScene).find(id);
+          };
 
-            var current_required_scene = this.getScene(current_requirement);
+          // pass the torch to the new scene
+          console.log("[scenemanager.js] Calling onPresent on " + scene.id);
+          this.activeScene = scene;
+          if (scene.onPresent) {
+            scene.onPresent();
+          }
+          return;
+      }
 
-            if (this.activeScene && current_required_scene.id == this.activeScene.id) {
-                //we've hit our current scene in the dependency graph. That means, everything we've accumulated up until now is all we need to present this scene.
-                return;
-            }
+      if (visitedScenes.indexOf(current_required_scene.id) > -1) {
+          console.error("[scenemanager.js/loader] Error: (1/2) You have a cyclic dependency in your scene graph. That is, the scene " + current_required_scene.id + " is required in a cyclic manner.");
+          console.error("[scenemanager.js/loader] (2/2) Please review your phantom scene 'requires' statements.");
+      }
 
-            if (visitedScenes.indexOf(current_required_scene.id)>-1) {
-                console.error("[scenemanager.js/loader]Error:(1/2) You have a cyclic dependency in your scene graph. That is, the scene " + current_required_scene.id + " is required in a cyclic manner.");
-                console.error("[scenemanager.js/loader](2/2)Please review your phantom scene 'requires' statements.");
-            }
+      visitedScenes.push(current_required_scene.id);
+      requiredScenes.push(current_required_scene.id);
 
-            visitedScenes.append(current_required_scene.id);
-            requiredScenes.append(current_required_scene.id);
+      current_requirement = current_required_scene.requires;
+    }
 
-            current_requirement = current_required_scene.requires;
-        }
+    var numRequirements = requiredScenes.length;
+    console.log("[scenemanager.js] Number of required scenes: " + numRequirements);
 
-        var numRequirements = requiredScenes.length;
+    // destroy whatever scene is currently on screen
+    if (this.activeScene && this.activeScene.onDestroy) {
+      this.activeScene.onDestroy();
+    }
 
-        // destroy whatever scene is currently on screen
-        if (this.activeScene && this.activeScene.onDestroy) {
-            this.activeScene.onDestroy();
-        }
+    // present the sequence of scenes that lead up until
+    var i = 0;
+    while (i < numRequirements) {
+      this.presentScene(requiredScenes.pop());
+      i++;
+    }
 
-        // present the sequence of scenes that lead up until
-        var i = 0;
-        while (i < numRequirements) {
-            this.presentScene(requiredScenes.pop());
-            i++;
-        }
-
-        scene.element = this.activeScene.element;
+    scene.element = this.activeScene.element;
 	}
 
-    //make sure the new scene can easily find things inside of itself.
-	scene.searchContent = function(id) {
-        return $(jQuery(newScene)).find(id);
-    };
+  // make sure the new scene can easily find things inside of itself.
+  scene.searchContent = function(id) {
+    return $(newScene).find(id);
+  };
 
-    //pass the torch onto the new scene
-    this.activeScene = scene;
-	if (scene.onPresent) {
-		scene.onPresent();
-	}
+  // pass the torch to the new scene
+  console.log("[scenemanager.js] Calling onPresent on " + scene.id);
+  this.activeScene = scene;
+  if (scene.onPresent) {
+  	scene.onPresent();
+  }
 };
 
 

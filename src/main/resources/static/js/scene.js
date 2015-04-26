@@ -273,7 +273,14 @@ Scene.prototype.preload = function() {
         var manager = SceneManager.getSharedInstance();
         if (manager.activeScene && manager.activeScene.exportedVariables) {
             console.log("[scene.js] Variables copied.");
-            jQuery.extend(this.exportedVariables, manager.activeScene.exportedVariables);
+            console.log("[scene.js] Variables to add: ");
+            console.log(manager.activeScene.exportedVariables);
+            if (!this.exportedVariables) {
+                this.exportedVariables = {};
+            }
+            $.extend(this.exportedVariables, manager.activeScene.exportedVariables);
+            console.log("[scene.js] New variable list: ");
+            console.log(this.exportedVariables);
         } else {
             console.log("[scene.js] No variables were copied.");
         }

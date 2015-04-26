@@ -2,8 +2,13 @@ var exported_scene = {
     id : "windows95",
 	onPresent : function() {
 		var manager = new WindowManager("desktop");
+		
 		var win = manager.inflate("taskManager");
 		win.moveTo(200, 100);
+		manager.addWindow(win);
+
+		var win = manager.inflate("explorer");
+		win.moveTo(150, 200);
 		manager.addWindow(win);
 		
 		var clippyAgent;

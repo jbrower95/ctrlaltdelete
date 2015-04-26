@@ -1,17 +1,16 @@
 var exported_scene = {
     id : "explorer95",
 	onPresent : function() {
-		var manager = new WindowManager("desktop");
-		var win = manager.inflate("explorer");
-		win.moveTo(150, 200);
-		manager.addWindow(win);
-		
+		console.log("[explorer95.js] The onPresent method of explorer95 has been called.");
 		if (!this.exportedVariables) {
+			console.error("[explorer95.js] Did not receive exported variables! This sucks...");
 			this.exportedVariables = {};
 		}
 
 		if (this.exportedVariables.clippy == null) {
 			console.error("[explorer95.js] Clippy is missing!");
+		} else {
+			console.log("[explorer95.js] Found Clippy! Hooray!");
 		}
 
 		var clippyAgent = this.exportedVariables.clippy;
@@ -46,7 +45,8 @@ var exported_scene = {
 
 	},
 	getHTML : function() {
-		return "explorer95.scene/explorer95.html";
+		//return "explorer95.scene/explorer95.html";
+		return null;
 	},
 	requires : "windows95"
 };
