@@ -95,7 +95,9 @@ Window.prototype.xHandler = function() {
 *		pos_y: The y-position to move the Window to, in pixels. (Cannot be a string.)
 */
 Window.prototype.moveTo = function(pos_x, pos_y) {
-	this.element.css({left: pos_x, top: pos_y});
+	$(this.element).css({left: pos_x + 'px', top: pos_y + 'px'});
+	this.x = pos_x;
+	this.y = pos_y;
 }
 
 /**

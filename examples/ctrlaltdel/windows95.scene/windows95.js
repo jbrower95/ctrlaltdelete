@@ -3,6 +3,7 @@ var exported_scene = {
 	onPresent : function() {
 		var manager = new WindowManager("desktop");
 		var win = manager.inflate("taskManager");
+		win.moveTo(200, 100);
 		manager.addWindow(win);
 		
 		var clippyAgent;

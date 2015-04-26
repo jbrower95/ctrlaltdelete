@@ -23,12 +23,11 @@
 	font-family: "Microsoft Sans Serif", "MS Sans Serif", Arial, sans-serif;
 }
 
-#taskManager {
+#explorer {
 	width: auto;
 	height: auto;
 	position: relative;
-	left: 200px;
-	top: 40px;
+	z-index: 5;
 }
 
 #taskbar {

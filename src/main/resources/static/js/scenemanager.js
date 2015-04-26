@@ -20,7 +20,7 @@
   *
   *          SceneManager.initialize(div)
   *
-  *      atleast once. If you don't call this, you will receive a null manager.
+  *      at least once. If you don't call this, you will receive a null manager.
   *      After performing the initialization methods, you can receive the manager by calling
   *
   *          SceneManager.getSharedInstance()
