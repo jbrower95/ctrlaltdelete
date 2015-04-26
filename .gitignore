@@ -25,4 +25,5 @@ Thumbs.db
 *.log
 C:*
 hs_err_pid*
+*~
 
