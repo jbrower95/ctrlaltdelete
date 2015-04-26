@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        /* #00bad6 - darkturquoise
+        #ef563d - tomato
+        #F5C70C - gold
+        #ffaf00 - orange
+        #222128 - darkslategrey
+        */
+        html, body {
+        padding: 0;
+        margin: 0;
+        background-color: #222128;
+        width: 100%;
+        position: relative;
+        overflow-x: hidden;
+        }
+
+        .head {
+        background-color: #222128;
+        position: relative;
+        margin: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5%;
+        padding: 3%;
+        padding-left: 10.5%;
+        padding-right: 8%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        color: white;
+        }
+
+        .head h1 {
+        display: block;
+        width: auto;
+        height: auto;
+        }
+
+        .new_experience {
+        position: relative;
+        right: 10%;
+        top: 3%;
+        padding: 1%;
+        padding-left: 2%;
+        padding-right: 2%;
+        border: 3px solid white;
+        width: auto;
+        height: auto;
+        background-color: rgba(255,255,255,0);
+        color: white;
+        font-family: 'Lato', sans-serif;
+        font-size: 1.3em;
+        font-weight: 700;
+        transition: background-color 0.2s, color 0.2s;
+        }
+
+        .new_experience:hover {
+        cursor: pointer;
+        background-color: rgba(255,255,255,1);
+        color: #222128;
+        }
+
+        .container {
+        position: relative;
+        margin: 0 auto;
+        width: 100%;
+        height: auto;
+        padding: 3%;
+        padding-left: 10%;
+        padding-right: 10%;
+        font-family: 'Merriweather', serif;
+        }
+
+        .block {
+        min-height: 0;
+        position: relative;
+        width: 23%;
+        padding-bottom: 20%;
+        float: left;
+        margin: 1%;
+        overflow: hidden;
+        background-color: #00bad6;
+        opacity: 1;
+        transition: opacity 0.1s;
+        }
+
+        .block-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 10%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: 'Lato', sans-serif;
+        font-size: 1.5em;
+        }
+
+        .block:focus, .block-overlay:focus {
+        outline: none;
+        }
+
+        .block:hover, .block-overlay:hover {
+        cursor: pointer;
+        }
+
+        .block:hover {
+        opacity: 0.8;
+        }
+
+        .turq {
+        background-color: #00bad6;
+        }
+
+        .tomato {
+        background-color: #ef563d;
+        }
+
+        .gold {
+        background-color: #F5C70C;
+        }
+
+        .orange {
+        background-color: orange;
+        }
+
+        h1 {
+        font-size: 3em;
+        font-family: 'Lato', sans-serif;
+        }
+
+        a {
+        text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <h1>Stories</h1>
+
+        <a href="experience.html" class="new_experience">New Experience</a>
+    </div>
+    <div class="container">
+            <a href="#">
+                <div class="block turq">
+                    <div class="block-overlay">
+                        Experience
+                    </div>
+                </div>
+            </a>
+
+        <a href="#">
+            <div class="block gold">
+                <div class="block-overlay">
+                    Experience
+                </div>
+            </div>
+        </a>
+
+        <a href="#">
+            <div class="block tomato">
+                <div class="block-overlay">
+                    Experience
+                </div>
+            </div>
+        </a>
+    </div>
+</body>
+</html>

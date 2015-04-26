@@ -110,6 +110,8 @@ public class Server {
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
+
+    Spark.post("/test", new TestHandler());
   }
 
   /**
@@ -391,6 +393,25 @@ public class Server {
         limit = 10;
       }
       return GSON.toJson(exp.db.getNBestScores(limit));
+    }
+  }
+
+  public class TestHandler implements Route {
+    @Override
+    public String handle(Request req, Response res) {
+      System.out.println("FileUpload!");
+
+      QueryParamsMap qm = req.queryMap();
+      System.out.println(qm.value("formData"));
+      //System.out.println(qm.value("hello"));
+      //System.out.println(qm.value("files"));
+      /*String filename = qm.value("file");
+      System.out.println(filename);
+
+      File file = new File(filename);
+      System.out.println(file.isFile());*/
+
+      return GSON.toJson(null);
     }
   }
 }
