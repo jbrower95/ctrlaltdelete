@@ -77,7 +77,7 @@ AssetManager.prototype.preloadNamed = function(soundPath, soundName, reload) {
         //this sound has already been loaded.
         return;
     }
-    
+
     this.namedSounds[soundName] = new buzz.sound(soundPath);
     this.namedSounds[soundName].load();
 };
