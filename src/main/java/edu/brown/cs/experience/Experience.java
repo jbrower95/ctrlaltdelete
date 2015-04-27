@@ -15,6 +15,7 @@ public class Experience {
   public final String name;
   public final String filename;
   public final String description;
+  public final String color;
   public final ExperienceDatabase db;
   public final boolean orderScoresHighToLow;
   public final JsonArray files;
@@ -45,6 +46,7 @@ public class Experience {
     }
 
     name = root.get("name").getAsString();
+    color = root.get("themeColor").getAsString();
     orderScoresHighToLow = root.get("orderScoresHighToLow").getAsBoolean();
     description = root.get("description").getAsString();
 
