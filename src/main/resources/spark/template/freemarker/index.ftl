@@ -49,7 +49,18 @@
 			padding: 3%;
 			padding-left: 10%;
 			padding-right: 10%;
+			box-sizing: border-box;
 			font-family: 'Merriweather', serif;
+			overflow: hidden;
+		}
+
+		.container:after {
+		visibility: hidden;
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 0;
 		}
 
 		.block {
@@ -142,7 +153,7 @@
 		  				</div>
 			  		</div>
 			  	</a>
-			</#list>  
+			</#list>
 		</div>
 	</body>
 

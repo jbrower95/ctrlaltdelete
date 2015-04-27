@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17e5ff33-56e5-47a7-8036-3e55f2356271" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ctrlaltdel.iml" afterPath="$PROJECT_DIR$/ctrlaltdel.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl" afterPath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl" afterPath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ctrlaltdel.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,20 +31,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.730769" vertical-offset="0" max-vertical-offset="663">
-              <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5698324" vertical-offset="408" max-vertical-offset="4420">
+            <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="4420">
               <caret line="63" column="19" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
               <folding>
                 <element signature="class#ContentHandler#0;class#Server#0" expanded="false" />
@@ -63,21 +56,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="editor.ftl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl">
+      <file leaf-file-name="windows95.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-19.52" vertical-offset="4476" max-vertical-offset="5202">
-              <caret line="292" column="15" selection-start-line="292" selection-start-column="15" selection-end-line="292" selection-end-column="15" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="2295">
+              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="menu.ftl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl">
+      <file leaf-file-name="windows95.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.04" vertical-offset="1464" max-vertical-offset="1921">
-              <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="969">
+              <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="editor.ftl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="58.574074" vertical-offset="3877" max-vertical-offset="5202">
+              <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -86,8 +89,18 @@
       <file leaf-file-name="index.ftl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.04" vertical-offset="2263" max-vertical-offset="3230">
-              <caret line="142" column="26" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+            <state vertical-scroll-proportion="-26.92" vertical-offset="1962" max-vertical-offset="3417">
+              <caret line="155" column="20" selection-start-line="155" selection-start-column="20" selection-end-line="155" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="makerIndex.ftl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8978979" vertical-offset="1146" max-vertical-offset="2873">
+              <caret line="85" column="39" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -147,12 +160,12 @@
         <option value="$PROJECT_DIR$/examples/impeachpaxson/.config" />
         <option value="$PROJECT_DIR$/examples/llamapalooza/.config" />
         <option value="$PROJECT_DIR$/examples/paint4ever/.config" />
-        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl" />
         <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/experience.html" />
         <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl" />
-        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl" />
-        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl" />
         <option value="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl" />
+        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl" />
+        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl" />
       </list>
     </option>
   </component>
@@ -413,6 +426,46 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="examples" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ctrlaltdel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="windows95.scene" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -990,13 +1043,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/examples/paint4ever/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/paint4ever/phaser.scene/game.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
@@ -1198,13 +1244,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="453" max-vertical-offset="833">
-          <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/scenemanager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4250681" vertical-offset="5131" max-vertical-offset="5576">
@@ -1238,14 +1277,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.5384617" vertical-offset="1326" max-vertical-offset="3162">
           <caret line="88" column="25" selection-start-line="0" selection-start-column="0" selection-end-line="180" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.730769" vertical-offset="0" max-vertical-offset="663">
-          <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
           <folding />
         </state>
       </provider>
@@ -1324,41 +1355,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl">
+    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2023809" vertical-offset="2232" max-vertical-offset="2856">
-          <caret line="161" column="11" selection-start-line="161" selection-start-column="11" selection-end-line="161" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="2295">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl">
+    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/windows95.scene/windows95.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.04" vertical-offset="2263" max-vertical-offset="3230">
-          <caret line="142" column="26" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="969">
+          <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl">
+    <entry file="file://$PROJECT_DIR$/examples/ctrlaltdel/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.04" vertical-offset="1464" max-vertical-offset="1921">
-          <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.52" vertical-offset="4476" max-vertical-offset="5202">
-          <caret line="292" column="15" selection-start-line="292" selection-start-column="15" selection-end-line="292" selection-end-column="15" />
+        <state vertical-scroll-proportion="0.79518074" vertical-offset="76" max-vertical-offset="663">
+          <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5698324" vertical-offset="408" max-vertical-offset="4420">
+        <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="4420">
           <caret line="63" column="19" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
           <folding>
             <element signature="class#ContentHandler#0;class#Server#0" expanded="false" />
@@ -1376,6 +1399,38 @@
             <element signature="docComment;class#MakerHandler#0;class#Server#0" expanded="false" />
             <element signature="docComment;class#EditorHandler#0;class#Server#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45345345" vertical-offset="1464" max-vertical-offset="1921">
+          <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-26.92" vertical-offset="1962" max-vertical-offset="3417">
+          <caret line="155" column="20" selection-start-line="155" selection-start-column="20" selection-end-line="155" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="58.574074" vertical-offset="3877" max-vertical-offset="5202">
+          <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8978979" vertical-offset="1146" max-vertical-offset="2873">
+          <caret line="85" column="39" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="39" />
+          <folding />
         </state>
       </provider>
     </entry>
