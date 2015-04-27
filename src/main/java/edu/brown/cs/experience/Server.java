@@ -32,7 +32,7 @@ import edu.brown.cs.joengelm.sqldb.Database;
 public class Server {
   Map<String, Experience> experiences = new HashMap<>();
   private final static Gson GSON = new Gson();
-  private final String directory;
+
   private final static Map<String, String> contentTypes = getContentTypes();
   private final static Set<String> typesWithoutBytes = ImmutableSet.of(
     "text/html", "text/css", "application/javascript");
@@ -60,15 +60,10 @@ public class Server {
   }
 
   public Server(String experiencesDirectory) {
-    directory = experiencesDirectory;
-    Spark.externalStaticFileLocation(experiencesDirectory);
-    senseExperiences();
-  }
-
-  public void senseExperiences() {
     System.out.println("[server] Binding file directory: "
-            + directory);
-    File dir = new File(directory);
+      + experiencesDirectory);
+    Spark.externalStaticFileLocation(experiencesDirectory);
+    File dir = new File(experiencesDirectory);
     File[] directoryListing = dir.listFiles();
     if (directoryListing != null) {
       for (File experienceFile : directoryListing) {
@@ -80,28 +75,27 @@ public class Server {
 
           experiences.put(exp.filename, exp);
           System.out.println("[server] Binding directory for experience: "
-                  + experienceFile.getPath());
+            + experienceFile.getPath());
+          Spark.externalStaticFileLocation(experienceFile.getPath());
           System.out.println("Successfully loaded experience: "
-                  + experienceFile.getName());
+            + experienceFile.getName());
         } catch (FileNotFoundException e) {
           System.err.println(experienceFile.getName()
-                  + " is missing its config file. It will be omitted.");
+            + " is missing its config file. It will be omitted.");
         } catch (JsonParseException e) {
           System.err.println(experienceFile.getName()
-                  + " has errors in its config file. It will be omitted.");
+            + " has errors in its config file. It will be omitted.");
           System.err.println(e.getMessage());
         } catch (IllegalArgumentException e) {
           System.err.println(experienceFile.getName() + " - "
-                  + e.getMessage());
+            + e.getMessage());
         }
       }
     } else {
-      throw new IllegalArgumentException(directory
-              + " is not a directory");
+      throw new IllegalArgumentException(experiencesDirectory
+        + " is not a directory");
     }
   }
-
-
 
   public void run() {
     Spark.externalStaticFileLocation("src/main/resources/static");
@@ -121,14 +115,8 @@ public class Server {
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
-  }
 
-  public class ReloadHandler implements Route {
-    @Override
-    public Object handle(Request request, Response response) {
-      senseExperiences();
-      return (new Gson()).toJson(ImmutableMap.of("success", "true"));
-    }
+    Spark.post("/test", new TestHandler());
   }
 
   /**
@@ -176,6 +164,19 @@ public class Server {
         "playLink", "/" + exp.filename + "/play", "scoresLink",
         "/" + exp.filename + "/scores");
       return new ModelAndView(variables, "menu.ftl");
+    }
+  }
+
+  /**
+   * Handle requests directed to each experience's content database.
+   *
+   * @author joengelm
+   */
+  public class ContentHandler implements Route {
+    @Override
+    public Object handle(Request req, Response res) {
+      // TODO idek
+      return req.splat().toString();
     }
   }
 
