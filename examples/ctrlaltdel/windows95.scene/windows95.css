@@ -69,6 +69,10 @@ body {
 	border: 3px solid #bdbdbd;
 }
 
+.top-window {
+	z-index: 100;
+}
+
 #desktop {
 	background-color: #0E6E6C;
 	width: 100%;
