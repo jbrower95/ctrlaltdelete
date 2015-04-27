@@ -136,7 +136,7 @@
 
 		    <#list expFileNames as expFileName>
 			    <a href="/${expFileName}">
-			  		<div class="block turq">
+			  		<div class="block" style="background-color:#${expColors[expFileName_index]}">
 			  			<div class="block-overlay">
 			  				${expNames[expFileName_index]}
 		  				</div>

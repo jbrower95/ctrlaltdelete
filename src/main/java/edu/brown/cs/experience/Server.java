@@ -32,7 +32,7 @@ import edu.brown.cs.joengelm.sqldb.Database;
 public class Server {
   Map<String, Experience> experiences = new HashMap<>();
   private final static Gson GSON = new Gson();
-
+  private final String directory;
   private final static Map<String, String> contentTypes = getContentTypes();
   private final static Set<String> typesWithoutBytes = ImmutableSet.of(
     "text/html", "text/css", "application/javascript");
@@ -60,10 +60,35 @@ public class Server {
   }
 
   public Server(String experiencesDirectory) {
+    this.directory = experiencesDirectory;
+    senseChanges();
+  }
+
+  public void run() {
+    Spark.externalStaticFileLocation(directory);
+
+    Spark.get("/", new IndexHandler(), new FreeMarkerEngine());
+    Spark.get("/maker", new MakerHandler(), new FreeMarkerEngine());
+    Spark.get("/reload", new ReloadHandler());
+    Spark.get("/make", new NewEditorHandler(),
+            new FreeMarkerEngine());
+    Spark.get("/:experience", new ExperienceMenuHandler(),
+      new FreeMarkerEngine());
+    Spark.get("/:experience/editor", new EditorHandler(),
+            new FreeMarkerEngine());
+
+    Spark.get("/:experience/play", new PlayHandler());
+    Spark.post("/:experience/scores", new PostScoresHandler());
+    Spark.get("/:experience/scores", new GetScoresHandler());
+    Spark.get("/:experience/:asset", new GameHandler());
+    Spark.get("/:experience/lib/:asset", new LibHandler());
+    Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
+  }
+
+  public void senseChanges() {
     System.out.println("[server] Binding file directory: "
-      + experiencesDirectory);
-    Spark.externalStaticFileLocation(experiencesDirectory);
-    File dir = new File(experiencesDirectory);
+            + directory);
+    File dir = new File(directory);
     File[] directoryListing = dir.listFiles();
     if (directoryListing != null) {
       for (File experienceFile : directoryListing) {
@@ -75,44 +100,35 @@ public class Server {
 
           experiences.put(exp.filename, exp);
           System.out.println("[server] Binding directory for experience: "
-            + experienceFile.getPath());
-          Spark.externalStaticFileLocation(experienceFile.getPath());
+                  + experienceFile.getPath());
           System.out.println("Successfully loaded experience: "
-            + experienceFile.getName());
+                  + experienceFile.getName());
         } catch (FileNotFoundException e) {
           System.err.println(experienceFile.getName()
-            + " is missing its config file. It will be omitted.");
+                  + " is missing its config file. It will be omitted.");
         } catch (JsonParseException e) {
           System.err.println(experienceFile.getName()
-            + " has errors in its config file. It will be omitted.");
+                  + " has errors in its config file. It will be omitted.");
           System.err.println(e.getMessage());
         } catch (IllegalArgumentException e) {
           System.err.println(experienceFile.getName() + " - "
-            + e.getMessage());
+                  + e.getMessage());
         }
       }
     } else {
-      throw new IllegalArgumentException(experiencesDirectory
-        + " is not a directory");
+      throw new IllegalArgumentException(directory
+              + " is not a directory");
     }
   }
 
-  public void run() {
-    Spark.externalStaticFileLocation("src/main/resources/static");
-    Spark.get("/", new IndexHandler(), new FreeMarkerEngine());
-    Spark.get("/:experience", new ExperienceMenuHandler(),
-      new FreeMarkerEngine());
-    Spark.get("/:experience/content/*", new ContentHandler());
-
-    Spark.get("/:experience/play", new PlayHandler());
-    Spark.post("/:experience/scores", new PostScoresHandler());
-    Spark.get("/:experience/scores", new GetScoresHandler());
-    Spark.get("/:experience/:asset", new GameHandler());
-    Spark.get("/:experience/lib/:asset", new LibHandler());
-    Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
-
-    Spark.post("/test", new TestHandler());
+  public class ReloadHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) {
+      senseChanges();
+      return GSON.toJson(ImmutableMap.of("success", "true"));
+    }
   }
+
 
   /**
    * Handle requests directed to this site's index.
@@ -124,13 +140,16 @@ public class Server {
     public ModelAndView handle(Request req, Response res) {
       List<String> experienceNames = new ArrayList<>();
       List<String> experienceFileNames = new ArrayList<>();
+      List<String> experienceColors = new ArrayList<>();
       for (Experience exp : experiences.values()) {
         experienceFileNames.add(exp.filename);
         experienceNames.add(exp.name);
+        experienceColors.add(exp.color);
       }
 
       Map<String, Object> variables = ImmutableMap.of("expFileNames",
-        experienceFileNames, "expNames", experienceNames);
+        experienceFileNames, "expNames", experienceNames,
+        "expColors", experienceColors);
       return new ModelAndView(variables, "index.ftl");
     }
   }
@@ -152,8 +171,9 @@ public class Server {
       Experience exp = experiences.get(experienceFileName);
 
       Map<String, Object> variables = ImmutableMap.of("title", exp.name,
-        "description", exp.description, "playLink", "/" + exp.filename
-          + "/play", "scoresLink", "/" + exp.filename + "/scores");
+        "color", exp.color, "description", exp.description,
+        "playLink", "/" + exp.filename + "/play", "scoresLink",
+        "/" + exp.filename + "/scores");
       return new ModelAndView(variables, "menu.ftl");
     }
   }
@@ -396,22 +416,75 @@ public class Server {
     }
   }
 
-  public class TestHandler implements Route {
-    @Override
-    public String handle(Request req, Response res) {
-      System.out.println("FileUpload!");
+  /**
+   * Handle the Experience Maker index.
+   *
+   * @author abchapin
+   */
+  public class MakerHandler implements TemplateViewRoute {
+    public ModelAndView handle(Request req, Response res) {
+      List<String> experienceNames = new ArrayList<>();
+      List<String> experienceFileNames = new ArrayList<>();
+      List<String> experienceColors = new ArrayList<>();
+      for (Experience exp : experiences.values()) {
+        experienceFileNames.add(exp.filename);
+        experienceNames.add(exp.name);
+        experienceColors.add(exp.color);
+      }
 
-      QueryParamsMap qm = req.queryMap();
-      System.out.println(qm.value("formData"));
-      //System.out.println(qm.value("hello"));
-      //System.out.println(qm.value("files"));
-      /*String filename = qm.value("file");
-      System.out.println(filename);
-
-      File file = new File(filename);
-      System.out.println(file.isFile());*/
-
-      return GSON.toJson(null);
+      Map<String, Object> variables = ImmutableMap.of("expFileNames",
+              experienceFileNames, "expNames", experienceNames,
+              "expColors", experienceColors);
+      return new ModelAndView(variables, "makerIndex.ftl");
     }
   }
+
+  /**
+   * Handle the experience editor.
+   *
+   * @author abchapin
+   */
+  public class EditorHandler implements TemplateViewRoute {
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      String experienceFileName = req.params(":experience");
+
+      if (!experiences.containsKey(experienceFileName)) {
+        res.status(404);
+        return new ModelAndView(new HashMap<>(), "error.ftl");
+      }
+
+      Experience exp = experiences.get(experienceFileName);
+
+      Map<String, Object> variables = ImmutableMap.of("title", exp.name,
+              "color", exp.color, "description", exp.description, "scoresRank",
+              exp.orderScoresHighToLow);
+      return new ModelAndView(variables, "editor.ftl");
+    }
+  }
+
+  /**
+   * Handle the experience editor, if a new experience
+   * is being made. This avoids making any experience names
+   * off-limits.
+   *
+   * @author abchapin
+   */
+  public class NewEditorHandler implements TemplateViewRoute {
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+
+      String name = "New Experience";
+      String description = "Enter a description about your experience...";
+      String color = "00bad6";
+      boolean lowToHigh = false;
+
+      Map<String, Object> variables = ImmutableMap.of("title", name,
+              "color", color, "description", description, "scoresRank",
+              lowToHigh);
+      return new ModelAndView(variables, "editor.ftl");
+    }
+  }
+
+
 }
