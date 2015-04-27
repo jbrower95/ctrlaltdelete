@@ -121,10 +121,11 @@
 
         .side-title {
             font-family: 'Lato', sans-serif;
-            font-size: 1.3em;
+            font-size: 1.4em;
             display: block;
             margin-bottom: 2%;
             color: white;
+            font-weight: 700;
         }
 
         .description {
