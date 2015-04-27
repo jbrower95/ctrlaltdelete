@@ -167,11 +167,17 @@
             font-size: 1.3em;
         }
 
-        .answers {
+        .answers, form {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+        }
+
+        form {
+            position: relative;
+            width: 100%;
+            height: auto;
         }
 
         input[type=radio] {
@@ -205,7 +211,7 @@
         .color-block {
             position: relative;
             height: 25px;
-            width: 100px;
+            width: 90px;
         }
 
         .c00bad6 {
@@ -227,7 +233,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="sidebar c${color}">
+        <div class="sidebar c${color}" id="${color}">
             <span class="side-title">${title}</span>
         </div>
 
@@ -254,22 +260,42 @@
                 <div class="settings-bar">
                     <div class="bar-block label">Theme Color</div>
                     <div class="bar-block answers">
-                        <input type="radio" name="theme-color" id="00bad6" value="00bad6" checked>
-                        <label for="00bad6"><div class="color-block c00bad6"></div></label>
+                        <form name="colors">
+                            <input type="radio" name="themeColor" id="00bad6" value="00bad6" />
+                            <label for="00bad6"><div class="color-block c00bad6"></div></label>
 
-                        <input type="radio" name="theme-color" id="ef563d" value="ef563d">
-                        <label for="ef563d"><div class="color-block cef563d"></div></label>
+                            <input type="radio" name="themeColor" id="ef563d" value="ef563d" />
+                            <label for="ef563d"><div class="color-block cef563d"></div></label>
 
-                        <input type="radio" name="theme-color" id="ffaf00" value="ffaf00">
-                        <label for="ffaf00"><div class="color-block cffaf00"></div></label>
+                            <input type="radio" name="themeColor" id="ffaf00" value="ffaf00" />
+                            <label for="ffaf00"><div class="color-block cffaf00"></div></label>
 
-                        <input type="radio" name="theme-color" id="F5C70C" value="F5C70C">
-                        <label for="F5C70C"><div class="color-block cF5C70C"></div></label>
-
+                            <input type="radio" name="themeColor" id="F5C70C" value="F5C70C" />
+                            <label for="F5C70C"><div class="color-block cF5C70C"></div></label>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var colorArray = ["00bad6", "ef563d", "ffaf00", "F5C70C"];
+            var color = $(".sidebar").attr('id');
+            var index = colorArray.indexOf(color);
+            console.log(index);
+            document.colors.themeColor[index].checked = true;
+
+            $("input[name=themeColor]").click(function() {
+                var color = this.attr('id');
+            });
+
+            function changeColor(color) {
+
+            }
+        });
+    </script>
 </body>
 </html>
