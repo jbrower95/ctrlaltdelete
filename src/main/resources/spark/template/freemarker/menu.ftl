@@ -93,7 +93,7 @@
 	</head>
 	
 	<body>
-		<div class="container" style="background-color:${color}">
+		<div class="container" style="background-color:#${color}">
 		  	<h1>${title}</h1>
 		  	<p>${description}</p>
 

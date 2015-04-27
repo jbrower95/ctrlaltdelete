@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17e5ff33-56e5-47a7-8036-3e55f2356271" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/ctrlaltdel/.config" afterPath="$PROJECT_DIR$/examples/ctrlaltdel/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/example_experience/.config" afterPath="$PROJECT_DIR$/examples/example_experience/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/fracktheratty/.config" afterPath="$PROJECT_DIR$/examples/fracktheratty/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/impeachpaxson/.config" afterPath="$PROJECT_DIR$/examples/impeachpaxson/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/llamapalooza/.config" afterPath="$PROJECT_DIR$/examples/llamapalooza/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/paint4ever/.config" afterPath="$PROJECT_DIR$/examples/paint4ever/.config" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Experience.java" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Experience.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java" afterPath="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl" afterPath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl" afterPath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/index.ftl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl" afterPath="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ctrlaltdel.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,41 +65,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="editor.ftl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="editor.ftl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8084507" vertical-offset="3113" max-vertical-offset="4760">
-              <caret line="200" column="26" selection-start-line="200" selection-start-column="26" selection-end-line="200" selection-end-column="26" />
+            <state vertical-scroll-proportion="-107.44" vertical-offset="765" max-vertical-offset="4760">
+              <caret line="203" column="0" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Experience.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Experience.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="918">
-              <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="menu.ftl" pinned="false" current-in-tab="false">
+      <file leaf-file-name="menu.ftl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.04" vertical-offset="1464" max-vertical-offset="1921">
-              <caret line="95" column="64" selection-start-line="95" selection-start-column="64" selection-end-line="95" selection-end-column="64" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="makerIndex.ftl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.88" vertical-offset="0" max-vertical-offset="2890">
-              <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.3595238" vertical-offset="1464" max-vertical-offset="1921">
+              <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -175,7 +143,6 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/brown/cs/experienceMaker/Maker.java" />
         <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.html" />
         <option value="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Experience.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl" />
         <option value="$PROJECT_DIR$/examples/ctrlaltdel/.config" />
         <option value="$PROJECT_DIR$/examples/example_experience/.config" />
         <option value="$PROJECT_DIR$/examples/fracktheratty/.config" />
@@ -187,6 +154,7 @@
         <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl" />
         <option value="$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java" />
         <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl" />
+        <option value="$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl" />
       </list>
     </option>
   </component>
@@ -949,7 +917,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.06954612" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288889" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35748032" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2551181" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18008785" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1358,22 +1326,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.04" vertical-offset="1464" max-vertical-offset="1921">
-          <caret line="95" column="64" selection-start-line="95" selection-start-column="64" selection-end-line="95" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Experience.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="918">
-          <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="784" max-vertical-offset="3366">
@@ -1401,16 +1353,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/makerIndex.ftl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.88" vertical-offset="0" max-vertical-offset="2890">
+        <state vertical-scroll-proportion="-5.233333" vertical-offset="2470" max-vertical-offset="2890">
           <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/brown/cs/experience/Experience.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.2988764" vertical-offset="102" max-vertical-offset="918">
+          <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/editor.ftl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8084507" vertical-offset="3113" max-vertical-offset="4760">
-          <caret line="200" column="26" selection-start-line="200" selection-start-column="26" selection-end-line="200" selection-end-column="26" />
+        <state vertical-scroll-proportion="-107.44" vertical-offset="765" max-vertical-offset="4760">
+          <caret line="203" column="0" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/spark/template/freemarker/menu.ftl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3595238" vertical-offset="1464" max-vertical-offset="1921">
+          <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
           <folding />
         </state>
       </provider>
