@@ -49,6 +49,17 @@ body {
 	cursor:pointer;
 }
 
+.dragbar-icon {
+	float: left;
+	width: 14px;
+	height: 14px;
+}
+
+.title {
+	float: left;
+	padding-left: 4px;
+}
+
 .window {
 	position: absolute;
 	display: inline-block;

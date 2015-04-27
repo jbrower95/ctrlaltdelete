@@ -41,6 +41,7 @@ function Window(element, x, y, draggable) {
 
 	if (draggable) {
 		var dragDiv = '<div class="dragbar clearfix">'
+						+ '<img class="dragbar-icon" src="images/default_window_icon.png">'
 						+ '<span class="title"></span>'
 				        + '<div class="close right button"><img src="images/close.png"></div>'
 				        + '<div class="right button"><img src="images/maximize.png"></div>'
@@ -126,6 +127,25 @@ Window.prototype.setTitle = function(new_title) {
 		title.html(new_title);
 	} else {
 		console.error("[window.js] No title element found in given Window.");
+	}
+}
+
+/**
+*	Sets the icon of the Window. To set the icon,
+*	the Window must have a child image element with
+*	the class "dragbar-icon", else an error is logged to
+*	the console.
+*
+*		new_icon: The icon's source to put in the drag bar of the Window.
+*/
+Window.prototype.setIcon = function(new_icon) {
+	var icon = $(this.element).find(".dragbar-icon");
+
+	// Checks if the icon element was found
+	if (icon.length > 0) {
+		icon.attr('src', new_icon);
+	} else {
+		console.error("[window.js] No icon element found in given Window.");
 	}
 }
 

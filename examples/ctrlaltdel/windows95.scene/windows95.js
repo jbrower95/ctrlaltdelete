@@ -5,11 +5,13 @@ var exported_scene = {
 		
 		var win = manager.inflate("taskManager");
 		win.setTitle("Task Manager");
+		win.setIcon("images/task_manager_icon.png");
 		win.moveTo(200, 100);
 		manager.addWindow(win);
 
 		var win = manager.inflate("explorer");
 		win.setTitle("My Computer");
+		win.setIcon("images/open_folder.png");
 		win.moveTo(150, 200);
 		manager.addWindow(win);
 		
