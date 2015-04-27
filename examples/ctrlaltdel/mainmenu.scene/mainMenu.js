@@ -5,7 +5,10 @@ var exported_scene = {
         var statue = this.searchContent("#statue");
         var options = this.searchContent("#options");
 
+        AssetManager.getSharedInstance().preloadNamed("sounds/ding.mp3", "button ding");
+
         this.searchContent("#start").click($.proxy(function() {
+            AssetManager.getSharedInstance().playNamed("button ding");
             console.log("Stopping audio...");
 
             var curtain = document.createElement("div");

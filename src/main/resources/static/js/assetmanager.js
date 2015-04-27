@@ -53,6 +53,8 @@ function AssetManager() {
         new buzz.sound("sounds/15.mp3")
     ];
 
+    this.namedSounds = {};
+
 }
 
 /**
