@@ -61,6 +61,7 @@ public class Server {
 
   public Server(String experiencesDirectory) {
     this.directory = experiencesDirectory;
+    senseChanges();
   }
 
   public void run() {
