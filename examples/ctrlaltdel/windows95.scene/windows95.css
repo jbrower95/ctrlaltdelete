@@ -1,3 +1,62 @@
+body {
+  overflow: hidden;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.clearfix:after {
+	 visibility: hidden;
+	 display: block;
+	 font-size: 0;
+	 content: " ";
+	 clear: both;
+	 height: 0;
+	 }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
+.dragbar {
+	width:100%;
+	height: 20px;
+	position:relative;
+	background-color: #00006f;
+	color: white;
+	font-family: 'MS Sans Serif', sans-serif;
+	font-size: .8em;
+	padding: 2px;
+	box-sizing: border-box;
+}
+
+.dragbar .right {
+	float: right;
+}
+
+.dragbar:hover {
+	cursor:pointer;
+}
+
+.window {
+	position: absolute;
+	height: auto;
+	width: auto;
+	background-color: #bdbdbd;
+	border: 3px solid #bdbdbd;
+}
+
 #desktop {
 	background-color: #0E6E6C;
 	width: 100%;

@@ -4,10 +4,12 @@ var exported_scene = {
 		var manager = new WindowManager("desktop");
 		
 		var win = manager.inflate("taskManager");
+		win.setTitle("Task Manager");
 		win.moveTo(200, 100);
 		manager.addWindow(win);
 
 		var win = manager.inflate("explorer");
+		win.setTitle("My Computer");
 		win.moveTo(150, 200);
 		manager.addWindow(win);
 		
@@ -27,7 +29,7 @@ var exported_scene = {
 				 	clippyAgent.show();
 			        clippyAgent.moveTo(200,200);
 				 	console.log("Playing sound 1");
-				 	clippyAgent.speak('Looks like your stuck inside a computer!');
+				 	clippyAgent.speak("Looks like you're stuck inside the computer!");
 				 	AssetManager.getSharedInstance().play(1);
 				 	clippyAgent.animate();
 			    }, this));
@@ -35,7 +37,7 @@ var exported_scene = {
 		
 		var clickTheX = function() {
 			clippyAgent.speak("Your windows are frozen! Click the x's!");
-			console.log("Playing sound 2");
+			console.log("Playing sound 3");
 			AssetManager.getSharedInstance().play(3);
 		};
 		

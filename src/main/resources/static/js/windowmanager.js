@@ -99,10 +99,17 @@ WindowManager.prototype.inflate = function(template) {
 		$(template_div).addClass("windowTemplate");
 	}
 
+	// Check if window should be draggable (default to draggable)
+	var draggable = true;
+	if (!$(template_div).hasClass("draggable")) {
+		console.log("Forcing draggable to false for div: " + template);
+		draggable = false;
+	}
+
 	var copy = template_div.cloneNode(true);
 
 	// Default position of (0,0)
-	var win = new Window(copy, 0, 0);
+	var win = new Window(copy, 0, 0, draggable);
 	win.setId(this.idCount);
 	win.setXHandler($.proxy(this.removeWindow, this));
 

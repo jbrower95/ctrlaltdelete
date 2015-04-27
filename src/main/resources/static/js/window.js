@@ -15,7 +15,7 @@
 *		y: The y-position of the Window, in pixels. Note that this is relative to the containing
 *		   div, and that the 0-position is the topmost edge of that div.
 */
-function Window(element, x, y) {
+function Window(element, x, y, draggable) {
 	this.winId = 0;
 	this.element = element;
 	this.close = null;
@@ -39,12 +39,22 @@ function Window(element, x, y) {
 		this.element.classList.add("window");
 	}
 
-	// Dragging
-	this.mouse_offset_x = 0;
-	this.mouse_offset_y = 0;
-	this.dragbar = $(this.element).find(".dragbar");
-	this.dragbar.mousedown($.proxy(this.mouseDown, this));
-	$(window).mouseup($.proxy(this.mouseUp, this));
+	if (draggable) {
+		var dragDiv = '<div class="dragbar clearfix">'
+						+ '<span class="title"></span>'
+				        + '<div class="close right button"><img src="images/close.png"></div>'
+				        + '<div class="right button"><img src="images/maximize.png"></div>'
+				        + '<div class="right button"><img src="images/minimize.png"></div></div>';
+		$(this.element).prepend(dragDiv);
+
+		// Dragging
+		this.mouse_offset_x = 0;
+		this.mouse_offset_y = 0;
+		this.dragbar = $(this.element).find(".dragbar");
+		this.dragbar.mousedown($.proxy(this.mouseDown, this));
+		$(window).mouseup($.proxy(this.mouseUp, this));
+	}
+	
 }
 
 /**
