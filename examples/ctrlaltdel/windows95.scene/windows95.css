@@ -51,6 +51,7 @@ body {
 
 .window {
 	position: absolute;
+	display: inline-block;
 	height: auto;
 	width: auto;
 	background-color: #bdbdbd;

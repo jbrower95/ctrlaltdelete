@@ -83,6 +83,7 @@
                 padding: 3%;
                 padding-left: 10%;
                 padding-right: 10%;
+                box-sizing: border-box;
                 font-family: 'Merriweather', serif;
                 }
 
