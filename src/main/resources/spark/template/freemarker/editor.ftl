@@ -60,6 +60,7 @@
             float: left;
             padding: 2.5%;
             box-sizing: border-box;
+            transition: background-color 0.2s;
         }
 
         .sidebar-title {
@@ -191,6 +192,7 @@
             transition: opacity 0.2s;
             font-size: 1em;
             text-align: center;
+            transition: background-color 0.2s;
         }
 
         input[type=radio] + label:hover {
@@ -302,10 +304,25 @@
             showCheckedScore(highToLow);
 
             /**
+            * Changes the color of a given element.
+            */
+            function changeColor(element, color) {
+                // The second class should always be the color class
+                var classList = element.attr('class').split(/\s+/);
+                element.removeClass(classList[1]);
+                element.removeAttr('id');
+
+                // Add on new color class
+                element.addClass("c" + color);
+                element.attr('id', color);
+            }
+
+            /**
             * Sets the visual color of the theme to the given color.
             */
             function showColor(color) {
-                // May not need to do this?
+                changeColor($(".sidebar"), color);
+                changeColor($("input[type=radio] + label"), color);
             }
 
             /**
@@ -329,6 +346,7 @@
             */
             $("input[name=themeColor]").click(function() {
                 color = $(this).attr('id');
+                showColor(color);
             });
 
             /**
@@ -349,6 +367,7 @@
             */
             $("input[name='experienceTitle']").change(function() {
                 title = $(this).val();
+                $(".side-title").html(title);
             });
 
             /**
