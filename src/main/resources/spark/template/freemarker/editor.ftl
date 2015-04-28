@@ -243,9 +243,9 @@
         </div>
 
         <div class="main">
-            <input type="text" class="title" name="experience-title" value="${title}" />
+            <input type="text" class="title" name="experienceTitle" value="${title}" />
 
-            <textarea class="description" name="experience-desc">${description}</textarea>
+            <textarea class="description" name="experienceDesc">${description}</textarea>
 
             <div class="settings">
                 <span class="settings-title">Settings</span>
@@ -253,12 +253,14 @@
                 <div class="settings-bar">
                     <div class="bar-block label">Order Scores</div>
                     <div class="bar-block answers">
-                        <!-- Low to High Score Ranking -->
-                        <input type="radio" name="score-ranking" id="low-to-high" value="low-to-high" checked>
-                        <label for="low-to-high" class="button c${color}">Low to High</label>
-                        <!-- High to Low Score Ranking -->
-                        <input type="radio" name="score-ranking" id="high-to-low" value="high-to-low">
-                        <label for="high-to-low" class="button c${color}">High to Low</label>
+                        <form name="score" id="${highToLow}">
+                            <!-- Low to High Score Ranking -->
+                            <input type="radio" name="scoreRanking" id="low-to-high" value="low-to-high" checked>
+                            <label for="low-to-high" class="button c${color}">Low to High</label>
+                            <!-- High to Low Score Ranking -->
+                            <input type="radio" name="scoreRanking" id="high-to-low" value="high-to-low">
+                            <label for="high-to-low" class="button c${color}">High to Low</label>
+                        </form>
                     </div>
                 </div>
 
@@ -287,9 +289,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            var colorArray = ["00bad6", "ef563d", "ffaf00", "F5C70C"];
+            /* Globals */
+            var title = $("input[name=experienceTitle]").val();
             var color = $(".sidebar").attr('id');
-            showColor(color);
+            var description = $("textarea[name='experienceDesc']").val();
+            var highToLow = $("form[name=score]").attr('id');
+
+            var colorArray = ["00bad6", "ef563d", "ffaf00", "F5C70C"];
+            var scoreArray = ["false", "true"];
+
+            showCheckedColor(color);
+            showCheckedScore(highToLow);
 
             /**
             * Sets the visual color of the theme to the given color.
@@ -307,71 +317,60 @@
             }
 
             /**
+            * Shows the correct score box as checked.
+            */
+            function showCheckedScore(highToLow) {
+                var index = scoreArray.indexOf(highToLow);
+                document.score.scoreRanking[index].checked = true;
+            }
+
+            /**
             * On click of a new color, change the color.
             */
             $("input[name=themeColor]").click(function() {
-                var color = $(this).attr('id');
-                changeColor(color);
+                color = $(this).attr('id');
             });
-
-            /**
-            * Makes a post request to change the color of the experience.
-            */
-            function changeColor(color) {
-                console.log(color);
-            }
 
             /**
             * When a score ranking button is clicked,
             * change the score ranking.
             */
-            $("input[name=score-ranking]").click(function() {
+            $("input[name=scoreRanking]").click(function() {
                 var valId = $(this).attr('id');
-                var highToLow;
                 if (valId === "low-to-high") {
                     highToLow = false;
                 } else {
                     highToLow = true;
                 }
-                changeScoreRanking(highToLow);
             });
-
-            /**
-            * Sends a post request to change the score ranking.
-            */
-            function changeScoreRanking(highToLow) {
-                console.log("highToLow: " + highToLow);
-            }
 
             /**
             * When the title input is edited, change the experience title.
             */
-            $("input[name='experience-title']").change(function() {
-                var title = $(this).val();
-                changeTitle(title);
+            $("input[name='experienceTitle']").change(function() {
+                title = $(this).val();
             });
-
-            /**
-            * Sends a post request to change the title of the experience.
-            */
-            function changeTitle(title) {
-                console.log(title);
-            }
 
             /**
             * When the description input is edited, change the experience description.
             */
-            $("textarea[name='experience-desc']").change(function() {
-                var desc = $(this).val();
-                changeTitle(desc);
+            $("textarea[name='experienceDesc']").change(function() {
+                description = $(this).val();
             });
 
-            /**
-            * Sends a post request to change the description of the experience.
-            */
-            function changeDescription(desc) {
-                console.log(desc);
+            function saveEdit() {
+                var input = {"title": title, "color": color, "description": description,
+                             "highToLow": highToLow};
+                $.post("/" + title + "/saveedit", input, function(responseJSON){
+                    //var responseObject = JSON.parse(responseJSON);
+                    //var success = JSON.parse(responseObject.success);
+                    //console.log(success);
+                });
             }
+
+            $(".side-title").click(function() {
+                saveEdit();
+            });
         });
     </script>
 </body>

@@ -12,12 +12,12 @@ import com.google.gson.JsonPrimitive;
 
 public class Experience {
 
-  public final String name;
+  public String name;
   public final String filename;
-  public final String description;
-  public final String color;
+  public String description;
+  public String color;
   public final ExperienceDatabase db;
-  public final boolean orderScoresHighToLow;
+  public boolean orderScoresHighToLow;
   public final JsonArray files;
   public final String mainFile;
   public final String directory;
@@ -47,5 +47,21 @@ public class Experience {
 
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
+  }
+
+  public void setName(String newName) {
+    name = newName;
+  }
+
+  public void setColor(String newColor) {
+    color = newColor;
+  }
+
+  public void setDescription(String newDescription) {
+    description = newDescription;
+  }
+
+  public void setScoreRanking(boolean newHighToLow) {
+    orderScoresHighToLow = newHighToLow;
   }
 }

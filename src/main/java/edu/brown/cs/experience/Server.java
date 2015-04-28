@@ -1,19 +1,12 @@
 package edu.brown.cs.experience;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.jetty.io.EofException;
 
@@ -31,7 +24,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 
 import edu.brown.cs.joengelm.sqldb.Database;
 
@@ -39,6 +31,7 @@ public class Server {
   Map<String, Experience> experiences = new HashMap<>();
   private final static Gson GSON = new Gson();
   private final String directory;
+  private int newExpId;
   private final static Map<String, String> contentTypes = getContentTypes();
   private final static Set<String> typesWithoutBytes = ImmutableSet.of(
     "text/html", "text/css", "application/javascript");
@@ -67,6 +60,7 @@ public class Server {
 
   public Server(String experiencesDirectory) {
     this.directory = experiencesDirectory;
+    newExpId = 0;
     senseChanges();
   }
 
@@ -86,6 +80,8 @@ public class Server {
     Spark.get("/:experience/play", new PlayHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.get("/:experience/scores", new GetScoresHandler());
+    Spark.post("/:experience/scores", new PostScoresHandler());
+    Spark.post("/:experience/saveedit", new SaveEditedExperienceHandler());
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
@@ -105,6 +101,7 @@ public class Server {
           Experience exp = new Experience(experienceFile.getPath());
 
           experiences.put(exp.filename, exp);
+
           System.out.println("[server] Binding directory for experience: "
                   + experienceFile.getPath());
           System.out.println("Successfully loaded experience: "
@@ -522,8 +519,8 @@ public class Server {
       Experience exp = experiences.get(experienceFileName);
 
       Map<String, Object> variables = ImmutableMap.of("title", exp.name,
-              "color", exp.color, "description", exp.description, "scoresRank",
-              exp.orderScoresHighToLow);
+              "color", exp.color, "description", exp.description, "highToLow",
+              GSON.toJson(exp.orderScoresHighToLow));
       return new ModelAndView(variables, "editor.ftl");
     }
   }
@@ -539,17 +536,93 @@ public class Server {
     @Override
     public ModelAndView handle(Request req, Response res) {
 
-      String name = "New Experience";
+      String name;
+      if (newExpId > 0) {
+        name = "New Experience " + newExpId;
+      } else {
+        name = "New Experience";
+      }
       String description = "Enter a description about your experience...";
       String color = "00bad6";
       boolean highToLow = true;
 
       Map<String, Object> variables = ImmutableMap.of("title", name,
-              "color", color, "description", description, "scoresRank",
-              highToLow);
+              "color", color, "description", description, "highToLow",
+              GSON.toJson(highToLow));
       return new ModelAndView(variables, "editor.ftl");
     }
   }
 
+  public class SaveEditedExperienceHandler implements Route {
+    @Override
+    public String handle(Request req, Response res) {
+      System.out.println("SaveEditedExperienceHandler");
+      Experience exp = experiences.get(req.params(":experience"));
 
+      // If experience not in hashtable, make directory
+      // and add to hashtable
+      if (exp == null) {
+        QueryParamsMap qm = req.queryMap();
+        String title = qm.value("title");
+        String color = qm.value("color");
+        String description = qm.value("description");
+        String highToLow = qm.value("highToLow");
+        Boolean htl = Boolean.getBoolean(highToLow);
+        Config config = new Config(title, color, description, htl);
+        String json = GSON.toJson(config);
+        System.out.println(json);
+
+        String dirPath = directory + File.separator + config.removeTitleSpaces();
+        File dir = new File(dirPath);
+        dir.mkdir();
+
+        File cfig = new File(dirPath + File.separator + ".config");
+
+        try {
+          cfig.createNewFile();
+          FileWriter fw = new FileWriter(cfig.getAbsoluteFile());
+          BufferedWriter bw = new BufferedWriter(fw);
+          bw.write(json);
+          bw.close();
+        } catch (IOException e) {
+          System.out.println("ERROR: IOException in SaveEditedExperienceHandler");
+          return GSON.toJson(false);
+        }
+
+        try {
+          exp = new Experience(dirPath);
+          experiences.put(exp.filename, exp);
+        } catch (FileNotFoundException e) {
+          System.out.println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
+          return GSON.toJson(false);
+        }
+      }
+      System.out.println("Yes");
+      return GSON.toJson(true);
+    }
+
+    private class Config {
+      private final String name, themeColor, description, mainFile;
+      private final boolean orderScoresHighToLow;
+      private final List<String> files;
+
+      public Config(String title, String color, String cDescription, boolean highToLow) {
+        name = title;
+        themeColor = color;
+        description = cDescription;
+        orderScoresHighToLow = highToLow;
+        files = new ArrayList<>();
+        mainFile = "";
+      }
+
+      public String removeTitleSpaces() {
+        String[] s = name.split(" ");
+        StringBuilder builder = new StringBuilder();
+        for(String str : s) {
+          builder.append(str);
+        }
+        return builder.toString();
+      }
+    }
+  }
 }
