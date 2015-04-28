@@ -8,16 +8,15 @@ import java.io.FileReader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 public class Experience {
 
-  public String name;
+  private String name;
   public final String filename;
-  public String description;
-  public String color;
+  private String description;
+  private String color;
   public final ExperienceDatabase db;
-  public boolean orderScoresHighToLow;
+  private boolean orderScoresHighToLow;
   public final JsonArray files;
   public final String mainFile;
   public final String directory;
@@ -53,15 +52,31 @@ public class Experience {
     name = newName;
   }
 
+  public String getName() {
+    return name;
+  }
+
   public void setColor(String newColor) {
     color = newColor;
+  }
+
+  public String getColor() {
+    return color;
   }
 
   public void setDescription(String newDescription) {
     description = newDescription;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
   public void setScoreRanking(boolean newHighToLow) {
     orderScoresHighToLow = newHighToLow;
+  }
+
+  public boolean hasScoresHighToLow() {
+    return orderScoresHighToLow;
   }
 }

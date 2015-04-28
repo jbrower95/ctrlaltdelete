@@ -1,12 +1,22 @@
 package edu.brown.cs.experience;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jetty.io.EofException;
 
@@ -70,12 +80,11 @@ public class Server {
     Spark.get("/", new IndexHandler(), new FreeMarkerEngine());
     Spark.get("/maker", new MakerHandler(), new FreeMarkerEngine());
     Spark.get("/reload", new ReloadHandler());
-    Spark.get("/make", new NewEditorHandler(),
-            new FreeMarkerEngine());
+    Spark.get("/make", new NewEditorHandler(), new FreeMarkerEngine());
     Spark.get("/:experience", new ExperienceMenuHandler(),
       new FreeMarkerEngine());
     Spark.get("/:experience/editor", new EditorHandler(),
-            new FreeMarkerEngine());
+      new FreeMarkerEngine());
 
     Spark.get("/:experience/play", new PlayHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
@@ -88,8 +97,7 @@ public class Server {
   }
 
   public void senseChanges() {
-    System.out.println("[server] Binding file directory: "
-            + directory);
+    System.out.println("[server] Binding file directory: " + directory);
     File dir = new File(directory);
     File[] directoryListing = dir.listFiles();
     if (directoryListing != null) {
@@ -103,24 +111,23 @@ public class Server {
           experiences.put(exp.filename, exp);
 
           System.out.println("[server] Binding directory for experience: "
-                  + experienceFile.getPath());
+            + experienceFile.getPath());
           System.out.println("Successfully loaded experience: "
-                  + experienceFile.getName());
+            + experienceFile.getName());
         } catch (FileNotFoundException e) {
           System.err.println(experienceFile.getName()
-                  + " is missing its config file. It will be omitted.");
+            + " is missing its config file. It will be omitted.");
         } catch (JsonParseException e) {
           System.err.println(experienceFile.getName()
-                  + " has errors in its config file. It will be omitted.");
+            + " has errors in its config file. It will be omitted.");
           System.err.println(e.getMessage());
         } catch (IllegalArgumentException e) {
           System.err.println(experienceFile.getName() + " - "
-                  + e.getMessage());
+            + e.getMessage());
         }
       }
     } else {
-      throw new IllegalArgumentException(directory
-              + " is not a directory");
+      throw new IllegalArgumentException(directory + " is not a directory");
     }
   }
 
@@ -131,7 +138,6 @@ public class Server {
       return GSON.toJson(ImmutableMap.of("success", "true"));
     }
   }
-
 
   /**
    * Handle requests directed to this site's index.
@@ -146,13 +152,13 @@ public class Server {
       List<String> experienceColors = new ArrayList<>();
       for (Experience exp : experiences.values()) {
         experienceFileNames.add(exp.filename);
-        experienceNames.add(exp.name);
-        experienceColors.add(exp.color);
+        experienceNames.add(exp.getName());
+        experienceColors.add(exp.getColor());
       }
 
       Map<String, Object> variables = ImmutableMap.of("expFileNames",
-        experienceFileNames, "expNames", experienceNames,
-        "expColors", experienceColors);
+        experienceFileNames, "expNames", experienceNames, "expColors",
+        experienceColors);
       return new ModelAndView(variables, "index.ftl");
     }
   }
@@ -173,10 +179,10 @@ public class Server {
 
       Experience exp = experiences.get(experienceFileName);
 
-      Map<String, Object> variables = ImmutableMap.of("title", exp.name,
-        "color", exp.color, "description", exp.description,
-        "playLink", "/" + exp.filename + "/play", "scoresLink",
-        "/" + exp.filename + "/scores");
+      Map<String, Object> variables = ImmutableMap.of("title",
+        exp.getName(), "color", exp.getColor(), "description",
+        exp.getDescription(), "playLink", "/" + exp.filename + "/play",
+        "scoresLink", "/" + exp.filename + "/scores");
       return new ModelAndView(variables, "menu.ftl");
     }
   }
@@ -211,7 +217,6 @@ public class Server {
       }
     }
   }
-  
 
   /**
    * Handle requests directed to each experience's small files.
@@ -225,17 +230,17 @@ public class Server {
       System.out.println("GameHandler");
       Experience exp = experiences.get(req.params(":experience"));
       String asset = req.params(":asset");
-      System.out.println(req.params(":experience") + ", " + req.params(":asset"));
+      System.out.println(req.params(":experience") + ", "
+        + req.params(":asset"));
       String path = (exp.directory + "/" + asset);
 
       System.out.println("Trying to get asset: " + asset);
 
       if (!experienceCanAccessAsset(exp, asset)) {
-    	  throw new IllegalArgumentException("Error: Can't access asset "
-    	          + asset + " -  Not declared in manifest.");
+        throw new IllegalArgumentException("Error: Can't access asset "
+          + asset + " -  Not declared in manifest.");
       }
-      
-      
+
       System.out.println("Experience: " + exp.directory);
 
       try {
@@ -264,11 +269,11 @@ public class Server {
           final OutputStream os = response.raw().getOutputStream();
 
           try {
-          for (byte b : contents) {
-            os.write(b);
-          }
+            for (byte b : contents) {
+              os.write(b);
+            }
           } catch (EofException e) {
-        	  System.err.println("[server/write] EOF exception.");
+            System.err.println("[server/write] EOF exception.");
           }
 
           in.close();
@@ -283,67 +288,73 @@ public class Server {
     }
   }
 
-  
   /**
    * Returns true if an experience can access a file.
-   * @param experience The experience in question
-   * @param scene The name of the requesting scene
-   * @param asset The requested asset.
+   *
+   * @param experience
+   *          The experience in question
+   * @param scene
+   *          The name of the requesting scene
+   * @param asset
+   *          The requested asset.
    * @return True if the asset should be served, otherwise false.
-   * 
-   * Precondition: This must be called while the current working directory is the directory
-   * for this experience.
+   *
+   *         Precondition: This must be called while the current working
+   *         directory is the directory for this experience.
    */
-  public boolean experienceCanAccessAsset(Experience experience, String scene, String asset) {
-	  
-	  String path = experience.directory + "/" + scene + "/" + asset;
-	  
-	  String sceneDirectory = scene;
-	  
-	  Path filename = FileSystems.getDefault().getPath(sceneDirectory, asset);
-	  
-	  for (JsonElement item : experience.files) {
-		  
-		  String value = item.getAsString();
-		  
-	  PathMatcher matcher =
-			    FileSystems.getDefault().getPathMatcher("glob:" + value);
-			if (matcher.matches(filename)) {
-			    return true;
-			}
-	  }
-	  
-	  return false;
+  public boolean experienceCanAccessAsset(Experience experience,
+    String scene, String asset) {
+    String sceneDirectory = scene;
+
+    Path filename = FileSystems.getDefault()
+      .getPath(sceneDirectory, asset);
+
+    for (JsonElement item : experience.files) {
+
+      String value = item.getAsString();
+
+      PathMatcher matcher = FileSystems.getDefault().getPathMatcher(
+        "glob:" + value);
+      if (matcher.matches(filename)) {
+        return true;
+      }
+    }
+
+    return false;
   }
-  
+
   /**
    * Returns true if an experience can access any asset inside of its folder.
-   * @param experience The experience object in question.
-   * @param asset The requested asset's relative path (to the root of the experience).
+   *
+   * @param experience
+   *          The experience object in question.
+   * @param asset
+   *          The requested asset's relative path (to the root of the
+   *          experience).
    * @return True if the asset is allowed read access, otherwise false.
-   * 
-   * Precondition: This must be called while the current working directory is the directory
-   * for this experience.
+   *
+   *         Precondition: This must be called while the current working
+   *         directory is the directory for this experience.
    */
-  public boolean experienceCanAccessAsset(Experience experience, String asset) {
-	  //note: the cwd (current working directory) is the experience directory.
-	  Path filename = FileSystems.getDefault().getPath("", asset);
-	  System.out.println("Determining accessibility of asset " + asset);
-	  for (JsonElement item : experience.files) {
-		  
-		  String value = item.getAsString();
-		  
-	  PathMatcher matcher =
-			    FileSystems.getDefault().getPathMatcher("glob:" + value);
-			if (matcher.matches(filename)) {
-			    return true;
-			}
-	  }
-	  
-	  return false;
+  public boolean experienceCanAccessAsset(Experience experience,
+    String asset) {
+    // note: the cwd (current working directory) is the experience directory.
+    Path filename = FileSystems.getDefault().getPath("", asset);
+    System.out.println("Determining accessibility of asset " + asset);
+    for (JsonElement item : experience.files) {
+
+      String value = item.getAsString();
+
+      PathMatcher matcher = FileSystems.getDefault().getPathMatcher(
+        "glob:" + value);
+      if (matcher.matches(filename)) {
+        return true;
+      }
+    }
+
+    return false;
   }
-  
-  
+
   /**
    * Handle requests directed to each experience's small files.
    *
@@ -353,10 +364,10 @@ public class Server {
     @Override
     public Object handle(Request req, Response res)
       throws IllegalArgumentException {
-    	Path currentRelativePath = Paths.get("");
-    	String s = currentRelativePath.toAbsolutePath().toString();
-    	System.out.println("Current relative path is: " + s);
-    	
+      Path currentRelativePath = Paths.get("");
+      String s = currentRelativePath.toAbsolutePath().toString();
+      System.out.println("Current relative path is: " + s);
+
       Experience exp = experiences.get(req.params(":experience"));
       String scene = req.params(":scene");
       String asset = req.params(":asset");
@@ -364,11 +375,11 @@ public class Server {
       String path = (exp.directory + "/" + scene + "/" + asset);
 
       System.out.println("Trying to get asset: " + asset);
-      
-      //access control
+
+      // access control
       if (!experienceCanAccessAsset(exp, scene, asset)) {
-    	  throw new IllegalArgumentException("Error: Can't access asset "
-    	          + path + " -  Not declared in manifest.");
+        throw new IllegalArgumentException("Error: Can't access asset "
+          + path + " -  Not declared in manifest.");
       }
 
       System.out.println("Experience: " + exp.directory);
@@ -484,19 +495,20 @@ public class Server {
    * @author abchapin
    */
   public class MakerHandler implements TemplateViewRoute {
+    @Override
     public ModelAndView handle(Request req, Response res) {
       List<String> experienceNames = new ArrayList<>();
       List<String> experienceFileNames = new ArrayList<>();
       List<String> experienceColors = new ArrayList<>();
       for (Experience exp : experiences.values()) {
         experienceFileNames.add(exp.filename);
-        experienceNames.add(exp.name);
-        experienceColors.add(exp.color);
+        experienceNames.add(exp.getName());
+        experienceColors.add(exp.getColor());
       }
 
       Map<String, Object> variables = ImmutableMap.of("expFileNames",
-              experienceFileNames, "expNames", experienceNames,
-              "expColors", experienceColors);
+        experienceFileNames, "expNames", experienceNames, "expColors",
+        experienceColors);
       return new ModelAndView(variables, "makerIndex.ftl");
     }
   }
@@ -518,17 +530,17 @@ public class Server {
 
       Experience exp = experiences.get(experienceFileName);
 
-      Map<String, Object> variables = ImmutableMap.of("title", exp.name,
-              "color", exp.color, "description", exp.description, "highToLow",
-              GSON.toJson(exp.orderScoresHighToLow));
+      Map<String, Object> variables = ImmutableMap.of("title",
+        exp.getName(), "color", exp.getColor(), "description",
+        exp.getDescription(), "highToLow",
+        GSON.toJson(exp.hasScoresHighToLow()));
       return new ModelAndView(variables, "editor.ftl");
     }
   }
 
   /**
-   * Handle the experience editor, if a new experience
-   * is being made. This avoids making any experience names
-   * off-limits.
+   * Handle the experience editor, if a new experience is being made. This
+   * avoids making any experience names off-limits.
    *
    * @author abchapin
    */
@@ -547,8 +559,8 @@ public class Server {
       boolean highToLow = true;
 
       Map<String, Object> variables = ImmutableMap.of("title", name,
-              "color", color, "description", description, "highToLow",
-              GSON.toJson(highToLow));
+        "color", color, "description", description, "highToLow",
+        GSON.toJson(highToLow));
       return new ModelAndView(variables, "editor.ftl");
     }
   }
@@ -572,7 +584,8 @@ public class Server {
         String json = GSON.toJson(config);
         System.out.println(json);
 
-        String dirPath = directory + File.separator + config.removeTitleSpaces();
+        String dirPath = directory + File.separator
+          + config.removeTitleSpaces();
         File dir = new File(dirPath);
         dir.mkdir();
 
@@ -585,7 +598,8 @@ public class Server {
           bw.write(json);
           bw.close();
         } catch (IOException e) {
-          System.out.println("ERROR: IOException in SaveEditedExperienceHandler");
+          System.out
+          .println("ERROR: IOException in SaveEditedExperienceHandler");
           return GSON.toJson(false);
         }
 
@@ -593,7 +607,8 @@ public class Server {
           exp = new Experience(dirPath);
           experiences.put(exp.filename, exp);
         } catch (FileNotFoundException e) {
-          System.out.println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
+          System.out
+          .println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
           return GSON.toJson(false);
         }
       }
@@ -606,7 +621,8 @@ public class Server {
       private final boolean orderScoresHighToLow;
       private final List<String> files;
 
-      public Config(String title, String color, String cDescription, boolean highToLow) {
+      public Config(String title, String color, String cDescription,
+        boolean highToLow) {
         name = title;
         themeColor = color;
         description = cDescription;
@@ -618,7 +634,7 @@ public class Server {
       public String removeTitleSpaces() {
         String[] s = name.split(" ");
         StringBuilder builder = new StringBuilder();
-        for(String str : s) {
+        for (String str : s) {
           builder.append(str);
         }
         return builder.toString();
