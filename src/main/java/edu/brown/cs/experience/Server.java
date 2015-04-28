@@ -189,19 +189,6 @@ public class Server {
    *
    * @author joengelm
    */
-  public class ContentHandler implements Route {
-    @Override
-    public Object handle(Request req, Response res) {
-      // TODO idek
-      return req.splat().toString();
-    }
-  }
-
-  /**
-   * Handle requests directed to each experience's content database.
-   *
-   * @author joengelm
-   */
   public class LibHandler implements Route {
     @Override
     public Object handle(Request req, Response res) {
