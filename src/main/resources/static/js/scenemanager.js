@@ -152,7 +152,7 @@ SceneManager.prototype.registerScene = function(scene) {
  * the scene will be ejected using a left to right animation.
  */
 SceneManager.prototype.presentScene = function(sceneID) {
-  console.log("[scenemanager.js] Presenting scene - " + sceneID);
+  console.log("[scenemanager.js] Presenting scene: " + sceneID);
 	var scene = this.scenes[sceneID];
 
 	if (scene == null) {
@@ -222,8 +222,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
           // pass the torch to the new scene
           console.log("[scenemanager.js] Calling onPresent on " + scene.id);
           this.activeScene = scene;
-          if (scene.onPresent) {
-            scene.onPresent();
+          if (scene.preload) {
+            scene.preload();
           }
           return;
       }
@@ -255,6 +255,10 @@ SceneManager.prototype.presentScene = function(sceneID) {
     }
 
     scene.element = this.activeScene.element;
+
+    console.log("[scenemanager.js/phantom] Presenting phantom scene: " + scene.id);
+
+
 	}
 
   // make sure the new scene can easily find things inside of itself.
@@ -301,6 +305,58 @@ SceneManager.performSequence = function(funcs, timeouts, context) {
 		(funcs.shift())();
 		SceneManager.performSequence(funcs, timeouts, context);
 		}, context), timeout);
+};
+
+
+/**
+*  Displays a Phantom Scene by using a stack of dependent scenes, injecting them, calling preload and then transitioning. 
+*  @return a promise to resolve these scenes.
+*/
+SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneStack) {
+
+    var manager = this;
+
+    console.log("[scenemanager.js/phantom] Resolving dependencies for phantom scene: " + sceneName);
+    return new Promise($.proxy(function(resolve, reject) {
+    // do a thing, possibly async, then…
+
+    //preload all dependencies
+    if (sceneStack.length > 0) {
+
+      requiredScene = sceneStack.pop();
+      rs = this.scenes[requiredScene];
+      this.activeScene = rs;
+      
+      if (!rs.isPhantom()) {
+        //this is NOT a phantom scene. inject the HTML.
+
+        if (!rs.element) {
+          //don't reload stuff if we don't need to.
+          var newScene = document.createElement("div");
+          newScene.className = "__scene__";
+          newScene.innerHTML = scene.getHTML();
+          rs.element = newScene;
+        }
+
+        
+
+      } 
+
+      //preload the scene. this may return a promise.
+      var possiblyPromise = rs.preload();
+
+        if (possiblyPromise) {
+
+          Promise.resolve(possiblyPromise).then(function() {
+          //recur with the new, reduced stack.
+            manager.resolvePhantomDependencies(sceneName, sceneStack);
+          });
+
+    } else {
+      resolve("[scenemanager.js/phantomLoader] Ready for scene " + sceneName + "!");
+    }
+  }
+}, manager));
 };
 
 
