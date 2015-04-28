@@ -1,7 +1,12 @@
 <p>Hey there! This is a test of our spooky <span style="font-weight: 500px;">PHANTOM SCENES</span>
 
-	<button onclick="javascript:transition('b')">Transition to B</button>
-	<button onclick="javascript:transition('c')">Transition to C, bypassing B.</button>
+	<button onclick="javascript:transition('b')">Load a first phantom scene, which requires this scene.</button>
+	<button onclick="javascript:transition('c')">Load a second phantom scene, which requires the previous phantom scene.</button>
+
+	<h1>Test out loading scenes from different dependency graphs</h1>
+	<button onclick="javascript:transition('d')">Load a different non phantom scene.</button>
+	<button onclick="javascript:transition('e')">Load a different phantom scene from this chain.</button>
+	<button onclick="javascript:transition('f')">Load a different phantom scene from this non-trivial chain.<button>s
 
 <script>
 
