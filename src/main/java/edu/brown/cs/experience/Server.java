@@ -477,11 +477,11 @@ public class Server {
       String name = "New Experience";
       String description = "Enter a description about your experience...";
       String color = "00bad6";
-      boolean lowToHigh = false;
+      boolean highToLow = true;
 
       Map<String, Object> variables = ImmutableMap.of("title", name,
               "color", color, "description", description, "scoresRank",
-              lowToHigh);
+              highToLow);
       return new ModelAndView(variables, "editor.ftl");
     }
   }

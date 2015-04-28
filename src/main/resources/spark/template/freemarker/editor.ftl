@@ -169,16 +169,13 @@
         }
 
         .answers, form {
+            position: relative;
+            width: 100%;
+            height: auto;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-        }
-
-        form {
-            position: relative;
-            width: 100%;
-            height: auto;
         }
 
         input[type=radio] {
@@ -187,6 +184,9 @@
         }
 
         input[type=radio] + label {
+            display: block;
+            position: relative;
+            height: auto;
             opacity: .6;
             transition: opacity 0.2s;
             font-size: 1em;
@@ -203,16 +203,20 @@
         }
 
         .button {
-        padding: 2%;
-        padding-left: 4%;
-        padding-right: 4%;
-        width: 40%;
+            padding: 2%;
+            padding-left: 4%;
+            padding-right: 4%;
+            width: 40%;
         }
 
         .color-block {
             position: relative;
             height: 25px;
-            width: 90px;
+            width: 100%;
+        }
+
+        label.color {
+            width: 20%;
         }
 
         .c00bad6 {
@@ -241,7 +245,7 @@
         <div class="main">
             <input type="text" class="title" name="experience-title" value="${title}" />
 
-            <textarea class="description" name="experience-title">${description}</textarea>
+            <textarea class="description" name="experience-desc">${description}</textarea>
 
             <div class="settings">
                 <span class="settings-title">Settings</span>
@@ -263,16 +267,16 @@
                     <div class="bar-block answers">
                         <form name="colors">
                             <input type="radio" name="themeColor" id="00bad6" value="00bad6" />
-                            <label for="00bad6"><div class="color-block c00bad6"></div></label>
+                            <label for="00bad6" class="color"><div class="color-block c00bad6"></div></label>
 
                             <input type="radio" name="themeColor" id="ef563d" value="ef563d" />
-                            <label for="ef563d"><div class="color-block cef563d"></div></label>
+                            <label for="ef563d" class="color"><div class="color-block cef563d"></div></label>
 
                             <input type="radio" name="themeColor" id="ffaf00" value="ffaf00" />
-                            <label for="ffaf00"><div class="color-block cffaf00"></div></label>
+                            <label for="ffaf00" class="color"><div class="color-block cffaf00"></div></label>
 
                             <input type="radio" name="themeColor" id="F5C70C" value="F5C70C" />
-                            <label for="F5C70C"><div class="color-block cF5C70C"></div></label>
+                            <label for="F5C70C" class="color"><div class="color-block cF5C70C"></div></label>
                         </form>
                     </div>
                 </div>
@@ -285,16 +289,88 @@
         $(document).ready(function() {
             var colorArray = ["00bad6", "ef563d", "ffaf00", "F5C70C"];
             var color = $(".sidebar").attr('id');
-            var index = colorArray.indexOf(color);
-            console.log(index);
-            document.colors.themeColor[index].checked = true;
+            showColor(color);
 
+            /**
+            * Sets the visual color of the theme to the given color.
+            */
+            function showColor(color) {
+                // May not need to do this?
+            }
+
+            /**
+            * Shows the correct color box as checked.
+            */
+            function showCheckedColor(color) {
+                var index = colorArray.indexOf(color);
+                document.colors.themeColor[index].checked = true;
+            }
+
+            /**
+            * On click of a new color, change the color.
+            */
             $("input[name=themeColor]").click(function() {
-                var color = this.attr('id');
+                var color = $(this).attr('id');
+                changeColor(color);
             });
 
+            /**
+            * Makes a post request to change the color of the experience.
+            */
             function changeColor(color) {
+                console.log(color);
+            }
 
+            /**
+            * When a score ranking button is clicked,
+            * change the score ranking.
+            */
+            $("input[name=score-ranking]").click(function() {
+                var valId = $(this).attr('id');
+                var highToLow;
+                if (valId === "low-to-high") {
+                    highToLow = false;
+                } else {
+                    highToLow = true;
+                }
+                changeScoreRanking(highToLow);
+            });
+
+            /**
+            * Sends a post request to change the score ranking.
+            */
+            function changeScoreRanking(highToLow) {
+                console.log("highToLow: " + highToLow);
+            }
+
+            /**
+            * When the title input is edited, change the experience title.
+            */
+            $("input[name='experience-title']").change(function() {
+                var title = $(this).val();
+                changeTitle(title);
+            });
+
+            /**
+            * Sends a post request to change the title of the experience.
+            */
+            function changeTitle(title) {
+                console.log(title);
+            }
+
+            /**
+            * When the description input is edited, change the experience description.
+            */
+            $("textarea[name='experience-desc']").change(function() {
+                var desc = $(this).val();
+                changeTitle(desc);
+            });
+
+            /**
+            * Sends a post request to change the description of the experience.
+            */
+            function changeDescription(desc) {
+                console.log(desc);
             }
         });
     </script>
