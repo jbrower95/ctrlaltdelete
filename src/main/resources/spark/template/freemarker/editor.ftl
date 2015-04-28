@@ -293,6 +293,7 @@
         $(document).ready(function() {
             /* Globals */
             var title = $("input[name=experienceTitle]").val();
+            var oldTitle = title;
             var color = $(".sidebar").attr('id');
             var description = $("textarea[name='experienceDesc']").val();
             var highToLow = $("form[name=score]").attr('id');
@@ -356,9 +357,9 @@
             $("input[name=scoreRanking]").click(function() {
                 var valId = $(this).attr('id');
                 if (valId === "low-to-high") {
-                    highToLow = false;
+                    highToLow = "false";
                 } else {
-                    highToLow = true;
+                    highToLow = "true";
                 }
             });
 
@@ -378,13 +379,13 @@
             });
 
             function saveEdit() {
-                var input = {"title": title, "color": color, "description": description,
+                var input = {"title": title, "oldTitle": oldTitle, "color": color, "description": description,
                              "highToLow": highToLow};
                 $.post("/" + title + "/saveedit", input, function(responseJSON){
-                    //var responseObject = JSON.parse(responseJSON);
-                    //var success = JSON.parse(responseObject.success);
-                    //console.log(success);
+                    var responseObject = JSON.parse(responseJSON);
+                    console.log(responseObject);
                 });
+                oldTitle = title;
             }
 
             $(".side-title").click(function() {

@@ -1,12 +1,8 @@
 package edu.brown.cs.experience;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -140,6 +136,45 @@ public class Server {
   }
 
   /**
+   * Takes a URL string and decodes usign UTF-8.
+   * @param url The given url.
+   * @return The decoded url, if available, else null.
+   */
+  public String getTitleFromURL(String url) {
+    String s = null;
+    try {
+      s = URLDecoder.decode(url, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      System.err.println("ERROR: UTF-8 encoding is unsupported.");
+    }
+
+    return s;
+  }
+
+  /**
+   * Gets an encoded URL from a title.
+   * @param title The given title.
+   * @return If able to encode, the encoded title,
+   * else null.
+   */
+  public String getURLFromTitle(String title) {
+    String s = null;
+    try {
+      s = URLEncoder.encode(title, "UTF-8")
+              .replaceAll("\\+", "%20")
+              .replaceAll("\\%21", "!")
+              .replaceAll("\\%27", "'")
+              .replaceAll("\\%28", "(")
+              .replaceAll("\\%29", ")")
+              .replaceAll("\\%7E", "~");;
+    } catch (UnsupportedEncodingException e) {
+      System.err.println("ERROR: UTF-8 encoding is unsupported.");
+    }
+
+    return s;
+  }
+
+  /**
    * Handle requests directed to this site's index.
    *
    * @author joengelm
@@ -152,7 +187,7 @@ public class Server {
       List<String> experienceColors = new ArrayList<>();
       for (Experience exp : experiences.values()) {
         experienceFileNames.add(exp.filename);
-        experienceNames.add(exp.getName());
+        experienceNames.add(getTitleFromURL(exp.getName()));
         experienceColors.add(exp.getColor());
       }
 
@@ -565,55 +600,140 @@ public class Server {
     }
   }
 
+  // TODO: In editor handlers, send some bool so we know if it's
+  // new or not--use this to set oldTitle appropriately.
+  // Check for existing experiences with the same name/filename
+  // to avoid overwriting.
+  // Send back error messages if doesn't work.
   public class SaveEditedExperienceHandler implements Route {
     @Override
     public String handle(Request req, Response res) {
       System.out.println("SaveEditedExperienceHandler");
-      Experience exp = experiences.get(req.params(":experience"));
+      String filename = req.params(":experience");
+      Experience exp = experiences.get(filename);
+
+      // Get data
+      QueryParamsMap qm = req.queryMap();
+      String oldTitle = qm.value("oldTitle");
+      String title = qm.value("title");
+      String color = qm.value("color");
+      String description = qm.value("description");
+      String highToLow = qm.value("highToLow");
+      Boolean htl = Boolean.parseBoolean(highToLow);
+
+      // Set up config object
+      Config config = new Config(title, color, description, htl);
+
+      // Set up directory path
+      String dirPath = directory + File.separator
+              + filename;
 
       // If experience not in hashtable, make directory
       // and add to hashtable
       if (exp == null) {
-        QueryParamsMap qm = req.queryMap();
-        String title = qm.value("title");
-        String color = qm.value("color");
-        String description = qm.value("description");
-        String highToLow = qm.value("highToLow");
-        Boolean htl = Boolean.getBoolean(highToLow);
-        Config config = new Config(title, color, description, htl);
-        String json = GSON.toJson(config);
-        System.out.println(json);
+        System.out.println("Experience " + title + " not in hashtable.");
+        // If the title changed, we need to change the
+        // directory name
+        if (oldTitle != null && !oldTitle.equals("") && !oldTitle.equals(title)) {
+          System.out.println("Old title " + oldTitle + " is different!");
+          exp = experiences.get(getURLFromTitle(oldTitle));
+          if (exp != null) {
+            System.out.println("Found old experience " + getURLFromTitle(oldTitle) + ".");
+            // Rename old directory
+            String path = directory + File.separator;
+            File oldDir = new File(path + getURLFromTitle(oldTitle));
+            File newDir = new File(path + filename);
+            if (oldDir.isDirectory()) {
+              System.out.println("Found old directory. Renaming...");
+              oldDir.renameTo(newDir);
+              dirPath = newDir.getPath();
+              System.out.println("Renamed");
+            } else {
+              System.err.println("ERROR: Old directory " + getURLFromTitle(oldTitle) + " not found.");
+              return GSON.toJson(false);
+            }
+          } else {
+            System.err.println("ERROR: Couldn't find old experience " + getURLFromTitle(oldTitle) + " in hashtable.");
+            return GSON.toJson(false);
+          }
+        } else {
+          System.out.println("Making new experience " + title + ".");
+          // Make new directory
+          File dir = new File(dirPath);
+          dir.mkdir();
 
-        String dirPath = directory + File.separator
-          + config.removeTitleSpaces();
-        File dir = new File(dirPath);
-        dir.mkdir();
+          // Create new config file
+          File cfig = new File(dirPath + File.separator + ".config");
+          try {
+            cfig.createNewFile();
+          } catch (IOException e) {
+            System.out
+                    .println("ERROR: IOException in SaveEditedExperienceHandler");
+            return GSON.toJson(null);
+          }
 
-        File cfig = new File(dirPath + File.separator + ".config");
-
-        try {
-          cfig.createNewFile();
-          FileWriter fw = new FileWriter(cfig.getAbsoluteFile());
-          BufferedWriter bw = new BufferedWriter(fw);
-          bw.write(json);
-          bw.close();
-        } catch (IOException e) {
-          System.out
-          .println("ERROR: IOException in SaveEditedExperienceHandler");
-          return GSON.toJson(false);
-        }
-
-        try {
-          exp = new Experience(dirPath);
-          experiences.put(exp.filename, exp);
-        } catch (FileNotFoundException e) {
-          System.out
-          .println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
-          return GSON.toJson(false);
+          saveExperience(cfig, config, dirPath);
+          System.out.println("Experience saved!");
+          return GSON.toJson(true);
         }
       }
-      System.out.println("Yes");
+
+      System.out.println("Removing old version of experience, saving new version.");
+      experiences.remove(exp.filename);
+      File cfig = new File(exp.directory + File.separator + ".config");
+      saveExperience(cfig, config, dirPath);
+
+      System.out.println("Experience saved!");
       return GSON.toJson(true);
+    }
+
+    /**
+     * Takes a name and removes all spaces.
+     * @param n The name.
+     * @return The name without the spaces.
+     */
+    private String removeTitleSpaces(String n) {
+      String[] s = n.split(" ");
+      StringBuilder builder = new StringBuilder();
+      for (String str : s) {
+        builder.append(str);
+      }
+      return builder.toString();
+    }
+
+    /**
+     * Takes a Config object, serializes it, and writes it to
+     * a given config file, then adds the resulting experience
+     * to the hashtable.
+     * @param file The .config file to write to.
+     * @param config The Config object.
+     * @param dirPath The path of the directory.
+     * @return True if it worked, false otherwise.
+     */
+    private boolean saveExperience(File file, Config config, String dirPath) {
+      String json = GSON.toJson(config);
+
+      try {
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(json);
+        bw.close();
+      } catch (IOException e) {
+        System.out
+                .println("ERROR: IOException in SaveEditedExperienceHandler");
+        return false;
+      }
+
+      try {
+        Experience exp = new Experience(dirPath);
+        experiences.put(exp.filename, exp);
+      } catch (FileNotFoundException e) {
+        System.out
+                .println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
+        return false;
+      }
+
+      return true;
     }
 
     private class Config {
@@ -629,15 +749,6 @@ public class Server {
         orderScoresHighToLow = highToLow;
         files = new ArrayList<>();
         mainFile = "";
-      }
-
-      public String removeTitleSpaces() {
-        String[] s = name.split(" ");
-        StringBuilder builder = new StringBuilder();
-        for (String str : s) {
-          builder.append(str);
-        }
-        return builder.toString();
       }
     }
   }
