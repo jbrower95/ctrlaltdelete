@@ -152,8 +152,7 @@ SceneManager.prototype.registerScene = function(scene) {
  * the scene will be ejected using a left to right animation.
  */
 SceneManager.prototype.presentScene = function(sceneID) {
-  console.log("[scenemanager.js] Presenting scene: " + sceneID);
-	var scene = this.scenes[sceneID];
+  var scene = this.scenes[sceneID];
 
 	if (scene == null) {
 		console.error("[scenemanager.js] Error: Couldn't load scene " + sceneID);
@@ -175,6 +174,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
 	scene.preload();
 
 	if (!scene.isPhantom()) {
+    console.log("[scenemanager.js] Presenting non phantom scene: " + sceneID);
+  
 		// If there is a scene already in the content div, move it out
 		if (this.activeScene) {
 			// since we reassign this.activeScene when the next animation completes,
@@ -193,6 +194,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
     scene.element = newScene;
     this.contentDiv.appendChild(scene.element);
 	} else {
+    console.log("[scenemanager.js] Presenting phantom scene: " + sceneID);
+  
 		// reuse the scene HTML that's in there. just tell the active scene it's being destroyed
     // resolve our dependencies
     var requiredScenes = [];
@@ -215,17 +218,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
           // We've hit our current scene in the dependency graph. That means, all content
           //   we've accumulated up until now is all we need to present this scene.
           // make sure the new scene can easily find things inside of itself.
-          scene.searchContent = function(id) {
-            return $(newScene).find(id);
-          };
-
-          // pass the torch to the new scene
-          console.log("[scenemanager.js] Calling onPresent on " + scene.id);
-          this.activeScene = scene;
-          if (scene.preload) {
-            scene.preload();
-          }
-          return;
+          console.log("[scenemanager.js/resolver] The dependency graph included the current scene! Short circuiting...");
+          break;
       }
 
       if (visitedScenes.indexOf(current_required_scene.id) > -1) {
@@ -235,6 +229,11 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
       visitedScenes.push(current_required_scene.id);
       requiredScenes.push(current_required_scene.id);
+
+      if (!current_required_scene.isPhantom()) {
+        console.log("[scenemanager.js/resolver] The dependency graph hit a root dependency! Short circuiting...");
+        break;
+      }
 
       current_requirement = current_required_scene.requires;
     }
@@ -254,6 +253,10 @@ SceneManager.prototype.presentScene = function(sceneID) {
       i++;
     }
 
+    console.log(scene);
+    console.log(this.activeScene);
+    //copy over variables
+    jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
     scene.element = this.activeScene.element;
 
     console.log("[scenemanager.js/phantom] Presenting phantom scene: " + scene.id);
