@@ -79,7 +79,7 @@ AssetManager.prototype.preloadNamed = function(soundPath, soundName, reload) {
         //this sound has already been loaded.
         return;
     }
-
+    console.log("Loading sound: " + soundPath);
     this.namedSounds[soundName] = new buzz.sound(soundPath);
     this.namedSounds[soundName].load();
 };
@@ -90,7 +90,7 @@ AssetManager.prototype.preloadNamed = function(soundPath, soundName, reload) {
  */
 AssetManager.prototype.isLoaded = function(soundName) {
     return (this.namedSounds[soundName]);
-}
+};
 
 /**
  * Returns the shared asset manager.
@@ -130,5 +130,7 @@ AssetManager.prototype.playNamed = function(soundName) {
         return;
     }
 
+    console.log("Playing sound: " + soundName);
+
     this.namedSounds[soundName].play();
-}
+};
