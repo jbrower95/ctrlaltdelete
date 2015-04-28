@@ -102,7 +102,6 @@ body {
 	width: auto;
 	height: auto;
 	position: relative;
-	z-index: 5;
 }
 
 #taskManager {
@@ -111,7 +110,6 @@ body {
 	position: relative;
 	left: 200px;
 	top: 40px;
-	z-index: 10;
 }
 
 #taskbar {
