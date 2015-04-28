@@ -14,10 +14,8 @@ var exported_scene = {
 		win.setIcon("images/open_folder.png");
 		win.moveTo(150, 200);
 		manager.addWindow(win);
-
-		this.exportedVariables.windowManager = manager;
 		
-		var clippyAgent;
+		var clippyAgent = this.exportedVariables.clippy;
 
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
@@ -27,9 +25,12 @@ var exported_scene = {
 		}
 
 		var showClippy = $.proxy(function() {
-			 clippy.load('Clippy', $.proxy(function(agent) {
-					this.exportedVariables.clippyAgent = agent;
-			    }, this));
+				 	clippyAgent.show();
+			        clippyAgent.moveTo(200,200);
+				 	console.log("Playing sound 1");
+				 	clippyAgent.speak("Looks like you're stuck inside the computer!");
+				 	AssetManager.getSharedInstance().play(1);
+				 	clippyAgent.animate();
 		}, this);
 		
 		var clickTheX = function() {
@@ -39,6 +40,9 @@ var exported_scene = {
 		};
 		
 		SceneManager.performSequence([showClippy, clickTheX], [300, 8000]);
+	},
+	onDestroy: function() {
+
 	},
 	getHTML : function() {
 		return "windows95.scene/windows95.html"

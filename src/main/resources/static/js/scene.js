@@ -176,7 +176,7 @@ function Scene(innerHTML, preload , onPresent, onDestroy) {
 function Scene(jsFile, onLoad) {
 
     var manager = SceneManager.getSharedInstance();
-
+    this.exportedVariables = {};
     console.log("[scene.js] Initializing scene: " + jsFile);
     var scene_reference = this;
 	// dynamically load the dependent script using jquery
@@ -198,6 +198,12 @@ function Scene(jsFile, onLoad) {
         this.id = exported_scene["id"];
 
         if (this.isPhantom()) {
+            
+            if (!exported_scene["requires"]) {
+                console.error("[scene.js] ERROR/fatal: Loading of scene " + this.id + " failed - A phantom scene must have a 'requires' field.");
+                return;
+            }
+
             this.requires = exported_scene["requires"];
         }
 
@@ -206,11 +212,6 @@ function Scene(jsFile, onLoad) {
         }
 
         exported_scene.scene = this;
-
-        if (exported_scene["exportedVariables"]) {
-            this.exportedVariables = {};
-            jQuery.extend(this.exportedVariables, exported_scene["exportedVariables"]);
-        }
 
 		var isHTMLFile = /[^]*.html$/g;
 
