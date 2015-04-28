@@ -71,6 +71,12 @@ Window.prototype.mouseUp = function() {
 Window.prototype.mouseDown = function(e) {
 	this.mouse_offset_x = e.pageX - this.x;
 	this.mouse_offset_y = e.pageY - this.y;
+	// remove class ".top-window" from all other windows
+	$(".top-window").map(function() {
+   		$(this).removeClass("top-window");
+	});
+	// add class ".top-window" to this window
+	$(this.element).addClass("top-window");
 	$(window).bind("mousemove", $.proxy(this.moveWindow, this));
 }
 
