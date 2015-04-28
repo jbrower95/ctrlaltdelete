@@ -4,13 +4,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.eclipse.jetty.io.EofException;
 
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -24,6 +29,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
@@ -221,6 +227,7 @@ public class Server {
       }
     }
   }
+  
 
   /**
    * Handle requests directed to each experience's small files.
@@ -239,11 +246,12 @@ public class Server {
 
       System.out.println("Trying to get asset: " + asset);
 
-      if (!exp.files.contains(new JsonPrimitive(asset))) {
-        throw new IllegalArgumentException("Error: Can't access asset "
-          + asset + " -  Not declared in manifest.");
+      if (!experienceCanAccessAsset(exp, asset)) {
+    	  throw new IllegalArgumentException("Error: Can't access asset "
+    	          + asset + " -  Not declared in manifest.");
       }
-
+      
+      
       System.out.println("Experience: " + exp.directory);
 
       try {
@@ -271,8 +279,12 @@ public class Server {
 
           final OutputStream os = response.raw().getOutputStream();
 
+          try {
           for (byte b : contents) {
             os.write(b);
+          }
+          } catch (EofException e) {
+        	  System.err.println("[server/write] EOF exception.");
           }
 
           in.close();
@@ -287,6 +299,67 @@ public class Server {
     }
   }
 
+  
+  /**
+   * Returns true if an experience can access a file.
+   * @param experience The experience in question
+   * @param scene The name of the requesting scene
+   * @param asset The requested asset.
+   * @return True if the asset should be served, otherwise false.
+   * 
+   * Precondition: This must be called while the current working directory is the directory
+   * for this experience.
+   */
+  public boolean experienceCanAccessAsset(Experience experience, String scene, String asset) {
+	  
+	  String path = experience.directory + "/" + scene + "/" + asset;
+	  
+	  String sceneDirectory = scene;
+	  
+	  Path filename = FileSystems.getDefault().getPath(sceneDirectory, asset);
+	  
+	  for (JsonElement item : experience.files) {
+		  
+		  String value = item.getAsString();
+		  
+	  PathMatcher matcher =
+			    FileSystems.getDefault().getPathMatcher("glob:" + value);
+			if (matcher.matches(filename)) {
+			    return true;
+			}
+	  }
+	  
+	  return false;
+  }
+  
+  /**
+   * Returns true if an experience can access any asset inside of its folder.
+   * @param experience The experience object in question.
+   * @param asset The requested asset's relative path (to the root of the experience).
+   * @return True if the asset is allowed read access, otherwise false.
+   * 
+   * Precondition: This must be called while the current working directory is the directory
+   * for this experience.
+   */
+  public boolean experienceCanAccessAsset(Experience experience, String asset) {
+	  //note: the cwd (current working directory) is the experience directory.
+	  Path filename = FileSystems.getDefault().getPath("", asset);
+	  System.out.println("Determining accessibility of asset " + asset);
+	  for (JsonElement item : experience.files) {
+		  
+		  String value = item.getAsString();
+		  
+	  PathMatcher matcher =
+			    FileSystems.getDefault().getPathMatcher("glob:" + value);
+			if (matcher.matches(filename)) {
+			    return true;
+			}
+	  }
+	  
+	  return false;
+  }
+  
+  
   /**
    * Handle requests directed to each experience's small files.
    *
@@ -296,6 +369,10 @@ public class Server {
     @Override
     public Object handle(Request req, Response res)
       throws IllegalArgumentException {
+    	Path currentRelativePath = Paths.get("");
+    	String s = currentRelativePath.toAbsolutePath().toString();
+    	System.out.println("Current relative path is: " + s);
+    	
       Experience exp = experiences.get(req.params(":experience"));
       String scene = req.params(":scene");
       String asset = req.params(":asset");
@@ -303,10 +380,11 @@ public class Server {
       String path = (exp.directory + "/" + scene + "/" + asset);
 
       System.out.println("Trying to get asset: " + asset);
-
-      if (!exp.files.contains(new JsonPrimitive(scene + "/" + asset))) {
-        throw new IllegalArgumentException("Error: Can't access asset "
-          + asset + " -  Not declared in manifest.");
+      
+      //access control
+      if (!experienceCanAccessAsset(exp, scene, asset)) {
+    	  throw new IllegalArgumentException("Error: Can't access asset "
+    	          + path + " -  Not declared in manifest.");
       }
 
       System.out.println("Experience: " + exp.directory);

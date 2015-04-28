@@ -40,11 +40,6 @@ public class Experience {
         "Error: Manifest does not have correct 'files' and 'mainFile' components.");
     }
 
-    if (!files.contains(new JsonPrimitive(mainFile))) {
-      throw new IllegalArgumentException(
-        "Error: Your main file must be declared in your list of files.");
-    }
-
     name = root.get("name").getAsString();
     color = root.get("themeColor").getAsString();
     orderScoresHighToLow = root.get("orderScoresHighToLow").getAsBoolean();
