@@ -568,7 +568,7 @@ public class Server {
       Map<String, Object> variables = ImmutableMap.of("title",
         exp.getName(), "color", exp.getColor(), "description",
         exp.getDescription(), "highToLow",
-        GSON.toJson(exp.hasScoresHighToLow()));
+        GSON.toJson(exp.hasScoresHighToLow()), "isNew", "false");
       return new ModelAndView(variables, "editor.ftl");
     }
   }
@@ -595,7 +595,7 @@ public class Server {
 
       Map<String, Object> variables = ImmutableMap.of("title", name,
         "color", color, "description", description, "highToLow",
-        GSON.toJson(highToLow));
+        GSON.toJson(highToLow), "isNew", "true");
       return new ModelAndView(variables, "editor.ftl");
     }
   }
@@ -643,11 +643,12 @@ public class Server {
             String path = directory + File.separator;
             File oldDir = new File(path + getURLFromTitle(oldTitle));
             File newDir = new File(path + filename);
+            System.out.println(filename);
             if (oldDir.isDirectory()) {
               System.out.println("Found old directory. Renaming...");
-              oldDir.renameTo(newDir);
+              boolean worked = oldDir.renameTo(newDir);
               dirPath = newDir.getPath();
-              System.out.println("Renamed");
+              System.out.println("Renamed worked is " + worked + ": " + oldDir.getPath());
             } else {
               System.err.println("ERROR: Old directory " + getURLFromTitle(oldTitle) + " not found.");
               return GSON.toJson(false);
@@ -725,6 +726,7 @@ public class Server {
       }
 
       try {
+        System.out.println(dirPath);
         Experience exp = new Experience(dirPath);
         experiences.put(exp.filename, exp);
       } catch (FileNotFoundException e) {

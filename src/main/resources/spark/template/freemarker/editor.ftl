@@ -280,7 +280,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="${isNew}">
         <div class="sidebar c${color}" id="${color}">
             <span class="side-title">${title}</span>
         </div>
@@ -339,9 +339,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
+            var isNew = $(".container").attr('id');
+
             /* Globals */
             var title = $("input[name=experienceTitle]").val();
-            var oldTitle = title;
+            var oldTitle;
+            if (isNew === "false") {
+                oldTitle = title;
+            } else {
+                oldTitle = null;
+            }
             var color = $(".sidebar").attr('id');
             var description = $("textarea[name='experienceDesc']").val();
             var highToLow = $("form[name=score]").attr('id');
