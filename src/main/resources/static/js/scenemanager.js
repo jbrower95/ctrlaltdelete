@@ -240,12 +240,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
     var numRequirements = requiredScenes.length;
     console.log("[scenemanager.js] Number of required scenes: " + numRequirements);
-
-    // destroy whatever scene is currently on screen
-    if (this.activeScene && this.activeScene.onDestroy) {
-      this.activeScene.onDestroy();
-    }
-
+    
     // present the sequence of scenes that lead up until
     var i = 0;
     while (i < numRequirements) {
