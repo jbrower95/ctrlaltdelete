@@ -204,11 +204,52 @@
             opacity: 1;
         }
 
+        .save-bar {
+            position: relative;
+            width: 85%;
+            height: auto;
+            margin-top: 8%;
+            text-align: right;
+        }
+
         .button {
             padding: 2%;
             padding-left: 4%;
             padding-right: 4%;
-            width: 40%;
+            width: 38.5%;
+        }
+
+        .save {
+            position: relative;
+            width: 31%;
+            padding-top: 1%;
+            padding-bottom: 1%;
+            border: 3px solid white;
+            color: white;
+            background-color: rgba(255,255,255,0);
+            font-family: 'Lato', sans-serif;
+            font-size: 1.3em;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .save:hover {
+            cursor: pointer;
+        }
+
+        .save:hover, .active {
+            background-color: rgba(255,255,255,1);
+            color: darkslategray;
+        }
+
+        .save-info {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            color: white;
+            font-size: .6em;
+            top: -20px;
+            left: 0;
+            text-align: left;
         }
 
         .color-block {
@@ -285,6 +326,13 @@
                     </div>
                 </div>
             </div>
+
+            <div class="save-bar">
+
+                <button class="save button">Save
+                <div class="save-info"></div>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -348,6 +396,7 @@
             $("input[name=themeColor]").click(function() {
                 color = $(this).attr('id');
                 showColor(color);
+                senseChanges();
             });
 
             /**
@@ -361,6 +410,7 @@
                 } else {
                     highToLow = "true";
                 }
+                senseChanges();
             });
 
             /**
@@ -369,6 +419,7 @@
             $("input[name='experienceTitle']").change(function() {
                 title = $(this).val();
                 $(".side-title").html(title);
+                senseChanges();
             });
 
             /**
@@ -376,19 +427,34 @@
             */
             $("textarea[name='experienceDesc']").change(function() {
                 description = $(this).val();
+                senseChanges();
             });
+
+            /**
+            * Resets "Save" button on change.
+            */
+            function senseChanges() {
+                $(".save").html("Save");
+                $(".save").removeClass("active");
+            }
 
             function saveEdit() {
                 var input = {"title": title, "oldTitle": oldTitle, "color": color, "description": description,
                              "highToLow": highToLow};
                 $.post("/" + title + "/saveedit", input, function(responseJSON){
                     var responseObject = JSON.parse(responseJSON);
-                    console.log(responseObject);
+                    if (responseObject === true) {
+                        var currentdate = new Date();
+                        var datetime = currentdate.getHours() + ":" + currentdate.getMinutes();
+                        $(".save-info").html("Last saved " + datetime);
+                        $(".save").html("Saved!");
+                        $(".save").addClass("active");
+                    }
                 });
                 oldTitle = title;
             }
 
-            $(".side-title").click(function() {
+            $(".save").click(function() {
                 saveEdit();
             });
         });

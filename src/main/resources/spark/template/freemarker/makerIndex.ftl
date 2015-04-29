@@ -53,7 +53,7 @@
 
                 .new_experience {
                 position: relative;
-                right: 10%;
+                right: 4%;
                 top: 3%;
                 padding: 1%;
                 padding-left: 2%;
