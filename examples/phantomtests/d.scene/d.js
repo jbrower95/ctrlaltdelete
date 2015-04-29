@@ -3,6 +3,7 @@ var exported_scene = {
     id : "d",
     preload : function() {
     	this.exportedVariables['bigNumber'] = 20;
+    	console.log('setting the big number to 20!');
     },
 	onPresent : function() {
 		if (this.exportedVariables['yo']) {
