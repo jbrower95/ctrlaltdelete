@@ -258,6 +258,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
     //copy over variables
     jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
     scene.element = this.activeScene.element;
+    scene.preload();
 
     console.log("[scenemanager.js/phantom] Presenting phantom scene: " + scene.id);
 
