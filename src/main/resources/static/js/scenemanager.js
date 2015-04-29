@@ -214,7 +214,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
       console.log("[scenemanager.js] Resolving requirement: " + current_requirement);
       var current_required_scene = this.getScene(current_requirement);
 
-      if (this.activeScene && current_required_scene.id == this.activeScene.id) {
+      if ((this.activeScene) && (current_required_scene.id == this.activeScene.id)) {
           // We've hit our current scene in the dependency graph. That means, all content
           //   we've accumulated up until now is all we need to present this scene.
           // make sure the new scene can easily find things inside of itself.
@@ -240,12 +240,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
     var numRequirements = requiredScenes.length;
     console.log("[scenemanager.js] Number of required scenes: " + numRequirements);
-
-    // destroy whatever scene is currently on screen
-    if (this.activeScene && this.activeScene.onDestroy) {
-      this.activeScene.onDestroy();
-    }
-
+    
     // present the sequence of scenes that lead up until
     var i = 0;
     while (i < numRequirements) {
@@ -258,6 +253,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
     //copy over variables
     jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
     scene.element = this.activeScene.element;
+    scene.preload();
 
     console.log("[scenemanager.js/phantom] Presenting phantom scene: " + scene.id);
 
