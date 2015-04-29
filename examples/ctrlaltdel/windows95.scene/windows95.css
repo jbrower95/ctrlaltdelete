@@ -109,13 +109,28 @@ body {
 	position: absolute;
 	top: 40px;
 	left: 1px;
-	width: 308px;
+	table-layout: fixed;
+}
 
+.win2x3 {
+	width: 248px;
+}
+
+.win2x4 {
+	width: 340px;
+}
+
+.windowIconArea td {
+	width: 80px;
 }
 
 .windowIcon {
 	width: 80px;
 	height: 80px;
+}
+
+.windowIcon:hover {
+	cursor: pointer;
 }
 
 #taskManager {
