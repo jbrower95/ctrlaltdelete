@@ -1,0 +1,18 @@
+<h1 id="sceneNameHeader">The current scene is <span id="sceneName"> d </span>
+
+<p>This is the second dependency graph.</p>
+
+<ul>
+	<li><button onclick="javascript:transition('e')">Load a phantom scene</button></li>
+	<li><button onclick="javascript:transition('f')">Load a non trivial phantom scene</button> This item will require the above scene.</li>
+
+
+</ul>
+
+
+
+<script>
+function transition(id) {
+	SceneManager.getSharedInstance().presentScene(id);
+}
+</script>

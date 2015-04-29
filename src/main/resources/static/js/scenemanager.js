@@ -214,7 +214,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
       console.log("[scenemanager.js] Resolving requirement: " + current_requirement);
       var current_required_scene = this.getScene(current_requirement);
 
-      if (this.activeScene && current_required_scene.id == this.activeScene.id) {
+      if ((this.activeScene) && (current_required_scene.id == this.activeScene.id)) {
           // We've hit our current scene in the dependency graph. That means, all content
           //   we've accumulated up until now is all we need to present this scene.
           // make sure the new scene can easily find things inside of itself.
