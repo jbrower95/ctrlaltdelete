@@ -22,7 +22,8 @@ body {
 	 content: " ";
 	 clear: both;
 	 height: 0;
-	 }
+}
+
 .clearfix { display: inline-block; }
 /* start commented backslash hack \*/
 * html .clearfix { height: 1%; }
@@ -66,7 +67,7 @@ body {
 	height: auto;
 	width: auto;
 	background-color: #bdbdbd;
-	border: 3px solid #bdbdbd;
+	border: 2px solid #bdbdbd;
 }
 
 .top-window {
@@ -104,6 +105,19 @@ body {
 	position: relative;
 }
 
+.windowIconArea {
+	position: absolute;
+	top: 40px;
+	left: 1px;
+	width: 308px;
+
+}
+
+.windowIcon {
+	width: 80px;
+	height: 80px;
+}
+
 #taskManager {
 	width: auto;
 	height: auto;
@@ -115,7 +129,7 @@ body {
 #taskbar {
 	clear: both;
     position: absolute;
-    z-index: 10;
+    z-index: 1000;
     height: 27px;
     bottom: 0;
     left: 0;
