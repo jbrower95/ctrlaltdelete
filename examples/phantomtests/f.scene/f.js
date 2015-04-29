@@ -7,7 +7,7 @@ var exported_scene = {
 	onPresent : function() {
 		if (this.exportedVariables['bigNumber']) {
 			success = (this.exportedVariables['bigNumber']==80);
-			alert("This is scene F! Verifying state..." + success);
+			alert("This is scene F! Verifying state..." + success + ". - " + this.exportedVariables['bigNumber']);
 		}
 	},
 	getHTML : function() {
