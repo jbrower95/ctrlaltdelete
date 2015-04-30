@@ -61,7 +61,12 @@ public class Experience {
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
     File dbFile = new File(directory + "/meta.db");
-    dbFile.setWritable(true);
+    boolean changed = dbFile.setWritable(true);
+    if (changed) {
+    	System.out.println("Successfully changed permissions!");
+    } else {
+    	System.out.println("Failed to change permissions.");
+    }
   }
 
   public String getId() {
