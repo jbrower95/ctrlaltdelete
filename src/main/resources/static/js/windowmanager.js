@@ -23,7 +23,7 @@ function WindowManager(content_div_id) {
 	if (existing_div === null) {
 		// Create a div
 		this.content_div = document.createElement("div");
-		document.body.appendChild(content_div);
+		document.body.appendChild(this.content_div);
 	} else {
 		// Is it a div?
 		if (existing_div.tagName == "DIV") {
