@@ -14,7 +14,7 @@ import java.util.Date;
  * @author joengelm
  *
  */
-public class Database {
+public class Database implements AutoCloseable {
 	private final String urlToDB;
 	private Connection conn;
 
@@ -134,5 +134,10 @@ public class Database {
 	public static Timestamp getCurrentTimestamp() {
 		Date today = new Date();
 		return new Timestamp(today.getTime());
+	}
+
+	@Override
+	public void close() throws Exception {
+		disconnect();
 	}
 }
