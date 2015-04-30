@@ -104,7 +104,7 @@ public class Server {
         try {
           Experience exp = new Experience(experienceFile.getPath());
 
-          experiences.put(exp.filename, exp);
+          experiences.put(exp.getId(), exp);
 
           System.out.println("[server] Binding directory for experience: "
             + experienceFile.getPath());
@@ -565,10 +565,14 @@ public class Server {
 
       Experience exp = experiences.get(experienceFileName);
 
-      Map<String, Object> variables = ImmutableMap.of("title",
-        exp.getName(), "color", exp.getColor(), "description",
-        exp.getDescription(), "highToLow",
-        GSON.toJson(exp.hasScoresHighToLow()), "isNew", "false");
+      Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+              .put("title", exp.getName())
+              .put("color", exp.getColor())
+              .put("description", exp.getDescription())
+              .put("highToLow", GSON.toJson(exp.hasScoresHighToLow()))
+              .put("isNew", "false")
+              .put("id", exp.getId())
+              .build();
       return new ModelAndView(variables, "editor.ftl");
     }
   }
@@ -593,9 +597,14 @@ public class Server {
       String color = "00bad6";
       boolean highToLow = true;
 
-      Map<String, Object> variables = ImmutableMap.of("title", name,
-        "color", color, "description", description, "highToLow",
-        GSON.toJson(highToLow), "isNew", "true");
+      Map<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+              .put("title", name)
+              .put("color", color)
+              .put("description", description)
+              .put("highToLow", GSON.toJson(highToLow))
+              .put("isNew", "true")
+              .put("id", "")
+              .build();
       return new ModelAndView(variables, "editor.ftl");
     }
   }
@@ -616,13 +625,16 @@ public class Server {
       QueryParamsMap qm = req.queryMap();
       String oldTitle = qm.value("oldTitle");
       String title = qm.value("title");
+      String id = qm.value("id");
       String color = qm.value("color");
       String description = qm.value("description");
       String highToLow = qm.value("highToLow");
       Boolean htl = Boolean.parseBoolean(highToLow);
 
       // Set up config object
-      Config config = new Config(title, color, description, htl);
+      Config config = new Config(title, id, color, description, htl);
+
+      System.out.println(filename);
 
       // Set up directory path
       String dirPath = directory + File.separator
@@ -753,7 +765,7 @@ public class Server {
       try {
         System.out.println(dirPath);
         Experience exp = new Experience(dirPath);
-        experiences.put(exp.filename, exp);
+        experiences.put(exp.getId(), exp);
       } catch (FileNotFoundException e) {
         System.out
                 .println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
@@ -764,13 +776,14 @@ public class Server {
     }
 
     private class Config {
-      private final String name, themeColor, description, mainFile;
+      private final String name, themeColor, description, mainFile, id;
       private final boolean orderScoresHighToLow;
       private final List<String> files;
 
-      public Config(String title, String color, String cDescription,
+      public Config(String title, String eyed, String color, String cDescription,
         boolean highToLow) {
         name = title;
+        id = eyed;
         themeColor = color;
         description = cDescription;
         orderScoresHighToLow = highToLow;

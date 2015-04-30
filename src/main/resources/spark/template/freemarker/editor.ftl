@@ -294,6 +294,13 @@
                 <span class="settings-title">Settings</span>
 
                 <div class="settings-bar">
+                    <div class="bar-block label">ID (this is your path)</div>
+                    <div class="bar-block answers">
+                        <input type="text" name="id" value="${id}"/>
+                    </div>
+                </div>
+
+                <div class="settings-bar">
                     <div class="bar-block label">Order Scores</div>
                     <div class="bar-block answers">
                         <form name="score" id="${highToLow}">
@@ -446,7 +453,8 @@
             }
 
             function saveEdit() {
-                var input = {"title": title, "oldTitle": oldTitle, "color": color, "description": description,
+                var id = $("input[name=id]").val();
+                var input = {"title": title, "id" : id, "oldTitle": oldTitle, "color": color, "description": description,
                              "highToLow": highToLow};
                 $.post("/" + title + "/saveedit", input, function(responseJSON){
                     var responseObject = JSON.parse(responseJSON);

@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 public class Experience {
 
   private String name;
+  private String id;
   public final String filename;
   private String description;
   private String color;
@@ -43,9 +44,14 @@ public class Experience {
     color = root.get("themeColor").getAsString();
     orderScoresHighToLow = root.get("orderScoresHighToLow").getAsBoolean();
     description = root.get("description").getAsString();
+    id = root.get("id").getAsString();
 
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
+  }
+
+  public String getId() {
+    return id;
   }
 
   public void setName(String newName) {
