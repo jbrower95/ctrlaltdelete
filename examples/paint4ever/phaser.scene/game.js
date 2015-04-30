@@ -86,9 +86,18 @@ var exported_scene = {
 			for (i = 0; i <= 6; i++) {
 				s = spikes.create(620 + i*20, 880, 'spike');
 			}
+			for (i = 0; i <= 3; i++) {
+				s = spikes.create(460 + i*20, 880, 'spike');
+			}
+			for (i = 0; i <= 4; i++) {
+				s = spikes.create(1640 + i*20, 1380, 'spike');
+			}
+			for (i = 0; i <= 2; i++) {
+				s = spikes.create(1920 + i*20, 1380, 'spike');
+			}
 
 			// Player
-			player = game.add.sprite(610, 780, 'gebu');//150, 50, 'gebu');
+			player = game.add.sprite(1920, 1300, 'gebu');//150, 50, 'gebu');
 			game.physics.arcade.enable(player);
 			player.body.bounce.y = 0.2;
 			player.body.gravity.y = 300;

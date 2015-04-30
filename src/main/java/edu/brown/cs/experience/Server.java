@@ -626,12 +626,12 @@ public class Server {
 
       // Get data
       QueryParamsMap qm = req.queryMap();
-      String oldId = qm.value("oldId");
-      String title = qm.value("title");
-      String id = qm.value("id");
-      String color = qm.value("color");
-      String description = qm.value("description");
-      String highToLow = qm.value("highToLow");
+      String oldId = sanitize(qm.value("oldId"));
+      String title = sanitize(qm.value("title"));
+      String id = sanitize(qm.value("id"));
+      String color = sanitize(qm.value("color"));
+      String description = sanitize(qm.value("description"));
+      String highToLow = sanitize(qm.value("highToLow"));
       Boolean htl = Boolean.parseBoolean(highToLow);
 
       // Check for id overwriting existing experience
@@ -738,9 +738,9 @@ public class Server {
 
         boolean worked = oldDir.renameTo(newDir);
         if (worked) {
-          System.out.println("Renaming fucking WORKED!");
+          System.out.println("Renaming WORKED!");
         } else {
-          System.out.println("The world sucks and renaming didn't work.");
+          System.out.println("Renaming didn't work.");
           newDir.mkdir();
           oldExp.db.disconnect();
           try {
@@ -781,8 +781,10 @@ public class Server {
      * @return the original string with '<' and '>' characters escaped
      */
     private String sanitize(String original) {
-    	String fixed = original.replaceAll(">", "&gt;");
-    	fixed = fixed.replaceAll("<", "&lt;");
+    	String fixed = original.replaceAll("&", "&amp;")
+    						   .replaceAll(">", "&gt;")
+    						   .replaceAll("<", "&lt;")
+    						   .replaceAll("\"", "&quot;");
     	return fixed;
     }
 
