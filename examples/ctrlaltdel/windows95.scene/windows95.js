@@ -11,9 +11,51 @@ var exported_scene = {
 
 		var win = manager.inflate("explorer");
 		win.setTitle("My Computer");
-		win.setIcon("images/open_folder.png");
+		win.setIcon("images/my_computer_icon.png");
 		win.moveTo(150, 200);
 		manager.addWindow(win);
+
+		function collision(obj1, ui_pos) {
+	      	var x1 = obj1.offset().left;
+	      	var y1 = obj1.offset().top;
+	      	var h1 = obj1.outerHeight(true);
+	      	var w1 = obj1.outerWidth(true);
+	      	var b1 = y1 + h1;
+	      	var r1 = x1 + w1;
+	      	var x2 = ui_pos.left;
+	      	var y2 = ui_pos.top;
+	      	var h2 = 80;
+	      	var w2 = 80;
+	      	var b2 = y2 + h2;
+	      	var r2 = x2 + w2;
+	        
+	      	if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+	      	return true;
+	    }
+
+		$(function() {
+			$(".drag").draggable({
+		      	stop: function(event, ui) {
+		        	if (collision($("#recycle"), ui.offset)) {
+		        		$(this).remove();
+		        		console.log("Woohoo!");
+		        	}
+		      	},
+		      	revert : function(event, ui) {
+		      		if (!$(this)) {
+		      			return false;
+		      		}
+		            $(this).data("ui-draggable").originalPosition = {
+		                top : 0,
+		                left : 0
+		            };
+		            return !event;
+		            // evaluates like this:
+		            // return event !== false ? false : true;
+		        }
+		    });
+		    $(".drop").droppable();
+		});
 
 		this.exportedVariables.windowManager = manager;
 		

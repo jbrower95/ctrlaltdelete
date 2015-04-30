@@ -55,7 +55,6 @@ function Window(element, x, y, draggable) {
 		this.dragbar.mousedown($.proxy(this.mouseDown, this));
 		$(window).mouseup($.proxy(this.mouseUp, this));
 	}
-	
 }
 
 /**
