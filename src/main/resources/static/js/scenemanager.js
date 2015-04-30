@@ -159,14 +159,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
 		return;
 	} 
 
-  if (!scene.getHTML) {
-    console.error("[scenemanager.js] Scene didn't have a getHTML property. This function is non optional, but can return null.");
-    console.error("[scenemanager.js] object: " + scene);
-    return;
-  }
-
-  if (!scene.preload) {
-    console.error("[scenemanager.js] Scene didn't have a preload() function. This is most likely an internal error.");
+  if (!scene.getHTML && !scene.requires) {
+    console.error("[scenemanager.js] Scene didn't have a getHTML function or require a previous scene. This is probably a user mistake.");
     console.error("[scenemanager.js] object: " + scene);
     return;
   }
@@ -191,10 +185,13 @@ SceneManager.prototype.presentScene = function(sceneID) {
 
     scene.element = newScene;
     this.contentDiv.appendChild(scene.element);
-    scene.preload();
+
+    if (scene.preload) {
+      scene.preload();
+    }
 	} else {
     console.log("[scenemanager.js] Presenting phantom scene: " + sceneID);
-  
+    
 		// reuse the scene HTML that's in there. just tell the active scene it's being destroyed
     // resolve our dependencies
     var requiredScenes = [];
@@ -237,15 +234,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
       current_requirement = current_required_scene.requires;
     }
 
-    var numRequirements = requiredScenes.length;
-    console.log("[scenemanager.js] Number of required scenes: " + numRequirements);
-    
-    // present the sequence of scenes that lead up until the originally requested scene.
-    var i = 0;
-    while (i < numRequirements) {
-      this.presentScene(requiredScenes.pop());
-      i++;
-    }
+    this.resolvePhantomDependencies(sceneID, requiredScenes);
 
     //copy over variables
     jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
@@ -310,26 +299,36 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
     var manager = this;
 
     console.log("[scenemanager.js/phantom] Resolving dependencies for phantom scene: " + sceneName);
+    console.log("Remaining: " + sceneStack.length);
     return new Promise($.proxy(function(resolve, reject) {
 
 
     //preload all dependencies
     if (sceneStack.length > 0) {
 
+
       requiredScene = sceneStack.pop();
       rs = this.scenes[requiredScene];
-      this.activeScene = rs;
+      
+      console.log("[scenemanager.js/phantom] Resolving dependency " + rs.id + " for scene: " + sceneName);
       
       if (!rs.isPhantom()) {
         //this is NOT a phantom scene. inject the HTML.
+        $(this.contentDiv).empty();
         if (!rs.element) {
           //don't reload stuff if we don't need to.
           var newScene = document.createElement("div");
           newScene.className = "__scene__";
           newScene.innerHTML = scene.getHTML();
+          this.contentDiv.appendChild(newScene);
           rs.element = newScene;
         }
-      } 
+      } else {
+        rs.preloadPhantom();
+      }
+
+      this.activeScene = rs;
+
 
       //preload the scene. this may return a promise.
       var possiblyPromise = rs.preload();
@@ -338,6 +337,7 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
 
           Promise.resolve(possiblyPromise).then(function() {
           //recur with the new, reduced stack.
+            console.log("proceeding...");
             manager.resolvePhantomDependencies(sceneName, sceneStack);
           });
 
