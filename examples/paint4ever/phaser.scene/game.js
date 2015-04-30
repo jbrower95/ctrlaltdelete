@@ -16,6 +16,7 @@ var exported_scene = {
 			game.load.image('ladderBlock', 'phaser.scene/ladder-block.png');
 			game.load.image('window', 'phaser.scene/windows.png');
 			game.load.image('clippy', 'phaser.scene/pixel-clippy.png');
+			game.load.image('spike', 'phaser.scene/spike.png');
 			game.load.spritesheet('gebu', 'phaser.scene/gebusheet.png',71, 79);
 			game.load.tilemap('map', 'phaser.scene/paint.json', null, Phaser.Tilemap.TILED_JSON);
 		}
@@ -30,6 +31,7 @@ var exported_scene = {
 		var base;
 		var firingTimer = 0;
 		var clippy;
+		var spikes;
 
 		function create() {
 			game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -48,22 +50,45 @@ var exported_scene = {
 			windows.enableBody = true;
 
 			// Clippy
-			clippy = game.add.sprite(1760, 50, 'clippy');
+			clippy = game.add.sprite(1760, 300, 'clippy');
 			game.physics.arcade.enable(clippy);
 			clippy.body.gravity.y = 300;
 
-			// Bullets
-
+			// Windows Bullets
+			windows = game.add.group();
+		    windows.enableBody = true;
+		    windows.physicsBodyType = Phaser.Physics.ARCADE;
+		    windows.createMultiple(30, 'window');
+		    windows.setAll('outOfBoundsKill', true);
+    		windows.setAll('checkWorldBounds', true);
 
 			// Blue Blocks
 			blueBlocks = game.add.group();
 			blueBlocks.enableBody = true;
 
 			var b = blueBlocks.create(450, 0, 'bigBlueBlock');
+			b = blueBlocks.create(1300, 0, 'bigBlueBlock');
 			b.body.gravity.y = 500;
 
+			// Spikes
+			spikes = game.add.group();
+			spikes.enableBody = true;
+			var s;
+			for (var i = 0; i <= 10; i++) {
+				s = spikes.create(1640 + i*20, 760, 'spike');
+			}
+			for (i = 0; i <= 13; i++) {
+				s = spikes.create(1140 + i*20, 880, 'spike');
+			}
+			for (i = 0; i <= 4; i++) {
+				s = spikes.create(860 + i*20, 880, 'spike');
+			}
+			for (i = 0; i <= 6; i++) {
+				s = spikes.create(620 + i*20, 880, 'spike');
+			}
+
 			// Player
-			player = game.add.sprite(150, 50, 'gebu');
+			player = game.add.sprite(610, 780, 'gebu');//150, 50, 'gebu');
 			game.physics.arcade.enable(player);
 			player.body.bounce.y = 0.2;
 			player.body.gravity.y = 300;
@@ -89,12 +114,13 @@ var exported_scene = {
 			}
 		}
 
-		function killWindow(player, window) {
-			window.kill();
+		function killWindow(win, other) {
+			win.kill();
 		}
 
 		function killPlayer(player, thing) {
-
+			//player.kill();
+			// NEEDS TO RESTART
 		}
 
 		function update() {
@@ -103,7 +129,11 @@ var exported_scene = {
 			game.physics.arcade.collide(blueBlocks, base);
 			game.physics.arcade.collide(clippy, base);
 			game.physics.arcade.collide(clippy, blueBlocks);
+
+			game.physics.arcade.overlap(player, spikes, killPlayer, null, this);
+			game.physics.arcade.overlap(windows, base, killWindow, null, this);
 			game.physics.arcade.overlap(windows, blueBlocks, killWindow, null, this);
+			game.physics.arcade.overlap(player, windows, killPlayer, null, this);
 			game.physics.arcade.overlap(player, ladder, upLadder, null, this);
 
 			//  Reset the players velocity (movement)
@@ -134,7 +164,7 @@ var exported_scene = {
 			}
 
 			// Check for enemy fire
-			if (firingTimer == game.time.now) {
+			if (game.time.now > firingTimer) {
 				enemyFire();
 			}
 		}
@@ -142,7 +172,7 @@ var exported_scene = {
 		function enemyFire() {
 			var bullet = windows.getFirstExists(false);
 			if (bullet) {
-				bullet.reset(1760,50);
+				bullet.reset(clippy.body.x,clippy.body.y);
 				bullet.body.velocity.x = -150;
 				firingTimer = game.time.now + 2000;
 			}
