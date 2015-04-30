@@ -657,7 +657,7 @@ public class Server {
             System.out.println("Found old experience " + oldId + ".");
 
             // Rename old directory
-            dirPath = renameDirectory(oldId, id);
+            dirPath = renameDirectory(oldId, id, exp);
             if (dirPath == null) {
               return GSON.toJson(getReturnVariables(false, "Couldn't find the old directory with id " + oldId + "."));
             }
@@ -719,7 +719,7 @@ public class Server {
      * @param filename The new id of the experience.
      * @return The resulting directory path of the experience.
      */
-    private String renameDirectory(String oldId, String filename) {
+    private String renameDirectory(String oldId, String filename, Experience oldExp) {
       String path = directory + File.separator;
       File oldDir = new File(path + oldId);
       File newDir = new File(path + filename);
@@ -730,20 +730,29 @@ public class Server {
       // rename it to the new directory path
       if (oldDir.isDirectory()) {
         System.out.println("Found old directory. Renaming...");
-        //newDir.mkdir();
-        //boolean worked = oldDir.renameTo(newDir);
-        try {
+
+        boolean worked = oldDir.renameTo(newDir);
+       /* try {
           FileUtils.moveDirectory(oldDir, newDir);
+          //FileUtils.deleteDirectory(oldDir);
         } catch (IOException e) {
           e.printStackTrace();
           System.err.println("ERROR: IOException when moving old directory to new directory.");
-        }
+        }        */
 
-        /*if (worked) {
+        if (worked) {
           System.out.println("Renaming fucking WORKED!");
         } else {
           System.out.println("The world sucks and renaming didn't work.");
-        }  */
+          newDir.mkdir();
+          oldExp.db.disconnect();
+          try {
+            FileUtils.deleteDirectory(oldDir);
+          } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("ERROR: IOException when moving old directory to new directory.");
+          }
+        }
 
         return newDir.getPath();
       } else {
