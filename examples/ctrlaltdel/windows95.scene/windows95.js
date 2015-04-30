@@ -10,8 +10,6 @@ var exported_scene = {
     		desktop.id = "desktop";
     		this.element.appendChild(desktop);
 
-    		
-
 	    	var manager = new WindowManager("desktop");
 			
 			var taskManager = manager.inflate("taskManager");

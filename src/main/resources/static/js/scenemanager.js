@@ -190,8 +190,8 @@ SceneManager.prototype.presentScene = function(sceneID) {
     newScene.innerHTML = scene.getHTML();
 
     scene.element = newScene;
-    scene.preload();
     this.contentDiv.appendChild(scene.element);
+    scene.preload();
 	} else {
     console.log("[scenemanager.js] Presenting phantom scene: " + sceneID);
   
