@@ -507,6 +507,7 @@
             * escaped version.
             */
             function sanitize(str) {
+
                 return str;
             }
 
