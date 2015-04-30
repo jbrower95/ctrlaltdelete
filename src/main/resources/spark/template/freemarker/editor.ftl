@@ -505,12 +505,12 @@
                         $(".save-info").html("Last saved " + datetime);
                         $(".save").html("Saved!");
                         $(".save").addClass("active");
+                        oldId = id;
                     } else {
                         var error = responseObject.error;
                         $.notify(error, "error");
                     }
                 });
-                oldId = id;
             }
 
             /**
