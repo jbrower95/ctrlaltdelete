@@ -58,15 +58,41 @@
             height: 100%;
             margin: 0;
             float: left;
-            padding: 2.5%;
+            padding-top: 2.5%;
+            padding-bottom: 2.5%;
             box-sizing: border-box;
             transition: background-color 0.2s;
+        }
+
+        .sidebar:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
         }
 
         .sidebar-title {
         color: white;
         font-family: 'Lato', sans-serif;
         font-size: 1.5em;
+        }
+
+        .left-bar {
+            float: left;
+            width: 12%;
+            height: 100%;
+            padding-left: 1%;
+            box-sizing: border-box;
+        }
+
+        .right-bar {
+            float: right;
+            width: 86%;
+            height: 100%;
+            padding-right: 1%;
+            box-sizing: border-box;
         }
 
         .main {
@@ -86,6 +112,7 @@
             width: 100%;
             padding-bottom: 10px;
             transition: border 0.2s;
+            font-family: 'Lato', sans-serif;
         }
 
         input[type=text]:focus {
@@ -282,7 +309,12 @@
 <body>
     <div class="container" id="${isNew}">
         <div class="sidebar c${color}" id="${color}">
-            <span class="side-title">${title}</span>
+            <div class="left-bar">
+
+            </div>
+            <div class="right-bar">
+                <span class="side-title">${title}</span>
+            </div>
         </div>
 
         <div class="main">
