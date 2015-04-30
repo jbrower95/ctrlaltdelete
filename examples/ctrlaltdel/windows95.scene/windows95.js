@@ -36,7 +36,7 @@ var exported_scene = {
 	    }
 
 		$(function() {
-			$(".drag").draggable({
+			$(".windowIcon").draggable({
 		      	stop: function(event, ui) {
 		        	if (collision($("#recycle"), ui.offset)) {
 		        		$(this).remove();
