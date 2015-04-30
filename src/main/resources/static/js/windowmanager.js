@@ -16,6 +16,7 @@
 *						- a NON DIV element with this id exists, an error will be written to the console.
 */
 function WindowManager(content_div_id) {
+	console.log("[windowmanager.js] Getting content div: " + content_div_id);
 	this.idCount = 0;
 	var existing_div = document.getElementById(content_div_id);
 

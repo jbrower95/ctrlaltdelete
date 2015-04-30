@@ -60,6 +60,8 @@ public class Experience {
     System.out.println("Experience " + name + " has id " + id + " and filename " + filename);
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
+    File dbFile = new File(directory + "/meta.db");
+    dbFile.setWritable(true);
   }
 
   public String getId() {
