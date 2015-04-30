@@ -2,7 +2,15 @@ var exported_scene = {
     id : "windows95",
     preload : function() {
 
+    	console.log("Initializing windows 95...");
+
     	if (!this.exportedVariables.windowManager) {
+
+    		var desktop = document.createElement("div");
+    		desktop.id = "desktop";
+    		console.log(this);
+    		this.element.appendChild(desktop);
+
 	    	var manager = new WindowManager("desktop");
 			
 			var taskManager = manager.inflate("taskManager");

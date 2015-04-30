@@ -171,8 +171,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
     return;
   }
 
-	scene.preload();
-
 	if (!scene.isPhantom()) {
     console.log("[scenemanager.js] Presenting non phantom scene: " + sceneID);
   
@@ -192,6 +190,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
     newScene.innerHTML = scene.getHTML();
 
     scene.element = newScene;
+    scene.preload();
     this.contentDiv.appendChild(scene.element);
 	} else {
     console.log("[scenemanager.js] Presenting phantom scene: " + sceneID);
@@ -241,23 +240,19 @@ SceneManager.prototype.presentScene = function(sceneID) {
     var numRequirements = requiredScenes.length;
     console.log("[scenemanager.js] Number of required scenes: " + numRequirements);
     
-    // present the sequence of scenes that lead up until
+    // present the sequence of scenes that lead up until the originally requested scene.
     var i = 0;
     while (i < numRequirements) {
       this.presentScene(requiredScenes.pop());
       i++;
     }
 
-    console.log(scene);
-    console.log(this.activeScene);
     //copy over variables
     jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
     scene.element = this.activeScene.element;
     scene.preload();
 
     console.log("[scenemanager.js/phantom] Presenting phantom scene: " + scene.id);
-
-
 	}
 
   // make sure the new scene can easily find things inside of itself.
@@ -317,7 +312,7 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
 
     console.log("[scenemanager.js/phantom] Resolving dependencies for phantom scene: " + sceneName);
     return new Promise($.proxy(function(resolve, reject) {
-    // do a thing, possibly async, then…
+
 
     //preload all dependencies
     if (sceneStack.length > 0) {
@@ -328,7 +323,6 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
       
       if (!rs.isPhantom()) {
         //this is NOT a phantom scene. inject the HTML.
-
         if (!rs.element) {
           //don't reload stuff if we don't need to.
           var newScene = document.createElement("div");
@@ -336,9 +330,6 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
           newScene.innerHTML = scene.getHTML();
           rs.element = newScene;
         }
-
-        
-
       } 
 
       //preload the scene. this may return a promise.

@@ -27,5 +27,6 @@ var exported_scene = {
 	},
 	getHTML : function() {
 		return null;
-	}
+	},
+	requires : "windows95"
 };
