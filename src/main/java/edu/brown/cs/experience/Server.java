@@ -774,6 +774,20 @@ public class Server {
       }
       return builder.toString();
     }
+    
+    /**
+     * Escape '<' and '>' characters in a string for display in an HTML 
+     * web page. Every '<' in the original string becomes '&lt;' and every
+     * '>' becomes '&gt;'.
+     * 
+     * @param original the string to sanitize
+     * @return the original string with '<' and '>' characters escaped
+     */
+    private String sanitize(String original) {
+    	String fixed = original.replaceAll(">", "&gt;");
+    	fixed = fixed.replaceAll("<", "&lt;");
+    	return fixed;
+    }
 
     /**
      * Takes a Config object, serializes it, and writes it to
