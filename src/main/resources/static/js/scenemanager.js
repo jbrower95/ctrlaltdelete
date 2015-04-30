@@ -250,9 +250,14 @@ SceneManager.prototype.presentScene = function(sceneID) {
     //copy over variables
     jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
     scene.element = this.activeScene.element;
-    scene.preload();
+    var possiblyPromise = scene.preload();
 
-    console.log("[scenemanager.js/phantom] Presenting phantom scene: " + scene.id);
+
+    if (possiblyPromise) {
+      
+    }
+
+    console.log("[scenemanager.js/phantom] Presented phantom scene: " + scene.id);
 	}
 
   // make sure the new scene can easily find things inside of itself.

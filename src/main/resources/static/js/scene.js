@@ -273,14 +273,11 @@ Scene.prototype.preload = function() {
         console.log("[scene.js] loading a phantom scene, copying variables from existing scene.");
         var manager = SceneManager.getSharedInstance();
         if (manager.activeScene && manager.activeScene.exportedVariables) {
-            console.log("[scene.js] Variables copied.");
-            console.log("[scene.js] Variables to add: ");
-            console.log(manager.activeScene.exportedVariables);
             if (!this.exportedVariables) {
                 this.exportedVariables = {};
             }
             $.extend(this.exportedVariables, manager.activeScene.exportedVariables);
-            console.log("[scene.js] New variable list: ");
+            console.log("[scene.js] New exportedVariable list: ");
             console.log(this.exportedVariables);
         } else {
             console.log("[scene.js] No variables were copied.");

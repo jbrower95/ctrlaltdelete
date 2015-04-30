@@ -2,7 +2,7 @@ var exported_scene = {
     id : "clickthexs",
 	onPresent : function() {
 		var manager = this.exportedVariables.windowManager;
-		
+		console.log(this.exportedVariables.length);
 		var clippyAgent = this.exportedVariables.clippyAgent;
 
 		AssetManager.getSharedInstance().preload(1);
