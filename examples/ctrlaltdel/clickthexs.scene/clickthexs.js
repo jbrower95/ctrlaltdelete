@@ -2,23 +2,31 @@ var exported_scene = {
     id : "clickthexs",
 	onPresent : function() {
 		var manager = this.exportedVariables.windowManager;
-		console.log(this.exportedVariables.length);
+		console.log("Printing exported variables: ");
+		if (!this.exportedVariables['windowManager']) {
+			console.error("Shit didn't transition properly.");
+		}
+		console.log(this.exportedVariables);
 		var clippyAgent = this.exportedVariables.clippyAgent;
-
+		console.log(clippyAgent);
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
 
 		var showClippy = $.proxy(function() {
-				 	clippyAgent.show();
-			        clippyAgent.moveTo(200,200);
-				 	console.log("Playing sound 1");
-				 	clippyAgent.speak("Looks like you're stuck inside the computer!");
-				 	AssetManager.getSharedInstance().play(1);
-				 	clippyAgent.animate();
+					if (clippyAgent) {
+					 	clippyAgent.show();
+				        clippyAgent.moveTo(200,200);
+					 	console.log("Playing sound 1");
+					 	clippyAgent.speak("Looks like you're stuck inside the computer!");
+					 	AssetManager.getSharedInstance().play(1);
+					 	clippyAgent.animate();
+				 	}
 		}, this);
 		
 		var clickTheX = function() {
-			clippyAgent.speak("Your windows are frozen! Click the x's!");
+			if (clippyAgent) {
+				clippyAgent.speak("Your windows are frozen! Click the x's!");
+			}
 			console.log("Playing sound 3");
 			AssetManager.getSharedInstance().play(3);
 		};
