@@ -673,7 +673,7 @@ public class Server {
 
       System.out.println("Removing old version of experience, saving new version.");
       experiences.remove(exp.filename);
-      File cfig = new File(exp.directory + File.separator + ".config");
+      File cfig = new File(dirPath + File.separator + ".config");
       saveExperience(cfig, config, dirPath);
 
       System.out.println("Experience saved!");
