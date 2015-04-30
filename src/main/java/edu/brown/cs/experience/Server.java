@@ -744,6 +744,7 @@ public class Server {
         bw.write(json);
         bw.close();
       } catch (IOException e) {
+    	  e.printStackTrace();
         System.out
                 .println("ERROR: IOException in SaveEditedExperienceHandler");
         return false;
