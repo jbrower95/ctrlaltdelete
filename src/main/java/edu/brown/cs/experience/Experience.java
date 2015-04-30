@@ -1,9 +1,6 @@
 package edu.brown.cs.experience;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -36,9 +33,17 @@ public class Experience {
     this.directory = directory;
 
     File config = new File(directory + "/.config");
-    
-    JsonObject root = new JsonParser().parse(
-      new BufferedReader(new FileReader(config))).getAsJsonObject();
+
+    BufferedReader reader = new BufferedReader(new FileReader(config));
+    JsonObject root = new JsonParser().parse(reader).getAsJsonObject();
+
+    try {
+      reader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.err.println("ERROR: Can't close reader of .config file for experience " + filename + ".");
+    }
+
     try {
       files = root.get("files").getAsJsonArray();
       mainFile = root.get("mainFile").getAsString();

@@ -447,6 +447,14 @@
             });
 
             /**
+            * When the id input is edited, change the experience id.
+            */
+            $("input[name='id']").change(function() {
+                id = $(this).val();
+                senseChanges();
+            });
+
+            /**
             * Resets "Save" button on change.
             */
             function senseChanges() {

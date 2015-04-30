@@ -16,6 +16,8 @@ import java.util.Set;
 
 import org.eclipse.jetty.io.EofException;
 
+import org.apache.commons.io.FileUtils;
+
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -728,12 +730,20 @@ public class Server {
       // rename it to the new directory path
       if (oldDir.isDirectory()) {
         System.out.println("Found old directory. Renaming...");
-        boolean worked = oldDir.renameTo(newDir);
-        if (worked) {
+        //newDir.mkdir();
+        //boolean worked = oldDir.renameTo(newDir);
+        try {
+          FileUtils.moveDirectory(oldDir, newDir);
+        } catch (IOException e) {
+          e.printStackTrace();
+          System.err.println("ERROR: IOException when moving old directory to new directory.");
+        }
+
+        /*if (worked) {
           System.out.println("Renaming fucking WORKED!");
         } else {
           System.out.println("The world sucks and renaming didn't work.");
-        }
+        }  */
 
         return newDir.getPath();
       } else {
