@@ -126,7 +126,7 @@ AssetManager.prototype.stopNamed = function(soundID) {
         return;
     }
 
-    this.sounds[soundID].stop();
+    this.namedSounds[soundID].stop();
 };
 
 /**
@@ -139,7 +139,7 @@ AssetManager.prototype.fadeOutNamed = function(soundID, duration, callback) {
         return;
     }
 
-    this.sounds[soundID].fadeOut(duration, callback);
+    this.namedSounds[soundID].fadeOut(duration, callback);
 };
 
 /**
@@ -152,7 +152,7 @@ AssetManager.prototype.fadeInNamed = function(soundID, duration, callback) {
         return;
     }
 
-    this.sounds[soundID].fadeIn(duration, callback);
+    this.namedSounds[soundID].fadeIn(duration, callback);
 };
 
 

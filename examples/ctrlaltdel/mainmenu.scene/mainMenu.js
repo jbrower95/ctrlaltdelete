@@ -5,6 +5,7 @@ var exported_scene = {
         var statue = this.searchContent("#statue");
         var options = this.searchContent("#options");
 
+        AssetManager.getSharedInstance().preloadNamed("sounds/eno95.mp3", "main menu music");
         AssetManager.getSharedInstance().preloadNamed("sounds/ding.mp3", "button ding");
 
         this.searchContent("#start").click($.proxy(function() {
@@ -29,13 +30,9 @@ var exported_scene = {
 
             var fadeOut = 6000;
 
-            $(sound).animate({volume: 0}, fadeOut);
-
+            AssetManager.getSharedInstance().fadeOutNamed("main menu music");
             $(curtain).animate({opacity: 1}, fadeOut, function() {
-                sound.pause();
-                sound.currentTime = 0;
-                sound.src = "";
-
+                AssetManager.getSharedInstance().stopNamed("main menu music");
                 SceneManager.getSharedInstance().presentScene("introcut");
             });
         }, this));
@@ -54,7 +51,7 @@ var exported_scene = {
 
         var sound = this.searchContent("#backgroundMusic");
         statue.animate({opacity: "1"}, 300, function() {
-            sound.trigger('play');
+            AssetManager.getSharedInstance().playNamed("main menu music");
            //make our options appear
             options.animate({opacity: 1});
         });
