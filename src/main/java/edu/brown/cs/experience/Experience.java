@@ -61,7 +61,7 @@ public class Experience {
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
     File dbFile = new File(directory + "/meta.db");
-    dbFile.setWritable(true);
+    dbFile.setWritable(true, false);
   }
 
   public String getId() {
