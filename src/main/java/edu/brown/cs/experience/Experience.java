@@ -24,12 +24,19 @@ public class Experience {
 
   public Experience(String directory) throws FileNotFoundException,
     IllegalArgumentException {
+	  System.out.println("Loading experience: " + directory);
     File file = new File(directory);
+    
+    if (!(file.exists() && file.isDirectory())) {
+    	System.err.println("Error: Invalid experience directory - " + directory);
+    	throw new FileNotFoundException();
+    }
+    
     filename = file.getName();
     this.directory = directory;
 
     File config = new File(directory + "/.config");
-
+    
     JsonObject root = new JsonParser().parse(
       new BufferedReader(new FileReader(config))).getAsJsonObject();
     try {
