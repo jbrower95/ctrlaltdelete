@@ -634,6 +634,11 @@ public class Server {
       String highToLow = qm.value("highToLow");
       Boolean htl = Boolean.parseBoolean(highToLow);
 
+      // Check for id overwriting existing experience
+      if (((oldId == null || oldId.equals("")) || !oldId.equals(id)) && exp != null) {
+        return GSON.toJson(getReturnVariables(false, "There already exists an experience with id " + id + "."));
+      }
+
       // Set up config object
       Config config = new Config(title, id, color, description, htl);
 
@@ -732,14 +737,6 @@ public class Server {
         System.out.println("Found old directory. Renaming...");
 
         boolean worked = oldDir.renameTo(newDir);
-       /* try {
-          FileUtils.moveDirectory(oldDir, newDir);
-          //FileUtils.deleteDirectory(oldDir);
-        } catch (IOException e) {
-          e.printStackTrace();
-          System.err.println("ERROR: IOException when moving old directory to new directory.");
-        }        */
-
         if (worked) {
           System.out.println("Renaming fucking WORKED!");
         } else {
