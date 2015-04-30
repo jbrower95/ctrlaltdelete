@@ -88,6 +88,9 @@ WindowManager.prototype.getWindowWithId = function(window_id) {
 *		template - The id of the template div.
 */
 WindowManager.prototype.inflate = function(template) {
+
+	console.log("Trying to inflate template: " + template);
+
 	var template_div = document.getElementById(template);
 
 	if (template_div == null) {

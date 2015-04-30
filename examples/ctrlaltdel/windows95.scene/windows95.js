@@ -8,8 +8,9 @@ var exported_scene = {
 
     		var desktop = document.createElement("div");
     		desktop.id = "desktop";
-    		console.log(this);
     		this.element.appendChild(desktop);
+
+    		
 
 	    	var manager = new WindowManager("desktop");
 			
@@ -19,7 +20,7 @@ var exported_scene = {
 			taskManager.moveTo(200, 120);
 			taskManager.setActive(true);
 			manager.addWindow(taskManager);
-
+/*
 			var myComputer = manager.inflate("explorer");
 			myComputer.setTitle("My Computer");
 			myComputer.setIcon("images/my_computer_icon.png");
@@ -27,7 +28,7 @@ var exported_scene = {
 			myComputer.setEnabled(false);
 			manager.addWindow(myComputer);
 
-			this.exportedVariables.windowManager = manager;
+			this.exportedVariables.windowManager = manager;*/
 		}
 
 

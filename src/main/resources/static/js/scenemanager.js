@@ -261,7 +261,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
   };
 
   // pass the torch to the new scene
-  console.log("[scenemanager.js] Calling onPresent on " + scene.id);
   this.activeScene = scene;
   if (scene.onPresent) {
   	scene.onPresent();
