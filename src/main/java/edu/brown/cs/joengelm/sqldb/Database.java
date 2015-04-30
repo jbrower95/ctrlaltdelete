@@ -36,7 +36,7 @@ public class Database {
 	 *
 	 * @return a connection to the database
 	 */
-	public Connection getConnection() throws RuntimeException {
+	private Connection getConnection() throws RuntimeException {
 		if (conn != null) {
 			return conn;
 		}
@@ -56,6 +56,17 @@ public class Database {
 		} catch (SQLException e) {
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+	
+	/**
+	 * Close the current connection to the database. Ignore all exceptions.
+	 */
+	public void disconnect() {
+		if (conn != null) {
+			return;
+		}
+		
+		closeQuietly(conn);
 	}
 
 	/**
