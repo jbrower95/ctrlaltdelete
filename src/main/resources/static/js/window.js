@@ -80,6 +80,33 @@ Window.prototype.mouseDown = function(e) {
 }
 
 /**
+ * Make this window the active window and bring it into focus.
+ */
+Window.prototype.setActive = function(isActive) {
+	if (isActive) {
+		// remove class ".top-window" from all other windows
+		$(".top-window").map(function() {
+	   		$(this).removeClass("top-window");
+		});
+		// add class ".top-window" to this window
+		$(this.element).addClass("top-window");
+	} else {
+		$(this).removeClass("top-window");
+	}
+}
+
+/**
+ * Make the window enabled and allow interaction with it.
+ */
+Window.prototype.setEnabled = function(enable) {
+	if (enable) {
+		$(this.element).removeClass("is-disabled")
+	} else {
+		$(this.element).addClass("is-disabled");
+	}
+}
+
+/**
 * Move window!
 */
 Window.prototype.moveWindow = function(e) {

@@ -3,17 +3,19 @@ var exported_scene = {
 	onPresent : function() {
 		var manager = new WindowManager("desktop");
 		
-		var win = manager.inflate("taskManager");
-		win.setTitle("Task Manager");
-		win.setIcon("images/task_manager_icon.png");
-		win.moveTo(200, 100);
-		manager.addWindow(win);
+		var taskManager = manager.inflate("taskManager");
+		taskManager.setTitle("Task Manager");
+		taskManager.setIcon("images/task_manager_icon.png");
+		taskManager.moveTo(200, 120);
+		taskManager.setActive(true);
+		manager.addWindow(taskManager);
 
-		var win = manager.inflate("explorer");
-		win.setTitle("My Computer");
-		win.setIcon("images/my_computer_icon.png");
-		win.moveTo(150, 200);
-		manager.addWindow(win);
+		var myComputer = manager.inflate("explorer");
+		myComputer.setTitle("My Computer");
+		myComputer.setIcon("images/my_computer_icon.png");
+		myComputer.moveTo(140, 50);
+		myComputer.setEnabled(false);
+		manager.addWindow(myComputer);
 
 		function collision(obj1, ui_pos) {
 	      	var x1 = obj1.offset().left;
@@ -38,7 +40,7 @@ var exported_scene = {
 		      	stop: function(event, ui) {
 		        	if (collision($("#recycle"), ui.offset)) {
 		        		$(this).remove();
-		        		console.log("Woohoo!");
+		        		$("#recycleIcon").attr('src', "images/full_recycle_bin.png");
 		        	}
 		      	},
 		      	revert : function(event, ui) {
