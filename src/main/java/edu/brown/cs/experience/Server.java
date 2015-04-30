@@ -87,6 +87,7 @@ public class Server {
     Spark.get("/:experience/scores", new GetScoresHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.post("/:experience/saveedit", new SaveEditedExperienceHandler());
+    Spark.get("/lib/:asset", new LibHandler());
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
@@ -136,7 +137,7 @@ public class Server {
   }
 
   /**
-   * Takes a URL string and decodes usign UTF-8.
+   * Takes a URL string and decodes using UTF-8.
    * @param url The given url.
    * @return The decoded url, if available, else null.
    */
@@ -623,7 +624,7 @@ public class Server {
 
       // Get data
       QueryParamsMap qm = req.queryMap();
-      String oldTitle = qm.value("oldTitle");
+      String oldId = qm.value("oldId");
       String title = qm.value("title");
       String id = qm.value("id");
       String color = qm.value("color");
@@ -636,9 +637,10 @@ public class Server {
 
       System.out.println(filename);
 
+      // TODO: Check that id is valid as filename
       // Set up directory path
       String dirPath = directory + File.separator
-              + filename;
+              + id;
 
       // If experience not in hashtable, make directory
       // and add to hashtable
@@ -646,20 +648,20 @@ public class Server {
         System.out.println("Experience " + title + " not in hashtable.");
         // If the title changed, we need to change the
         // directory name
-        if (oldTitle != null && !oldTitle.equals("") && !oldTitle.equals(title)) {
-          System.out.println("Old title " + oldTitle + " is different!");
-          exp = experiences.get(getURLFromTitle(oldTitle));
+        if (oldId != null && !oldId.equals("") && !oldId.equals(id)) {
+          System.out.println("Old id " + oldId + " is different!");
+          exp = experiences.get(oldId);
           if (exp != null) {
-            System.out.println("Found old experience " + getURLFromTitle(oldTitle) + ".");
+            System.out.println("Found old experience " + oldId + ".");
 
             // Rename old directory
-            dirPath = renameDirectory(oldTitle, filename);
+            dirPath = renameDirectory(oldId, id);
             if (dirPath == null) {
-              return GSON.toJson(false);
+              return GSON.toJson(getReturnVariables(false, "Couldn't find the old directory with id " + oldId + "."));
             }
           } else {
-            System.err.println("ERROR: Couldn't find old experience " + getURLFromTitle(oldTitle) + " in hashtable.");
-            return GSON.toJson(false);
+            System.err.println("ERROR: Couldn't find old experience " + oldId + " in hashtable.");
+            return GSON.toJson(getReturnVariables(false, "Couldn't find old experience " + oldId + " to save over."));
           }
         } else {
           System.out.println("Making new experience " + title + ".");
@@ -673,35 +675,51 @@ public class Server {
             cfig.createNewFile();
           } catch (IOException e) {
             System.out
-                    .println("ERROR: IOException in SaveEditedExperienceHandler");
-            return GSON.toJson(null);
+                    .println("ERROR: IOException in SaveEditedExperienceHandler. No .config file created.");
+            return GSON.toJson(getReturnVariables(false, "Couldn't create a new .config file for your experience."));
           }
 
           saveExperience(cfig, config, dirPath);
           System.out.println("Experience saved!");
-          return GSON.toJson(true);
+          return GSON.toJson(getReturnVariables(true, ""));
         }
       }
 
       System.out.println("Removing old version of experience, saving new version.");
       experiences.remove(exp.filename);
       File cfig = new File(dirPath + File.separator + ".config");
-      saveExperience(cfig, config, dirPath);
+      boolean worked = saveExperience(cfig, config, dirPath);
 
-      System.out.println("Experience saved!");
-      return GSON.toJson(true);
+      if (worked) {
+        System.out.println("Experience saved!");
+        return GSON.toJson(getReturnVariables(true, ""));
+      } else {
+        return GSON.toJson(getReturnVariables(false, "Experience couldn't be saved."));
+      }
+    }
+
+    /**
+     * Makes a map of the given return data.
+     * @param worked Whether or not saving fully worked.
+     * @param error The error message, if it did work.
+     * @return The Map of variables.
+     */
+    private Map<String, Object> getReturnVariables(boolean worked, String error) {
+      Map<String, Object> variables = ImmutableMap.of("worked",
+        GSON.toJson(worked), "error", error);
+      return variables;
     }
 
     /**
      * Renames the old directory to a new directory
      * name based on the given filename,
-     * @param oldTitle The old title of the experience.
-     * @param filename The new title of the experience.
+     * @param oldId The old id of the experience.
+     * @param filename The new id of the experience.
      * @return The resulting directory path of the experience.
      */
-    private String renameDirectory(String oldTitle, String filename) {
+    private String renameDirectory(String oldId, String filename) {
       String path = directory + File.separator;
-      File oldDir = new File(path + getURLFromTitle(oldTitle));
+      File oldDir = new File(path + oldId);
       File newDir = new File(path + filename);
 
       System.out.println(filename);
@@ -719,7 +737,7 @@ public class Server {
 
         return newDir.getPath();
       } else {
-        System.err.println("ERROR: Old directory " + getURLFromTitle(oldTitle) + " not found.");
+        System.err.println("ERROR: Old directory " + oldId + " not found.");
         return null;
       }
     }
@@ -767,6 +785,7 @@ public class Server {
         Experience exp = new Experience(dirPath);
         experiences.put(exp.getId(), exp);
       } catch (FileNotFoundException e) {
+        e.printStackTrace();
         System.out
                 .println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
         return false;

@@ -45,7 +45,7 @@ public class Experience {
     orderScoresHighToLow = root.get("orderScoresHighToLow").getAsBoolean();
     description = root.get("description").getAsString();
     id = root.get("id").getAsString();
-
+    System.out.println("Experience " + name + " has id " + id + " and filename " + filename);
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
   }
