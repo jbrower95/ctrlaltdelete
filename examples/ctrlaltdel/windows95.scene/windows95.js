@@ -1,22 +1,29 @@
 var exported_scene = {
     id : "windows95",
-	onPresent : function() {
-		var manager = new WindowManager("desktop");
+    preload : function() {
+
+    	if (!this.exportedVariables.windowManager) {
+	    	var manager = new WindowManager("desktop");
+			
+			var taskManager = manager.inflate("taskManager");
+			taskManager.setTitle("Task Manager");
+			taskManager.setIcon("images/task_manager_icon.png");
+			taskManager.moveTo(200, 120);
+			taskManager.setActive(true);
+			manager.addWindow(taskManager);
+
+			var myComputer = manager.inflate("explorer");
+			myComputer.setTitle("My Computer");
+			myComputer.setIcon("images/my_computer_icon.png");
+			myComputer.moveTo(140, 50);
+			myComputer.setEnabled(false);
+			manager.addWindow(myComputer);
+
+			this.exportedVariables.windowManager = manager;
+		}
+
+
 		
-		var taskManager = manager.inflate("taskManager");
-		taskManager.setTitle("Task Manager");
-		taskManager.setIcon("images/task_manager_icon.png");
-		taskManager.moveTo(200, 120);
-		taskManager.setActive(true);
-		manager.addWindow(taskManager);
-
-		var myComputer = manager.inflate("explorer");
-		myComputer.setTitle("My Computer");
-		myComputer.setIcon("images/my_computer_icon.png");
-		myComputer.moveTo(140, 50);
-		myComputer.setEnabled(false);
-		manager.addWindow(myComputer);
-
 		function collision(obj1, ui_pos) {
 	      	var x1 = obj1.offset().left;
 	      	var y1 = obj1.offset().top;
@@ -35,6 +42,7 @@ var exported_scene = {
 	      	return true;
 	    }
 
+	    //recycle bin functionality
 		$(function() {
 			$(".drag").draggable({
 		      	stop: function(event, ui) {
@@ -59,31 +67,22 @@ var exported_scene = {
 		    $(".drop").droppable();
 		});
 
-		this.exportedVariables.windowManager = manager;
-		
 		var clippyAgent;
 
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
 
-		if (!this.exportedVariables) {
-			this.exportedVariables = {};
-		}
+		return new Promise($.proxy(function(resolve, reject) { 
 
-		var showClippy = $.proxy(function() {
-			 clippy.load('Clippy', $.proxy(function(agent) {
+			clippy.load('Clippy', $.proxy(function(agent) {
 					this.exportedVariables.clippyAgent = agent;
+					resolve();
 			    }, this));
-		}, this);
+
+		}, this));
 		
-		var clickTheX = function() {
-			clippyAgent.speak("Your windows are frozen! Click the x's!");
-			console.log("Playing sound 3");
-			AssetManager.getSharedInstance().play(3);
-		};
-		
-		SceneManager.performSequence([showClippy, clickTheX], [300, 8000]);
-	},
+
+    },
 	getHTML : function() {
 		return "windows95.scene/windows95.html"
 	}
