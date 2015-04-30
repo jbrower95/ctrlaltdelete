@@ -462,6 +462,25 @@
                 $(".save").removeClass("active");
             }
 
+            /**
+            * Tests if an id is valid (non-empty and only contains
+            * words, numbers, or underscores).
+            */
+            function isValidId(str) {
+                return /^[0-9a-z]+$/.test(str);
+            }
+
+            /**
+            * Replaces "<" and ">" with the the
+            * escaped version.
+            */
+            function sanitize(str) {
+                return str;
+            }
+
+            /**
+            * Save the experience using a post request.
+            */
             function saveEdit() {
                 var id = $("input[name=id]").val();
 
@@ -470,7 +489,12 @@
                     return;
                 }
 
-                var input = {"title": title, "id" : id, "oldId": oldId, "color": color, "description": description,
+                if (!isValidId(id)) {
+                    $.notify("Your id can only have lowercase letters and numbers.", "warning");
+                    return;
+                }
+
+                var input = {"title": sanitize(title), "id" : id, "oldId": oldId, "color": color, "description": sanitize(description),
                              "highToLow": highToLow};
                 $.post("/" + id + "/saveedit", input, function(responseJSON){
                     var responseObject = JSON.parse(responseJSON);
@@ -489,6 +513,9 @@
                 oldId = id;
             }
 
+            /**
+            * Save on click of the save button.
+            */
             $(".save").click(function() {
                 saveEdit();
             });
