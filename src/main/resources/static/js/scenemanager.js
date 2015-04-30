@@ -234,29 +234,43 @@ SceneManager.prototype.presentScene = function(sceneID) {
       current_requirement = current_required_scene.requires;
     }
 
-    this.resolvePhantomDependencies(sceneID, requiredScenes);
+    this.resolvePhantomDependencies(sceneID, requiredScenes).then($.proxy(function() {
 
-    //copy over variables
-    jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
-    scene.element = this.activeScene.element;
+        //copy over variables
+        jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
+        scene.element = this.activeScene.element;
 
-    if (scene.preload) {
-      var possiblyPromise = scene.preload();
+        if (scene.preload) {
+          var possiblyPromise = scene.preload();
 
-      if (possiblyPromise) {
-        Promise.resolve(possiblyPromise).then($.proxy(function() {
-          scene.searchContent = function(id) {
-            return $(scene.element).find(id);
-          };
-          this.activeScene = scene;
-          if (scene.onPresent) {
-            scene.onPresent();
-          }
-          console.log("[scenemanager.js/phantom] Presented phantom scene (async): " + scene.id);
-        }, this));
-        return;
-      } 
-    } 
+          if (possiblyPromise) {
+            Promise.resolve(possiblyPromise).then($.proxy(function() {
+              scene.searchContent = function(id) {
+                return $(scene.element).find(id);
+              };
+              this.activeScene = scene;
+              if (scene.onPresent) {
+                scene.onPresent();
+              }
+              console.log("[scenemanager.js/phantom] Presented phantom scene (async): " + scene.id);
+            }, this));
+            return;
+          } 
+        } 
+
+        // make sure the new scene can easily find things inside of itself.
+        scene.searchContent = function(id) {
+          return $(newScene).find(id);
+        };
+
+        console.log("[scenemanager.js] Presented scene: " + scene.id);
+        // pass the torch to the new scene
+        this.activeScene = scene;
+        if (scene.onPresent) {
+          scene.onPresent();
+        }
+    }, this));
+    return;
 	}
 
   // make sure the new scene can easily find things inside of itself.
@@ -320,7 +334,6 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
         //preload all dependencies
         if (sceneStack.length > 0) {
 
-
           requiredScene = sceneStack.pop();
           rs = this.scenes[requiredScene];
           
@@ -343,10 +356,9 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
 
           this.activeScene = rs;
 
-
           //preload the scene. this may return a promise.
           if (rs.preload) {
-          var possiblyPromise = rs.preload();
+            var possiblyPromise = rs.preload();
 
             if (possiblyPromise) {
 

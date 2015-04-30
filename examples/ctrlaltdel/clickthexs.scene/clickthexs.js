@@ -6,6 +6,9 @@ var exported_scene = {
 		if (!this.exportedVariables['windowManager']) {
 			console.error("Shit didn't transition properly.");
 		}
+		if (!this.exportedVariables['clippyAgent']) {
+			console.error("Async shit didn't transition properly.");
+		}
 		console.log(this.exportedVariables);
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		console.log(clippyAgent);
