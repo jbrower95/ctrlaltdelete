@@ -1,10 +1,14 @@
 var exported_scene = {
     id : "introcut",
+    preload: function() {
+        AssetManager.getSharedInstance().preloadNamed("sounds/harderbetterfastersadder.mp3","walking home music");
+    },
 	getHTML : function() {
 		return "introcut.scene/introcut.html"
 	},
     onPresent : function() {
 
+        AssetManager.getSharedInstance().playNamed("walking home music");
         this.searchContent("caption").hide();
 
         setTimeout(this.searchContent("caption").show, 2000);
