@@ -2,7 +2,16 @@ var exported_scene = {
     id : "windows95",
     preload : function() {
 
+    	console.log("Initializing windows 95...");
+
     	if (!this.exportedVariables.windowManager) {
+
+    		var desktop = document.createElement("div");
+    		desktop.id = "desktop";
+    		this.element.appendChild(desktop);
+
+    		
+
 	    	var manager = new WindowManager("desktop");
 			
 			var taskManager = manager.inflate("taskManager");
@@ -11,7 +20,7 @@ var exported_scene = {
 			taskManager.moveTo(200, 120);
 			taskManager.setActive(true);
 			manager.addWindow(taskManager);
-
+/*
 			var myComputer = manager.inflate("explorer");
 			myComputer.setTitle("My Computer");
 			myComputer.setIcon("images/my_computer_icon.png");
@@ -19,7 +28,7 @@ var exported_scene = {
 			myComputer.setEnabled(false);
 			manager.addWindow(myComputer);
 
-			this.exportedVariables.windowManager = manager;
+			this.exportedVariables.windowManager = manager;*/
 		}
 
 

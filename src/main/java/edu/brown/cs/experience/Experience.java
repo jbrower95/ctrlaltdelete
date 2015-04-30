@@ -1,6 +1,9 @@
 package edu.brown.cs.experience;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -33,17 +36,9 @@ public class Experience {
     this.directory = directory;
 
     File config = new File(directory + "/.config");
-
-    BufferedReader reader = new BufferedReader(new FileReader(config));
-    JsonObject root = new JsonParser().parse(reader).getAsJsonObject();
-
-    try {
-      reader.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("ERROR: Can't close reader of .config file for experience " + filename + ".");
-    }
-
+    
+    JsonObject root = new JsonParser().parse(
+      new BufferedReader(new FileReader(config))).getAsJsonObject();
     try {
       files = root.get("files").getAsJsonArray();
       mainFile = root.get("mainFile").getAsString();
@@ -52,21 +47,16 @@ public class Experience {
         "Error: Manifest does not have correct 'files' and 'mainFile' components.");
     }
 
+    
+    
     name = root.get("name").getAsString();
     color = root.get("themeColor").getAsString();
     orderScoresHighToLow = root.get("orderScoresHighToLow").getAsBoolean();
     description = root.get("description").getAsString();
     id = root.get("id").getAsString();
-    System.out.println("Experience " + name + " has id " + id + " and filename " + filename);
+
     db = new ExperienceDatabase(directory + "/meta.db",
       orderScoresHighToLow);
-    File dbFile = new File(directory + "/meta.db");
-    boolean changed = dbFile.setWritable(true, false);
-    if (changed) {
-    	System.out.println("Successfully changed permissions!");
-    } else {
-    	System.out.println("Failed to change permissions.");
-    }
   }
 
   public String getId() {

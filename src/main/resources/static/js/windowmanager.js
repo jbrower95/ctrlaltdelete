@@ -23,14 +23,14 @@ function WindowManager(content_div_id) {
 	if (existing_div === null) {
 		// Create a div
 		this.content_div = document.createElement("div");
-		document.body.appendChild(content_div);
+		document.body.appendChild(this.content_div);
 	} else {
 		// Is it a div?
 		if (existing_div.tagName == "DIV") {
 			this.content_div = existing_div;
 		} else {
 			// Don't load if not a div
-			console.log("[windowmanager.js] Error: Couldn't load content div - tag must be a div");
+			console.error("[windowmanager.js] Couldn't load content div - tag must be a div");
 			return null;
 		}
 	}
@@ -74,7 +74,7 @@ WindowManager.prototype.removeWindow = function(window_obj) {
 WindowManager.prototype.getWindowWithId = function(window_id) {
 	// Check if windowId exists in the hashtable
 	if (!(windowId in this.windows)) {
-		console.log("[windowmanager.js] Error: Window ID doesn't exist in the manager.");
+		console.error("[windowmanager.js] Window ID doesn't exist in the manager.");
 	} else {
 		return this.windows[window_id];
 	}
@@ -88,10 +88,13 @@ WindowManager.prototype.getWindowWithId = function(window_id) {
 *		template - The id of the template div.
 */
 WindowManager.prototype.inflate = function(template) {
+
+	console.log("Trying to inflate template: " + template);
+
 	var template_div = document.getElementById(template);
 
 	if (template_div == null) {
-		console.log("[windowmanager.js] Error: Couldn't find a template div.");
+		console.error("[windowmanager.js] Couldn't find a template div.");
 		return null;
 	}
 
