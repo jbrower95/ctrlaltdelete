@@ -4,7 +4,7 @@ var exported_scene = {
 
     	console.log("Initializing windows 95...");
 
-    	if (!this.exportedVariables.windowManager) {
+    	if (!this.exportedVariables['windowManager']) {
 
     		var desktop = document.createElement("div");
     		desktop.id = "desktop";
@@ -18,7 +18,7 @@ var exported_scene = {
 			taskManager.moveTo(200, 120);
 			taskManager.setActive(true);
 			manager.addWindow(taskManager);
-/*
+
 			var myComputer = manager.inflate("explorer");
 			myComputer.setTitle("My Computer");
 			myComputer.setIcon("images/my_computer_icon.png");
@@ -26,7 +26,7 @@ var exported_scene = {
 			myComputer.setEnabled(false);
 			manager.addWindow(myComputer);
 
-			this.exportedVariables.windowManager = manager;*/
+			this.exportedVariables['windowManager'] = manager;
 		}
 
 
@@ -82,6 +82,7 @@ var exported_scene = {
 		return new Promise($.proxy(function(resolve, reject) { 
 
 			clippy.load('Clippy', $.proxy(function(agent) {
+					console.log("Loaded clippy!");
 					this.exportedVariables.clippyAgent = agent;
 					resolve();
 			    }, this));

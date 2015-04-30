@@ -195,6 +195,7 @@ function Scene(jsFile, onLoad) {
 		this.onPresent = exported_scene["onPresent"];
 		this.onDestroy = exported_scene["onDestroy"];
 		this.getHTML = exported_scene["getHTML"];
+        this.preload = (exported_scene['preload'] || this.preload);
         this.id = exported_scene["id"];
 
         if (this.isPhantom()) {
@@ -264,23 +265,20 @@ Scene.load = function(jsFile, onLoad) {
 
 
 /**
- * Preloads the scene. This should always be called before presenting a scene,
+ * Preloads a phantom scene. This should always be called before presenting a scene,
  * as it allows phantom scenes to function.
  */
-Scene.prototype.preload = function() {
+Scene.prototype.preloadPhantom = function() {
     if (this.isPhantom()) {
         //copy over exported variables
         console.log("[scene.js] loading a phantom scene, copying variables from existing scene.");
         var manager = SceneManager.getSharedInstance();
         if (manager.activeScene && manager.activeScene.exportedVariables) {
-            console.log("[scene.js] Variables copied.");
-            console.log("[scene.js] Variables to add: ");
-            console.log(manager.activeScene.exportedVariables);
             if (!this.exportedVariables) {
                 this.exportedVariables = {};
             }
             $.extend(this.exportedVariables, manager.activeScene.exportedVariables);
-            console.log("[scene.js] New variable list: ");
+            console.log("[scene.js] New exportedVariable list: ");
             console.log(this.exportedVariables);
         } else {
             console.log("[scene.js] No variables were copied.");
@@ -293,13 +291,7 @@ Scene.prototype.preload = function() {
  * @returns {boolean}
  */
 Scene.prototype.isPhantom = function() {
-
-    if (this.getHTML == null) {
-        console.log("[scene.js] [FATAL] scene didn't have a getHTML function.");
-        return;
-    }
-
-    return (this.getHTML() == null);
+    return (this.getHTML == null || this.getHTML() == null);
 }
 
 
