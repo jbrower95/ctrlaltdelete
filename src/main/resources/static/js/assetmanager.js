@@ -119,6 +119,43 @@ AssetManager.prototype.play = function(soundID) {
     this.sounds[soundID-1].play();
 };
 
+//stops a sound.
+AssetManager.prototype.stopNamed = function(soundID) {
+    if (!this.namedSounds[soundID]) {
+        console.error("[assetmanager/play] Error: Tried to play non-loaded sound: " + soundID);
+        return;
+    }
+
+    this.namedSounds[soundID].stop();
+};
+
+/**
+  * Allows you to fade out a specific named sound with a duration and callback function.
+  */
+AssetManager.prototype.fadeOutNamed = function(soundID, duration, callback) {
+
+    if (!this.namedSounds[soundID]) {
+        console.error("[assetmanager/play] Error: Tried to play non-loaded sound: " + soundID);
+        return;
+    }
+
+    this.namedSounds[soundID].fadeOut(duration, callback);
+};
+
+/**
+  * Allows you to fade out a specific named sound with a duration and callback function.
+  */
+AssetManager.prototype.fadeInNamed = function(soundID, duration, callback) {
+
+    if (!this.namedSounds[soundID]) {
+        console.error("[assetmanager/play] Error: Tried to play non-loaded sound: " + soundID);
+        return;
+    }
+
+    this.namedSounds[soundID].fadeIn(duration, callback);
+};
+
+
 /**
  * Plays a named sound.
  * @param soundName
