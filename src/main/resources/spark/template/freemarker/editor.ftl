@@ -344,17 +344,19 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="lib/notify.min.js"></script>
     <script>
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
 
             /* Globals */
             var title = $("input[name=experienceTitle]").val();
-            var oldTitle;
+            var id = $("input[name=id]").val();
+            var oldId;
             if (isNew === "false") {
-                oldTitle = title;
+                oldId = id;
             } else {
-                oldTitle = null;
+                oldId = null;
             }
             var color = $(".sidebar").attr('id');
             var description = $("textarea[name='experienceDesc']").val();
@@ -454,19 +456,29 @@
 
             function saveEdit() {
                 var id = $("input[name=id]").val();
-                var input = {"title": title, "id" : id, "oldTitle": oldTitle, "color": color, "description": description,
+
+                if (id === null || id === "" || id === undefined) {
+                    $.notify("You must specify an id for your experience.", "warning");
+                    return;
+                }
+
+                var input = {"title": title, "id" : id, "oldId": oldId, "color": color, "description": description,
                              "highToLow": highToLow};
-                $.post("/" + title + "/saveedit", input, function(responseJSON){
+                $.post("/" + id + "/saveedit", input, function(responseJSON){
                     var responseObject = JSON.parse(responseJSON);
-                    if (responseObject === true) {
+                    var worked = JSON.parse(responseObject.worked);
+                    if (worked === true) {
                         var currentdate = new Date();
                         var datetime = currentdate.getHours() + ":" + currentdate.getMinutes();
                         $(".save-info").html("Last saved " + datetime);
                         $(".save").html("Saved!");
                         $(".save").addClass("active");
+                    } else {
+                        var error = responseObject.error;
+                        $.notify(error, "error");
                     }
                 });
-                oldTitle = title;
+                oldId = id;
             }
 
             $(".save").click(function() {
