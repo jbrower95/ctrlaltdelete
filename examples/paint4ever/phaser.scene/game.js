@@ -48,9 +48,12 @@ var exported_scene = {
 			windows.enableBody = true;
 
 			// Clippy
-			clippy = game.add.sprite(1760, game.world.height - 300, 'clippy');
+			clippy = game.add.sprite(1760, 50, 'clippy');
 			game.physics.arcade.enable(clippy);
 			clippy.body.gravity.y = 300;
+
+			// Bullets
+
 
 			// Blue Blocks
 			blueBlocks = game.add.group();
@@ -60,7 +63,7 @@ var exported_scene = {
 			b.body.gravity.y = 500;
 
 			// Player
-			player = game.add.sprite(250, game.world.height - 300, 'gebu');
+			player = game.add.sprite(150, 50, 'gebu');
 			game.physics.arcade.enable(player);
 			player.body.bounce.y = 0.2;
 			player.body.gravity.y = 300;
@@ -129,13 +132,18 @@ var exported_scene = {
 			if (cursors.up.isDown && (player.body.blocked.down || player.body.touching.down)) {
 				player.body.velocity.y = -350;
 			}
+
+			// Check for enemy fire
+			if (firingTimer == game.time.now) {
+				enemyFire();
+			}
 		}
 
 		function enemyFire() {
 			var bullet = windows.getFirstExists(false);
 			if (bullet) {
-				bullet.reset(0,0);
-				// make move to the left
+				bullet.reset(1760,50);
+				bullet.body.velocity.x = -150;
 				firingTimer = game.time.now + 2000;
 			}
 		}

@@ -639,18 +639,10 @@ public class Server {
           exp = experiences.get(getURLFromTitle(oldTitle));
           if (exp != null) {
             System.out.println("Found old experience " + getURLFromTitle(oldTitle) + ".");
+
             // Rename old directory
-            String path = directory + File.separator;
-            File oldDir = new File(path + getURLFromTitle(oldTitle));
-            File newDir = new File(path + filename);
-            System.out.println(filename);
-            if (oldDir.isDirectory()) {
-              System.out.println("Found old directory. Renaming...");
-              boolean worked = oldDir.renameTo(newDir);
-              dirPath = newDir.getPath();
-              System.out.println("Renamed worked is " + worked + ": " + oldDir.getPath());
-            } else {
-              System.err.println("ERROR: Old directory " + getURLFromTitle(oldTitle) + " not found.");
+            dirPath = renameDirectory(oldTitle, filename);
+            if (dirPath == null) {
               return GSON.toJson(false);
             }
           } else {
@@ -681,11 +673,43 @@ public class Server {
 
       System.out.println("Removing old version of experience, saving new version.");
       experiences.remove(exp.filename);
-      File cfig = new File(exp.directory + File.separator + ".config");
+      File cfig = new File(dirPath + File.separator + ".config");
       saveExperience(cfig, config, dirPath);
 
       System.out.println("Experience saved!");
       return GSON.toJson(true);
+    }
+
+    /**
+     * Renames the old directory to a new directory
+     * name based on the given filename,
+     * @param oldTitle The old title of the experience.
+     * @param filename The new title of the experience.
+     * @return The resulting directory path of the experience.
+     */
+    private String renameDirectory(String oldTitle, String filename) {
+      String path = directory + File.separator;
+      File oldDir = new File(path + getURLFromTitle(oldTitle));
+      File newDir = new File(path + filename);
+
+      System.out.println(filename);
+
+      // If the old directory exists as a directory,
+      // rename it to the new directory path
+      if (oldDir.isDirectory()) {
+        System.out.println("Found old directory. Renaming...");
+        boolean worked = oldDir.renameTo(newDir);
+        if (worked) {
+          System.out.println("Renaming fucking WORKED!");
+        } else {
+          System.out.println("The world sucks and renaming didn't work.");
+        }
+
+        return newDir.getPath();
+      } else {
+        System.err.println("ERROR: Old directory " + getURLFromTitle(oldTitle) + " not found.");
+        return null;
+      }
     }
 
     /**
@@ -720,6 +744,7 @@ public class Server {
         bw.write(json);
         bw.close();
       } catch (IOException e) {
+    	  e.printStackTrace();
         System.out
                 .println("ERROR: IOException in SaveEditedExperienceHandler");
         return false;
