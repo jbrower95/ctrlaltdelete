@@ -29,6 +29,13 @@ var exported_scene = {
 			this.exportedVariables['windowManager'] = manager;
 		}
 
+		if (!this.exportedVariables['gabe']) {
+
+			//LOAD GABE
+
+
+		}
+
 
 		
 		function collision(obj1, ui_pos) {
@@ -67,8 +74,6 @@ var exported_scene = {
 		                left : 0
 		            };
 		            return !event;
-		            // evaluates like this:
-		            // return event !== false ? false : true;
 		        }
 		    });
 		    $(".drop").droppable();
@@ -83,6 +88,7 @@ var exported_scene = {
 
 			clippy.load('Clippy', $.proxy(function(agent) {
 					console.log("Loaded clippy!");
+					console.log(this);
 					this.exportedVariables.clippyAgent = agent;
 					resolve();
 			    }, this));

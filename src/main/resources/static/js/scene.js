@@ -172,83 +172,84 @@ function Scene(innerHTML, preload , onPresent, onDestroy) {
 *
 *		jsFile: The location of a scene javascript file
 *		Manager: The associated scene manager
+*
+*   @return a promise to load the scene.
 */
-function Scene(jsFile, onLoad) {
+function Scene(jsFile) {
 
-    var manager = SceneManager.getSharedInstance();
-    this.exportedVariables = {};
-    console.log("[scene.js] Initializing scene: " + jsFile);
-    var scene_reference = this;
-	// dynamically load the dependent script using jquery
-	$.getScript(jsFile).done($.proxy(function(){
+    return new Promise($.proxy(function(resolve, reject) { 
 
-		console.log("[scene.js] Loaded remote scene: " + jsFile);
+        var manager = SceneManager.getSharedInstance();
+        this.exportedVariables = {};
+        console.log("[scene.js] Initializing scene: " + jsFile);
+        var scene_reference = this;
+    	// dynamically load the dependent script using jquery
+    	$.getScript(jsFile).done($.proxy(function() {
 
-		if (exported_scene == null) {
-			console.log("[scene.js] Error: Couldn't load scene object from " + jsFile);
-		}
+    		console.log("[scene.js] Loaded remote scene: " + jsFile);
 
-		if (exported_scene["preload"]) {
-            this.preload = exported_scene["preload"];
-        }
+    		if (exported_scene == null) {
+    			console.log("[scene.js] Error: Couldn't load scene object from " + jsFile);
+    		}
 
-		this.onPresent = exported_scene["onPresent"];
-		this.onDestroy = exported_scene["onDestroy"];
-		this.getHTML = exported_scene["getHTML"];
-        this.preload = (exported_scene['preload'] || this.preload);
-        this.id = exported_scene["id"];
-
-        if (this.isPhantom()) {
-            
-            if (!exported_scene["requires"]) {
-                console.error("[scene.js] ERROR/fatal: Loading of scene " + this.id + " failed - A phantom scene must have a 'requires' field.");
-                return;
+    		if (exported_scene["preload"]) {
+                this.preload = exported_scene["preload"];
             }
 
-            this.requires = exported_scene["requires"];
-        }
+    		this.onPresent = exported_scene["onPresent"];
+    		this.onDestroy = exported_scene["onDestroy"];
+    		this.getHTML = exported_scene["getHTML"];
+            this.preload = (exported_scene['preload'] || this.preload);
+            this.id = exported_scene["id"];
 
-        if (!this.id) {
-            console.error("[scene.js] ERROR/fatal: The scene in " + jsFile + " is missing an id.");
-        }
-
-        exported_scene.scene = this;
-
-		var isHTMLFile = /[^]*.html$/g;
-
-        //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
-
-		if (isHTMLFile.exec(this.getHTML()) != null) {
-            console.log("[scene.js] Loading HTML from external file - " + this.getHTML());
-			//we have to load this because it's the location of an html file.
-			var container = document.createElement("div");
-			$(jQuery(container)).load(this.getHTML(), $.proxy(function(response, status, xhr) {
-                //this code is executed asynchronously
-
-                if (status == "error") {
-                    console.error("[scene.js] Remote load failed.");
+            if (this.isPhantom()) {
+                
+                if (!exported_scene["requires"]) {
+                    console.error("[scene.js] ERROR/fatal: Loading of scene " + this.id + " failed - A phantom scene must have a 'requires' field.");
                     return;
                 }
 
-                var results = container.innerHTML;
-                this.getHTML = function() {return results};
-                manager.registerScene(this);
-                if (onLoad != null) {
-                    onLoad();
-                }
-            }, scene_reference));
-            return;
-		}
+                this.requires = exported_scene["requires"];
+            }
 
-        //this happens synchronously
-        manager.registerScene(this);
+            if (!this.id) {
+                console.error("[scene.js] ERROR/fatal: The scene in " + jsFile + " is missing an id.");
+            }
 
-        if (onLoad != null) {
-            onLoad();
-        }
-	}, scene_reference)).fail($.proxy(function(){
-		console.error("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
-	}, scene_reference));
+            exported_scene.scene = this;
+
+    		var isHTMLFile = /[^]*.html$/g;
+
+            //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
+
+    		if (isHTMLFile.exec(this.getHTML()) != null) {
+                console.log("[scene.js] Loading HTML from external file - " + this.getHTML());
+    			//we have to load this because it's the location of an html file.
+    			var container = document.createElement("div");
+    			$(jQuery(container)).load(this.getHTML(), $.proxy(function(response, status, xhr) {
+                    //this code is executed asynchronously
+
+                    if (status == "error") {
+                        console.error("[scene.js] Remote load failed.");
+                        return;
+                    }
+
+                    var results = container.innerHTML;
+                    this.getHTML = function() {return results};
+                    manager.registerScene(this);
+                    resolve();
+                }, scene_reference));
+                return;
+    		}
+
+            //this happens synchronously
+            manager.registerScene(this);
+            resolve();
+    	}, scene_reference)).fail($.proxy(function(){
+    		console.error("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
+            reject();
+    	}, scene_reference));
+    }, this));
 }
 
 /**
@@ -258,10 +259,16 @@ function Scene(jsFile, onLoad) {
  * @param jsFile
  * @param sceneID
  * @param manager
+ * @return a promise to load the scene!
  */
-Scene.load = function(jsFile, onLoad) {
-    new Scene(jsFile, onLoad);
-}
+Scene.load = function(jsFile) {
+    return new Promise(function(resolve, reject) {
+        var willLoadScene = new Scene(jsFile);
+        Promise.resolve(willLoadScene).then(function(){
+                resolve();
+            });
+    });
+};
 
 
 /**

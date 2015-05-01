@@ -152,6 +152,8 @@ SceneManager.prototype.registerScene = function(scene) {
  * the scene will be ejected using a left to right animation.
  */
 SceneManager.prototype.presentScene = function(sceneID) {
+
+  return new Promise($.proxy(function(resolve, reject) {
   var scene = this.scenes[sceneID];
 
 	if (scene == null) {
@@ -203,7 +205,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
     var current_requirement = scene.requires;
 
     if (current_requirement == null) {
-      console.error("[scenemanager.js] No required scene provided for this phantom scene.")
+      console.error("[scenemanager.js] No required scene provided for this phantom scene.");
     }
 
     while (current_requirement != null) {
@@ -234,31 +236,59 @@ SceneManager.prototype.presentScene = function(sceneID) {
       current_requirement = current_required_scene.requires;
     }
 
-    this.resolvePhantomDependencies(sceneID, requiredScenes);
+    this.resolvePhantomDependencies(sceneID, requiredScenes).then($.proxy(function() {
+        console.log("Done resolving dependencies!");
+        //copy over variables
+        jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
+        scene.element = this.activeScene.element;
 
-    //copy over variables
-    jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
-    scene.element = this.activeScene.element;
-    var possiblyPromise = scene.preload();
+        if (scene.preload) {
+          var possiblyPromise = scene.preload();
 
+          if (possiblyPromise) {
+            Promise.resolve(possiblyPromise).then($.proxy(function() {
+              scene.searchContent = function(id) {
+                return $(scene.element).find(id);
+              };
+              this.activeScene = scene;
+              if (scene.onPresent) {
+                scene.onPresent();
+              }
+              console.log("[scenemanager.js/phantom] Presented phantom scene (async): " + scene.id);
+            }, this));
+            return;
+          } 
+        } 
 
-    if (possiblyPromise) {
-      
-    }
+        // make sure the new scene can easily find things inside of itself.
+        scene.searchContent = function(id) {
+          return $(newScene).find(id);
+        };
 
-    console.log("[scenemanager.js/phantom] Presented phantom scene: " + scene.id);
+        console.log("[scenemanager.js] Presented scene: " + scene.id);
+        // pass the torch to the new scene
+        this.activeScene = scene;
+        if (scene.onPresent) {
+          scene.onPresent();
+        }
+    }, this));
+    return;
 	}
 
   // make sure the new scene can easily find things inside of itself.
   scene.searchContent = function(id) {
     return $(newScene).find(id);
   };
-
+  console.log("[scenemanager.js] Presented scene: " + scene.id);
   // pass the torch to the new scene
   this.activeScene = scene;
   if (scene.onPresent) {
   	scene.onPresent();
   }
+
+}, this));
+
+
 };
 
 
@@ -307,50 +337,48 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
     console.log("Remaining: " + sceneStack.length);
     return new Promise($.proxy(function(resolve, reject) {
 
+        //preload all dependencies
+        if (sceneStack.length > 0) {
 
-    //preload all dependencies
-    if (sceneStack.length > 0) {
+          requiredScene = sceneStack.pop();
+          rs = this.scenes[requiredScene];
+          
+          console.log("[scenemanager.js/phantom] Resolving dependency " + rs.id + " for scene: " + sceneName);
+          
+          if (!rs.isPhantom()) {
+            //this is NOT a phantom scene. inject the HTML.
+            $(this.contentDiv).empty();
+            if (!rs.element) {
+              //don't reload stuff if we don't need to.
+              var newScene = document.createElement("div");
+              newScene.className = "__scene__";
+              newScene.innerHTML = rs.getHTML();
+              this.contentDiv.appendChild(newScene);
+              rs.element = newScene;
+            }
+          } else {
+            rs.preloadPhantom();
+          }
 
+          this.activeScene = rs;
 
-      requiredScene = sceneStack.pop();
-      rs = this.scenes[requiredScene];
-      
-      console.log("[scenemanager.js/phantom] Resolving dependency " + rs.id + " for scene: " + sceneName);
-      
-      if (!rs.isPhantom()) {
-        //this is NOT a phantom scene. inject the HTML.
-        $(this.contentDiv).empty();
-        if (!rs.element) {
-          //don't reload stuff if we don't need to.
-          var newScene = document.createElement("div");
-          newScene.className = "__scene__";
-          newScene.innerHTML = scene.getHTML();
-          this.contentDiv.appendChild(newScene);
-          rs.element = newScene;
+          //preload the scene. this may return a promise.
+          if (rs.preload) {
+            var possiblyPromise = rs.preload();
+
+            if (possiblyPromise) {
+
+              Promise.resolve(possiblyPromise).then(function() {
+              //recur with the new, reduced stack.
+                manager.resolvePhantomDependencies(sceneName, sceneStack);
+                resolve();
+              });
+            }
+          } 
+        } else {
+          resolve("[scenemanager.js/phantomLoader] Ready for scene " + sceneName + "!");
         }
-      } else {
-        rs.preloadPhantom();
-      }
-
-      this.activeScene = rs;
-
-
-      //preload the scene. this may return a promise.
-      var possiblyPromise = rs.preload();
-
-        if (possiblyPromise) {
-
-          Promise.resolve(possiblyPromise).then(function() {
-          //recur with the new, reduced stack.
-            console.log("proceeding...");
-            manager.resolvePhantomDependencies(sceneName, sceneStack);
-          });
-
-    } else {
-      resolve("[scenemanager.js/phantomLoader] Ready for scene " + sceneName + "!");
-    }
-  }
-}, manager));
+  }, manager));
 };
 
 
