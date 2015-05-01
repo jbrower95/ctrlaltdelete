@@ -24,7 +24,7 @@ var exported_scene = {
 			});
 			manager.addWindow(taskManager);
 
-			var myComputer = manager.inflate("explorer");
+			var myComputer = manager.inflate("myComputer");
 			myComputer.setTitle("My Computer");
 			myComputer.setIcon("images/my_computer_icon.png");
 			myComputer.moveTo(140, 50);
@@ -67,6 +67,13 @@ var exported_scene = {
 		      	stop: function(event, ui) {
 		        	if (collision($("#recycle"), ui.offset)) {
 		        		$(this).remove();
+		        		if (!$(this).hasClass("clippyFile")) {
+		        			$("#desktop").prepend("<div class='bluescreen'></div>");
+		        			$(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
+		        			$(document).keydown(function(e) {
+		        				$(".bluescreen").remove();
+		        			});
+		        		}
 		        		$("#recycleIcon").attr('src', "images/full_recycle_bin.png");
 		        	}
 		      	},
@@ -80,6 +87,11 @@ var exported_scene = {
 		            };
 		            return !event;
 		        }
+		    });
+		    $(".windowIcon").dblclick(function(e) {
+		    	if ($(this).hasClass("folder")) {
+		    		console.log("should open a new folder!");
+		    	}
 		    });
 		    $(".drop").droppable();
 		});
