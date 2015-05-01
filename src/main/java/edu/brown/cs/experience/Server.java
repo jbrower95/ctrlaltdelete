@@ -123,7 +123,9 @@ public class Server {
 		String experienceName = request.params(":experience");
 		senseChanges();
 		Experience experience = experiences.get(experienceName);
-		return GSON.toJson(experience.getScenes().stream().map(scene -> ImmutableMap.of("id",scene.getId())).collect(Collectors.toList()));
+		String output = GSON.toJson(experience.getScenes().stream().map(scene -> ImmutableMap.of("id",scene.getId())).collect(Collectors.toList()));
+		System.out.println("Output: " + output);
+		return output;
 	}
   }
   
@@ -147,10 +149,12 @@ public class Server {
 		
 		int uniqueId = 1;
 		
+		Path tentativeSpot;
+		
 		while (true) {
 			
 			//see if this file exists
-			Path tentativeSpot = Paths.get(expDirectory + "/newScene" + uniqueId);
+			tentativeSpot = Paths.get(expDirectory + "/newScene" + uniqueId + ".scene");
 			
 			if (!Files.exists(tentativeSpot)) {
 				//awesome.
@@ -160,9 +164,15 @@ public class Server {
 			if (uniqueId > 500) {
 				System.err.println("There are 500 'newScene' instances. This is getting a bit excessive.");
 				response.status(503);
+				return GSON.toJson(ImmutableMap.of("success", "false", "error", "Error: You have too many default 'newScene' instances. Please make room for more."));
 			}
 		}
 		
+		//create the directory for the scene.
+		new File(tentativeSpot.toAbsolutePath().toString()).mkdirs();
+		
+		//copy the files in
+		String baseName = "newScene" + uniqueId;
 		
 		
 		// TODO Auto-generated method stub
