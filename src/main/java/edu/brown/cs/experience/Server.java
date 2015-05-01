@@ -127,10 +127,10 @@ public class Server {
   
   /**
    * SceneTemplateHandler is responsible for copying in the template files for a new scene, as well as determining a name for a new scene.
-   * 
+   * This creates a new scene.
    * PUT /:experience/newscene
    * 
-   * returns: the scene object that was created.
+   * returns: JSON of the scene object that was created.
    * 
    * @author Justin
    *
@@ -139,12 +139,33 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
+		
+		String experience = request.params(":experience");
+		String expDirectory = directory + "/" + experience;
+		
+		int uniqueId = 1;
+		
+		while (true) {
+			
+			//see if this file exists
+			Path tentativeSpot = Paths.get(expDirectory + "/newScene" + uniqueId);
+			
+			if (!Files.exists(tentativeSpot)) {
+				//awesome.
+				break;
+			}
+			
+			if (uniqueId > 500) {
+				System.err.println("There are 500 'newScene' instances. This is getting a bit excessive.");
+				response.status(503);
+			}
+		}
+		
+		
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
-	  
-	 
-	  
   }
   
   /**
