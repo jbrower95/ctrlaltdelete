@@ -114,6 +114,10 @@
             margin-top: 10px;
         }
 
+        .list li:hover {
+            cursor: pointer;
+        }
+
         .main {
             position: relative;
             width: 74%;
@@ -422,7 +426,6 @@
                     <span class="side-title">${title}</span>
                     <ul class="list">
                         <li>Main</li>
-                        <li>Scene 1</li>
                     </ul>
                 </div>
             </div>
@@ -453,27 +456,54 @@
                     <div class="settings-bar">
                         <div class="bar-block label">Previous Scene</div>
                         <div class="bar-block answers">
-                            <input type="text" name="sceneId" value=""/>
+                            <input type="text" name="prevScene" value=""/>
                         </div>
                     </div>
                 </div>
 
+                <!-- Scene.js -->
                 <div class="editor-bar">
                     <div class="editor-head clearfix">
-                        <div class="left">
-                            scene1.js
+                        <div class="left" id="scenejs">
+                            
                         </div>
                         <div class="right">
                             +
                         </div>
                     </div>
 
-                    <pre class="prettyprint linenums">
                     <textarea name="js" class="editor">
-                        
-                            function
-                        
-                    </textarea></pre>
+                    </textarea>
+                </div>
+
+                <!-- Scene.html -->
+                <div class="editor-bar">
+                    <div class="editor-head clearfix">
+                        <div class="left" id="scenehtml">
+                            
+                        </div>
+                        <div class="right">
+                            +
+                        </div>
+                    </div>
+
+                    <textarea name="html" class="editor">
+                    </textarea>
+                </div>
+
+                <!-- Scene.css -->
+                <div class="editor-bar">
+                    <div class="editor-head clearfix">
+                        <div class="left" id="scenecss">
+                            
+                        </div>
+                        <div class="right">
+                            +
+                        </div>
+                    </div>
+
+                    <textarea name="css" class="editor">
+                    </textarea>
                 </div>
             </div>
 
@@ -539,7 +569,6 @@
     <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="lib/notify.min.js"></script>
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
     <script>
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
@@ -562,41 +591,54 @@
 
             showCheckedColor(color);
             showCheckedScore(highToLow);
-            getScenes();
+            listScenes();
 
             /**
-            * Sends a get request to get a list of scenes
-            * for the given experience.
-            */
-            function getScenes() {
-                $.get("/" + id + "/scenes", function(responseJSON){
-                    var responseObject = JSON.parse(responseJSON);
-                    console.log(responseObject);
-                    var scenes = [];
-                    for (o in responseObject) {
-                        console.log(o);
-                        var s = JSON.parse(o);
-                        scenes.push(s);
-                        console.log(s);
-                    }
-
-                    return scenes;
-                });
-            }
-
-            /**
-            * Calls for getScenes to give a list of
+            * Uses a get request to give a list of
             * scenes, then appends them to the scene list
             * in the sidebar.
             */
             function listScenes() {
-                var scenes = getScenes();
                 var list = $(".list");
 
-                for (scene in scenes) {
-                    var s = "<li id=" + scene + ">" + scene + "</li>";
-                    list.append(s);
-                }
+                $.get("/" + id + "/scenes", function(responseJSON){
+                    var responseObject = JSON.parse(responseJSON);
+                    for (o in responseObject) {
+                        var scene = responseObject[o].id;
+                        var s = "<li id=" + scene + ">" + scene + "</li>";
+                        list.append(s);
+                    }
+
+                    // Pretty gross, but has to be done
+                    $("ul.list li").click(function() {
+                        var scene = $(this).attr('id');
+                        fillSceneInfo(scene);
+                    });
+                });
+            }
+
+            /**
+            * Uses a get request to fill the scene fields.
+            */
+            function fillSceneInfo(scene) {
+                $.get("/" + id + "/" + scene + "/edit", function(responseJSON){
+                    var responseObject = JSON.parse(responseJSON);
+                    var sceneId = responseObject.value.id;
+                    var sceneJs = responseObject.value.js;
+                    var sceneHtml = responseObject.value.html;
+                    var sceneCss = responseObject.value.css;
+
+                    $("input[name=sceneTitle]").val(scene);
+                    $("input[name=sceneId]").val(sceneId);
+
+                    $("#scenejs").html(sceneId + ".js");
+                    $("#scenehtml").html(sceneId + ".html");
+                    $("#scenecss").html(sceneId + ".css");
+
+                    $("textarea[name=js]").val(sceneJs);
+                    $("textarea[name=html]").val(sceneHtml);
+                    $("textarea[name=css]").val(sceneCss);
+                });
             }
 
             /**
