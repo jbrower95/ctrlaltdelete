@@ -609,6 +609,9 @@
     	function toggleJs() {
     		var editors = $(".editor-bar");
     		console.log(editors);
+    		
+    		var indicator = $(editors[0]).find("right");
+    		
     		$(editors[0]).find(".CodeMirror").toggle({duration: 200});
     	}
     	

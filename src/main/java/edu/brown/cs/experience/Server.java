@@ -665,8 +665,8 @@ public class Server {
    */
   public class LibHandler implements Route {
     @Override
-    public Object handle(Request req, Response res) {
-      String asset = req.splat()[0];
+    public Object handle(Request request, Response response) {
+      String asset = request.splat()[0];
       
       System.out.println("Trying to get library!: " + asset);
       
@@ -675,17 +675,29 @@ public class Server {
       System.out.println("Serving library: " + assetPath);
 
       try {
-        String[] contents = Files.readAllLines(assetPath).toArray(
-          new String[1]);
-        StringBuilder result = new StringBuilder();
-        // flatten contents
-        for (String x : contents) {
-          result.append(x + "\n");
+        byte[] contents = Files.readAllBytes(assetPath);
+        
+        response.header("Content-Type", "application/json");
+        response.header("Content-Disposition",
+          String.format("attachment; filename=\"%s\"", asset));
+        response.header("Connection", "close");
+        response.raw().setContentLength(contents.length);
+
+        ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
+        try {
+      	  servletoutputstream.write(contents); // this throws EofException
+        } catch (EofException e) {
+      	  e.printStackTrace();
+      	  System.err.println("Client closed connection early.");
+        } finally {
+      	  servletoutputstream.flush();
         }
-        return result.toString();
+        
+        return GSON.toJson(ImmutableMap.of("success", "true"));
       } catch (Exception e) {
         e.printStackTrace();
-        return e.getMessage();
+        response.status(404);
+        return GSON.toJson(ImmutableMap.of("success", "false", "error", "Couldn't locate asset."));
       }
     }
   }
