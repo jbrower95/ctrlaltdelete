@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -14,8 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.jetty.io.EofException;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletException;
+import javax.servlet.http.Part;
 
+import org.eclipse.jetty.io.EofException;
 import org.apache.commons.io.FileUtils;
 
 import spark.ModelAndView;
@@ -93,6 +97,37 @@ public class Server {
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
+    
+    Spark.put("/:experience/:asset", new AssetUploadHandler());
+  }
+  
+  public class AssetUploadHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		
+		MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
+		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
+		   
+		String assetName = request.queryMap().value("experience");
+		String experienceName = request.queryMap().value("asset");
+		Path assetsDir = Paths.get(experienceName + "/assets");
+		try {
+			Part file = request.raw().getPart("asset");
+			
+			if (!Files.exists(assetsDir)) {
+				//create the directory for assets
+				new File(assetsDir.toString()).mkdir();
+			}
+			
+			file.write(experienceName + "/assets/" + assetName);
+		} catch (IOException | ServletException e) {
+			e.printStackTrace();
+			return GSON.toJson(ImmutableMap.of("success", "false"));
+		} 
+		
+		return GSON.toJson(ImmutableMap.of("success", "true"));
+	}
   }
 
   public void senseChanges() {
