@@ -102,6 +102,11 @@ public class Server {
     Spark.post("/:experience", new AssetUploadHandler());
   }
   
+  /**
+   * Handles uploading assets to an experience.
+   * @author Justin
+   *
+   */
   public class AssetUploadHandler implements Route {
 
 	@Override
@@ -113,11 +118,8 @@ public class Server {
 		String experienceName = request.params(":experience");
 		Path assetsDir = Paths.get(directory + "/" + experienceName + "/assets");
 		
-		
-		
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(assetsDir.toAbsolutePath().toString());
 		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
-		
 		
 		try {
 			Part file = request.raw().getPart("file");
