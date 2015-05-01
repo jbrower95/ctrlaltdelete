@@ -3,6 +3,7 @@ package edu.brown.cs.experience;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -171,12 +172,53 @@ public class Server {
 		//create the directory for the scene.
 		new File(tentativeSpot.toAbsolutePath().toString()).mkdirs();
 		
-		//copy the files in
+		//copy the files in this directory.
 		String baseName = "newScene" + uniqueId;
 		
+		String sceneTemplateDirectory = "src/main/resources/static/template/scene";
 		
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			
+			File[] files = new File(sceneTemplateDirectory).listFiles();
+			
+			//copy all of the template files.
+			for (File file : files) {
+				
+				String fileExtension = file.getName().split("\\.")[1];
+				
+				String location = tentativeSpot.resolve(baseName + "." + fileExtension).toAbsolutePath().toString();
+				
+				InputStream inputStream = new FileInputStream(file);
+				FileOutputStream outputStream = new FileOutputStream(new File(location));
+				
+				byte[] input = Files.readAllBytes(file.toPath());
+				
+				String result = new String(input, Charset.defaultCharset());
+				result.replace("$(id)", baseName);
+				
+				byte[] outputData = result.getBytes();
+				outputStream.write(outputData, 0, outputData.length);
+				
+				inputStream.close();
+				outputStream.close();
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		senseChanges();
+		
+		Experience e = experiences.get(experience);
+		
+		Optional<Scene> createdScene = e.getScenes().stream().filter(scene -> scene.getId().equals(baseName)).findAny();
+		
+		if (createdScene.isPresent()) {
+			return GSON.toJson(ImmutableMap.of("success", "true", "scene", createdScene.get()));
+		} else {
+			return ImmutableMap.of("success", "false", "error", "Couldn't create scene!");
+		}
 	}
   }
   
