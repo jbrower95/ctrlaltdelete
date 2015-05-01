@@ -686,11 +686,6 @@ public class Server {
     }
   }
 
-  // TODO: In editor handlers, send some bool so we know if it's
-  // new or not--use this to set oldTitle appropriately.
-  // Check for existing experiences with the same name/filename
-  // to avoid overwriting.
-  // Send back error messages if doesn't work.
   public class SaveEditedExperienceHandler implements Route {
     @Override
     public String handle(Request req, Response res) {
