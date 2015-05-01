@@ -146,6 +146,12 @@ body {
 	position: absolute;
 }
 
+#paint {
+	width: auto;
+	height: auto;
+	position: absolute;
+}
+
 #taskbar {
 	clear: both;
     position: absolute;
