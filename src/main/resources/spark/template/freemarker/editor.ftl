@@ -564,11 +564,39 @@
             showCheckedScore(highToLow);
             getScenes();
 
+            /**
+            * Sends a get request to get a list of scenes
+            * for the given experience.
+            */
             function getScenes() {
                 $.get("/" + id + "/scenes", function(responseJSON){
                     var responseObject = JSON.parse(responseJSON);
                     console.log(responseObject);
+                    var scenes = [];
+                    for (o in responseObject) {
+                        console.log(o);
+                        var s = JSON.parse(o);
+                        scenes.push(s);
+                        console.log(s);
+                    }
+
+                    return scenes;
                 });
+            }
+
+            /**
+            * Calls for getScenes to give a list of
+            * scenes, then appends them to the scene list
+            * in the sidebar.
+            */
+            function listScenes() {
+                var scenes = getScenes();
+                var list = $(".list");
+
+                for (scene in scenes) {
+                    var s = "<li id=" + scene + ">" + scene + "</li>";
+                    list.append(s);
+                }
             }
 
             /**
