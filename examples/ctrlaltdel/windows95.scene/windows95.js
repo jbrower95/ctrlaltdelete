@@ -21,9 +21,17 @@ var exported_scene = {
 				console.log("x-ing out");
 				$(this.element).remove();
 				manager.removeWindow(taskManager);
-				SceneManager.getSharedInstance().presentScene("explorer95");
+				SceneManager.getSharedInstance().presentScene("paint");
 			});
 			manager.addWindow(taskManager);
+
+			var paint = manager.inflate("paint");
+			paint.setTitle("untitled - Paint");
+			paint.moveTo(60, 100);
+			paint.setEnabled(false);
+			paint.setCancellable(false);
+			paint.setIcon('images/paint_icon.png')
+			manager.addWindow(paint);
 
 			var myComputer = manager.inflate("myComputer");
 			myComputer.setTitle("My Computer");

@@ -1,5 +1,26 @@
 var exported_scene = {
     id : "paint",
+    preload : function() {
+    	if (!this.exportedVariables) {
+			console.error("[paint.js] Did not receive exported variables! This sucks...");
+			this.exportedVariables = {};
+		}
+
+		if (this.exportedVariables.windowManager == null) {
+			console.error("[paint.js] The window manager is missing!");
+		}
+
+		var manager = this.exportedVariables.windowManager;
+		var taskManager = manager.getWindowWithId("taskManager");
+		if (taskManager) {
+			taskManager.setXHandler(function() {
+				$(this.element).remove();
+				manager.removeWindow(taskManager);
+			});
+			taskManager.xHandler();
+			manager.removeWindow(taskManager);
+		}
+    },
 	onPresent : function() {
 		console.log("Paint!");
 		var manager = this.exportedVariables.windowManager;
@@ -13,6 +34,13 @@ var exported_scene = {
 		console.log(this.exportedVariables);
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		console.log(clippyAgent);
+		clippyAgent.moveTo(400, 50);
+
+		var paintWindow = manager.getWindowWithId("paint");
+		paintWindow.setEnabled(true);
+		paintWindow.setActive(true);
+
+
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
 
@@ -217,19 +245,20 @@ var exported_scene = {
 			}
 		}
 
-		$(document).ready(function(){
-			var win = manager.inflate("paint");
-			win.setTitle("untitled - Paint");
-			win.setCancellable(false);
-			win.setIcon('images/paint_icon.png')
-			manager.addWindow(win);
-			
-			game.state.add("Paint",paint);
+		$(document).keydown(function(e) {
+			var code = e.keyCode || e.which;
+			if(code == 85) {
+   				SceneManager.getSharedInstance().presentScene("explorer95");
+ 			}
+		});
+
+		$(document).ready(function() {
+			game.state.add("Paint", paint);
 			game.state.start("Paint");
 		});
 	},
 	getHTML : function() {
 		return null;
 	},
-	requires : "windows95"
+	requires : "clickthexs"
 };

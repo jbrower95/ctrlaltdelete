@@ -16,6 +16,14 @@ var exported_scene = {
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
 
+		var lockScreen = function(lock) {
+			if (lock == true) {
+				$("#desktop").css('pointer-events', 'none');
+			} else {
+				$("#desktop").css('pointer-events', 'auto');
+			}
+		}
+
 		var showClippy = $.proxy(function() {
 					if (clippyAgent) {
 					 	clippyAgent.show();
@@ -34,6 +42,8 @@ var exported_scene = {
 			AssetManager.getSharedInstance().play(3);
 		};
 		
+		lockScreen(true);
+		setTimeout(function () {lockScreen(false);}, 8000);
 		SceneManager.performSequence([showClippy, clickTheX], [300, 4000]);
 	},
 	getHTML : function() {
