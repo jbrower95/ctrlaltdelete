@@ -602,6 +602,7 @@
     <script src="http://codemirror.net/addon/selection/active-line.js"></script>
     <script src="http://codemirror.net/addon/edit/matchbrackets.js"></script>
     <script src="http://codemirror.net/addon/edit/closebrackets.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
     <script>
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
