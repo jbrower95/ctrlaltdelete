@@ -38,7 +38,39 @@ var exported_scene = {
         }, this));
 
         this.searchContent("#load").click(function() {
-            alert("unimplemented.");
+            console.log("Loading...");
+            if (localStorage.ctrlaltdel_save) {
+                console.log("Found save file");
+                console.log("Transitioning...");
+                AssetManager.getSharedInstance().playNamed("button ding");
+                console.log("Stopping audio...");
+
+                var curtain = document.createElement("div");
+                curtain.style.position = "absolute";
+                curtain.style.left = 0;
+                curtain.style.top = 0;
+                curtain.style.width = "100%";
+                curtain.style.height = "100%";
+                curtain.style.backgroundColor = "#000000";
+                curtain.style.opacity = 0;
+                curtain.style.zIndex = 10;
+
+
+                document.body.style.backgroundImage = "";
+                var sound = document.getElementById("backgroundMusic");
+
+                document.getElementById('content').appendChild(curtain);
+
+                var fadeOut = 6000;
+
+                AssetManager.getSharedInstance().fadeOutNamed("main menu music");
+                $(curtain).animate({opacity: 1}, fadeOut, function() {
+                    AssetManager.getSharedInstance().stopNamed("main menu music");
+                    SceneManager.getSharedInstance().presentScene(localStorage.ctrlaltdel_save);
+                });
+            } else {
+                alert("No save data found!");
+            }
         });
 
         this.searchContent("#scores").click(function() {
@@ -52,7 +84,7 @@ var exported_scene = {
         var sound = this.searchContent("#backgroundMusic");
         statue.animate({opacity: "1"}, 300, function() {
             AssetManager.getSharedInstance().playNamed("main menu music");
-           //make our options appear
+            //make our options appear
             options.animate({opacity: 1});
         });
 	},

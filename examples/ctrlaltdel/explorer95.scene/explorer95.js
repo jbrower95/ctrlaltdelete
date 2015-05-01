@@ -23,6 +23,7 @@ var exported_scene = {
 		manager.removeWindow(taskManager);
     },
 	onPresent : function() {
+		localStorage.ctrlaltdel_save = 'explorer95';
 		if (!this.exportedVariables) {
 			console.error("[explorer95.js] Did not receive exported variables! This sucks...");
 			this.exportedVariables = {};

@@ -1,6 +1,7 @@
 var exported_scene = {
     id : "credits",
     onPresent : function() {
+        localStorage.ctrlaltdel_save = 'credits';
         var manager = SceneManager.getSharedInstance();
 
         if (manager == null) {
