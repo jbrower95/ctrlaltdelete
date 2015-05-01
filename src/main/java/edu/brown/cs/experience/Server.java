@@ -324,14 +324,15 @@ public class Server {
 		String type = qm.value("type");
 		String text = qm.value("text");
 
-		File file = new File(sceneDir + File.separator + "index." + type);
+		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
 
-		if (!file.exists()) {
+		if (file.getAbsoluteFile().exists()) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
+				e.printStackTrace();
 				System.out
-						.println("ERROR: IOException in SceneEditHandler. Couldn't save " + file.getPath());
+						.println("ERROR: IOException in SceneEditHandler. Couldn't create file -" + file.getPath());
 				return GSON.toJson(false);
 			}
 		}
