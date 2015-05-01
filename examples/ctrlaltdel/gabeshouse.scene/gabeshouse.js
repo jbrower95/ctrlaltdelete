@@ -24,6 +24,7 @@ var exported_scene = {
                     gabe.hide(2000, function() {
                         SceneManager.getSharedInstance().presentScene("clickthexs");
                     });
+                    AssetManager.getSharedInstance().fadeOutNamed("walking home music");
                 }, 5000);
             }, 600);
         });

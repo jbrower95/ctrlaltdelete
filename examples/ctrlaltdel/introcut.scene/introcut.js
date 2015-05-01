@@ -1,7 +1,7 @@
 var exported_scene = {
     id : "introcut",
     preload: function() {
-        AssetManager.getSharedInstance().preloadNamed("sounds/harderbetterfastersadder.mp3","walking home music");
+        AssetManager.getSharedInstance().preloadNamed("sounds/macintoshplus.mp3","walking home music");
     },
 	getHTML : function() {
 		return "introcut.scene/introcut.html"
