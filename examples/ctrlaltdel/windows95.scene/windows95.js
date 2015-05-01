@@ -29,6 +29,13 @@ var exported_scene = {
 			this.exportedVariables['windowManager'] = manager;
 		}
 
+		if (!this.exportedVariables['gabe']) {
+
+			//LOAD GABE
+
+
+		}
+
 
 		
 		function collision(obj1, ui_pos) {

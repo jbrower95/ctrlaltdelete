@@ -265,7 +265,7 @@ Scene.load = function(jsFile) {
     return new Promise(function(resolve, reject) {
         var willLoadScene = new Scene(jsFile);
         Promise.resolve(willLoadScene).then(function(){
-                resolve()
+                resolve();
             });
     });
 };
