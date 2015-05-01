@@ -323,7 +323,7 @@
             </div>
             <div class="right-bar">
                 <span class="side-title">${title}</span>
-                <form action="/file-upload" class="dropzone dz-clickable" id="asset-upload-field">
+                <form action="/${id}" class="dropzone dz-clickable" id="asset-upload-field">
   					<div class="fallback">
     					<input name="file" type="file" multiple />
   					</div>
