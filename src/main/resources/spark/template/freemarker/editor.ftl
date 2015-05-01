@@ -304,16 +304,28 @@
         .cffaf00 {
         background-color: #ffaf00;
         }
+        
+        #asset-upload-field {
+        background-color: #ffffff;
+        border-radius: 15px;
+        border: 2px dotted solid black;
+        height: 200px;
+        width: 80%;
+        }
     </style>
 </head>
 <body>
     <div class="container" id="${isNew}">
         <div class="sidebar c${color}" id="${color}">
             <div class="left-bar">
-
             </div>
             <div class="right-bar">
                 <span class="side-title">${title}</span>
+                <form action="/file-upload" class="dropzone dz-clickable" id="asset-upload-field">
+  					<div class="fallback">
+    					<input name="file" type="file" multiple />
+  					</div>
+				</form>
             </div>
         </div>
 
