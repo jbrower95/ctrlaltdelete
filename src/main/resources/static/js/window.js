@@ -29,7 +29,10 @@ function Window(element, x, y, draggable) {
 	this.cancellable = true;
 
 	// Windows x-handler, to be called on close
-	this.xOut = function(w){};
+	this.xOut = function(w) {
+		console.log("x-ing out");
+		$(this.element).remove();
+	};
 
 	// xHandler when close is clicked
 	$(this.element).find(".close").click($.proxy(this.xHandler, this));
@@ -52,6 +55,7 @@ function Window(element, x, y, draggable) {
 		this.mouse_offset_x = 0;
 		this.mouse_offset_y = 0;
 		this.dragbar = $(this.element).find(".dragbar");
+		this.dragbar.find(".close").mousedown($.proxy(this.xOut, this));
 		this.dragbar.mousedown($.proxy(this.mouseDown, this));
 		$(window).mouseup($.proxy(this.mouseUp, this));
 	}
@@ -186,6 +190,7 @@ Window.prototype.setIcon = function(new_icon) {
 */
 Window.prototype.setXHandler = function(x_handler) {
 	this.xOut = x_handler;
+	this.dragbar.find(".close").mousedown($.proxy(this.xOut, this));
 }
 
 /**

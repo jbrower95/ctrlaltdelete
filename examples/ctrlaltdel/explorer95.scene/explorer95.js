@@ -6,11 +6,19 @@ var exported_scene = {
 			this.exportedVariables = {};
 		}
 
-		if (this.exportedVariables.clippy == null) {
+		if (this.exportedVariables.clippyAgent == null) {
 			console.error("[explorer95.js] Clippy is missing!");
 		}
 
-		var clippyAgent = this.exportedVariables.clippy;
+		if (this.exportedVariables.windowManager == null) {
+			console.error("[explorer95.js] The window manager is missing!");
+		}
+
+		var clippyAgent = this.exportedVariables.clippyAgent;
+		var manager = this.exportedVariables.windowManager;
+		var explorer = manager.getWindowWithId("explorer");
+		console.log(explorer);
+		explorer.setEnabled(true);
 
 		AssetManager.getSharedInstance().preload(6);
 		AssetManager.getSharedInstance().preload(7);
@@ -20,7 +28,7 @@ var exported_scene = {
 			 	console.log("Playing sound 7");
 			 	clippyAgent.speak('What are you doing in here? Get out! GET OUT!');
 			 	AssetManager.getSharedInstance().play(7);
-			 	clippyAgent.animate();
+			 	clippyAgent.play('Save');
 		    };
 		
 		var gabeThoughts = function() {
@@ -44,5 +52,5 @@ var exported_scene = {
 	getHTML : function() {
 		return null;
 	},
-	requires : "windows95"
+	requires : "clickthexs"
 };

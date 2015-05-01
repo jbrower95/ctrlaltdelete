@@ -17,6 +17,11 @@ var exported_scene = {
 			taskManager.setIcon("images/task_manager_icon.png");
 			taskManager.moveTo(200, 120);
 			taskManager.setActive(true);
+			taskManager.setXHandler(function() {
+				console.log("x-ing out");
+				$(this.element).remove();
+				SceneManager.getSharedInstance().presentScene("explorer95");
+			});
 			manager.addWindow(taskManager);
 
 			var myComputer = manager.inflate("explorer");
@@ -85,17 +90,15 @@ var exported_scene = {
 		AssetManager.getSharedInstance().preload(3);
 
 		return new Promise($.proxy(function(resolve, reject) { 
-
-			clippy.load('Clippy', $.proxy(function(agent) {
-					console.log("Loaded clippy!");
-					console.log(this);
-					this.exportedVariables.clippyAgent = agent;
-					resolve();
-			    }, this));
-
+			if (!this.exportedVariables.clippyAgent) {
+				clippy.load('Clippy', $.proxy(function(agent) {
+						console.log("Loaded clippy!");
+						console.log(this);
+						this.exportedVariables.clippyAgent = agent;
+						resolve();
+				    }, this));
+			}
 		}, this));
-		
-
     },
 	getHTML : function() {
 		return "windows95.scene/windows95.html"

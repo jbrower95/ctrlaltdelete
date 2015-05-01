@@ -23,9 +23,8 @@ var exported_scene = {
 					 	console.log("Playing sound 1");
 					 	clippyAgent.speak("Looks like you're stuck inside the computer!");
 					 	AssetManager.getSharedInstance().play(1);
-					 	clippyAgent.animate();
 				 	}
-		}, this);
+			}, this);
 		
 		var clickTheX = function() {
 			if (clippyAgent) {
@@ -35,7 +34,7 @@ var exported_scene = {
 			AssetManager.getSharedInstance().play(3);
 		};
 		
-		SceneManager.performSequence([showClippy, clickTheX], [300, 8000]);
+		SceneManager.performSequence([showClippy, clickTheX], [300, 4000]);
 	},
 	getHTML : function() {
 		return null;
