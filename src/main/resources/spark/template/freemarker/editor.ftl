@@ -16,7 +16,7 @@
         padding: 0;
         margin: 0;
         top: 0;
-        overflow-x: hidden;
+        overflow: hidden;
         }
         body {
             background-color: #222128;
@@ -35,6 +35,15 @@
             margin-top: 2%;
         }
 
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+
         .container {
             position: relative;
             width: 100%;
@@ -43,18 +52,9 @@
             margin: 0;
         }
 
-        .container:after {
-        visibility: hidden;
-        display: block;
-        font-size: 0;
-        content: " ";
-        clear: both;
-        height: 0;
-        }
-
         .sidebar {
             position: relative;
-            width: 22.5%;
+            width: 25%;
             height: 100%;
             margin: 0;
             float: left;
@@ -64,44 +64,43 @@
             transition: background-color 0.2s;
         }
 
-        .sidebar:after {
-        visibility: hidden;
-        display: block;
-        font-size: 0;
-        content: " ";
-        clear: both;
-        height: 0;
+        .sidebar-title {
+            color: white;
+            font-family: 'Lato', sans-serif;
+            font-size: 1.5em;
         }
 
-        .sidebar-title {
-        color: white;
-        font-family: 'Lato', sans-serif;
-        font-size: 1.5em;
+        .scene-list {
+            position: relative;
+            width: 100%;
+            height: 78%;
+            overflow: auto;
         }
 
         .left-bar {
             float: left;
-            width: 12%;
-            height: 100%;
+            width: 15%;
+            height: auto;
             padding-left: 1%;
             box-sizing: border-box;
         }
 
         .right-bar {
             float: right;
-            width: 86%;
-            height: 100%;
+            width: 84%;
+            height: auto;
             padding-right: 1%;
             box-sizing: border-box;
         }
 
         .main {
             position: relative;
-            width: 75.5%;
+            width: 74%;
             height: 100%;
             float: right;
             padding: 2.5%;
             box-sizing: border-box;
+            overflow: auto;
         }
 
         input[type=text] {
@@ -304,30 +303,67 @@
         .cffaf00 {
         background-color: #ffaf00;
         }
+
+        .asset-zone {
+            position: absolute;
+            width: 100%;
+            height: 25%;
+            left: 0;
+            bottom: 0;
+            box-sizing: border-box;
+            padding: 1%;
+        }
         
         #asset-upload-field {
-        background-color: #ffffff;
-        border: 4px dashed gray;
-        height: 200px;
-        width: 80%;
-        float: bottom;
+            background-color: transparent;
+            border: 3px dashed rgba(255,255,255,0.5);
+            border-radius: 5px;
+            position: relative;
+            height: 100%;
+            width: 100%;
+            float: none;
+            color: white;
+            font-family: 'Lato', sans-serif;
+            font-size: 1.2em;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 15%;
+            transition: border-color 0.2s;
+        }
+
+        #asset-upload-field:hover {
+            border-color: rgba(255,255,255,1);
         }
     </style>
-    <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
 <body>
-    <div class="container" id="${isNew}">
+    <div class="container clearfix" id="${isNew}">
         <div class="sidebar c${color}" id="${color}">
-            <div class="left-bar">
+            <div class="scene-list clearfix">
+                <div class="left-bar">
+                </div>
+                <div class="right-bar">
+                    <span class="side-title">${title}</span>
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />
+                    a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />
+                </div>
             </div>
-            <div class="right-bar">
-                <span class="side-title">${title}</span>
+            
+            <div class="asset-zone">
                 <form action="/${id}" class="dropzone dz-clickable" id="asset-upload-field">
-  					<div class="fallback">
-    					<input name="file" type="file" multiple />
-  					</div>
-				</form>
+                    <div class="fallback">
+                        <input name="file" type="file" multiple />
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -389,6 +425,7 @@
         </div>
     </div>
 
+    <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="lib/notify.min.js"></script>
     <script>
