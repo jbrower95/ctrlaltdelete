@@ -675,7 +675,6 @@ public class Server {
       System.out.println("Serving library: " + assetPath);
 
       try {
-        res.type("application/javascript");
         String[] contents = Files.readAllLines(assetPath).toArray(
           new String[1]);
         StringBuilder result = new StringBuilder();
@@ -707,20 +706,19 @@ public class Server {
         + req.params(":asset"));
       String path = (exp.directory + File.separator + asset);
 
-      System.out.println("Trying to get asset: " + asset);
+      System.out.println("[gamehandler] Trying to get asset: " + asset);
 
       if (!experienceCanAccessAsset(exp, asset)) {
         throw new IllegalArgumentException("Error: Can't access asset "
           + asset + " -  Not declared in manifest.");
       }
 
-      System.out.println("Experience: " + exp.directory);
-
       try {
         String[] assetParts = asset.split("[.]");
         String type = contentTypes.getOrDefault(
           assetParts[assetParts.length - 1], "application/octet-stream");
         if (typesWithoutBytes.contains(type)) {
+        	System.out.println("Serving file as text.");
           String[] contents = Files.readAllLines(Paths.get(path)).toArray(
             new String[1]);
           StringBuilder result = new StringBuilder();
@@ -730,21 +728,21 @@ public class Server {
           }
           return result.toString();
         } else {
-          final FileInputStream in = new FileInputStream(path);
+        	System.out.println("Serving file as bytes");
           Response response = res;
           byte[] contents = Files.readAllBytes(Paths.get(path));
           System.out.println("Serving asset: " + asset);
+          response.header("Content-Type", "application/json");
           response.header("Content-Disposition",
             String.format("attachment; filename=\"%s\"", asset));
           response.header("Connection", "close");
-          response.raw().setContentLength(contents.length+1);
-
-          final OutputStream os = response.raw().getOutputStream();
+          response.raw().setContentLength(contents.length);
 
           ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
           try {
         	  servletoutputstream.write(contents); // this throws EofException
           } catch (EofException e) {
+        	  e.printStackTrace();
         	  System.err.println("Client closed connection early.");
           } finally {
         	  servletoutputstream.flush();
@@ -837,23 +835,20 @@ public class Server {
       throws IllegalArgumentException {
       Path currentRelativePath = Paths.get("");
       String s = currentRelativePath.toAbsolutePath().toString();
-      System.out.println("Current relative path is: " + s);
-
+      
       Experience exp = experiences.get(req.params(":experience"));
       String scene = req.params(":scene");
       String asset = req.params(":asset");
 
       String path = (exp.directory + File.separator + scene + File.separator + asset);
 
-      System.out.println("Trying to get asset: " + asset);
+      System.out.println("[scenecontenthandler] Trying to get asset: " + asset);
 
       // access control
       if (!experienceCanAccessAsset(exp, scene, asset)) {
         throw new IllegalArgumentException("Error: Can't access asset "
           + path + " -  Not declared in manifest.");
       }
-
-      System.out.println("Experience: " + exp.directory);
 
       try {
         String[] assetParts = asset.split("[.]");
@@ -879,22 +874,15 @@ public class Server {
           response.header("Connection", "close");
           response.raw().setContentLength(contents.length);
 
-          final OutputStream os = response.raw().getOutputStream();
-
-          ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
+          ServletOutputStream servletoutputstream = response.raw().getOutputStream();
           try {
         	  servletoutputstream.write(contents); // this throws EofException
           } catch (EofException e) {
+        	  e.printStackTrace();
         	  System.err.println("Client closed connection early.");
           } finally {
         	  servletoutputstream.flush();
-        	  in.close();
-        	  os.close();
           }
-          
-
-          //in.close();
-          //os.close();
 
           return GSON.toJson(ImmutableMap.of("success", "true"));
         }
