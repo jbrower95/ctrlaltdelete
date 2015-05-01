@@ -107,7 +107,7 @@ public class Server {
     Spark.get("/:experience/scores", new GetScoresHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.post("/:experience/saveedit", new SaveEditedExperienceHandler());
-    Spark.get("/lib/:asset", new LibHandler());
+    Spark.get("/:experience/lib/*", new LibHandler());
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
@@ -664,15 +664,17 @@ public class Server {
   public class LibHandler implements Route {
     @Override
     public Object handle(Request req, Response res) {
-      String asset = req.params(":asset");
-
-      String path = ("src/main/resources/static/js/" + asset);
-
-      System.out.println("Serving library: " + path);
+      String asset = req.splat()[0];
+      
+      System.out.println("Trying to get library!: " + asset);
+      
+      Path assetPath = Paths.get("src").resolve("main").resolve("resources").resolve("static").resolve(asset);
+      
+      System.out.println("Serving library: " + assetPath);
 
       try {
         res.type("application/javascript");
-        String[] contents = Files.readAllLines(Paths.get(path)).toArray(
+        String[] contents = Files.readAllLines(assetPath).toArray(
           new String[1]);
         StringBuilder result = new StringBuilder();
         // flatten contents

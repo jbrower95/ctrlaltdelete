@@ -719,12 +719,15 @@
 	
 	                        if (scene === "newScene") {
 	                            fillNewScene();
+	                            return;
 	                        }
 	                        
 	                        fillSceneInfo(scene);
 	                        
-	                        resolve();
 	                    });
+	                    
+	                    
+	                    resolve();
 	                });
 	        	});
             }
