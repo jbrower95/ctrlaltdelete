@@ -34,9 +34,6 @@ function Window(element, x, y, draggable) {
 		$(this.element).remove();
 	};
 
-	// xHandler when close is clicked
-	$(this.element).find(".close").click($.proxy(this.xHandler, this));
-
 	// Make sure to initialize with the window class
 	if (!$(this.element).hasClass("window")) {
 		this.element.classList.add("window");
@@ -55,7 +52,7 @@ function Window(element, x, y, draggable) {
 		this.mouse_offset_x = 0;
 		this.mouse_offset_y = 0;
 		this.dragbar = $(this.element).find(".dragbar");
-		this.dragbar.find(".close").mousedown($.proxy(this.xOut, this));
+		this.dragbar.find(".close").mousedown($.proxy(this.xHandler, this));
 		this.dragbar.mousedown($.proxy(this.mouseDown, this));
 		$(window).mouseup($.proxy(this.mouseUp, this));
 	}
@@ -131,7 +128,7 @@ Window.prototype.setId = function(newId) {
 * Runs the close handler.
 */
 Window.prototype.xHandler = function() {
-	if (this.cancellable) {
+	if (this.cancellable === true) {
 		this.xOut(this);
 	}
 }
@@ -190,7 +187,7 @@ Window.prototype.setIcon = function(new_icon) {
 */
 Window.prototype.setXHandler = function(x_handler) {
 	this.xOut = x_handler;
-	this.dragbar.find(".close").mousedown($.proxy(this.xOut, this));
+	//this.dragbar.find(".close").mousedown($.proxy(this.xHandler, this));
 }
 
 /**

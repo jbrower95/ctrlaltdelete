@@ -219,6 +219,9 @@ var exported_scene = {
 
 		$(document).ready(function(){
 			var win = manager.inflate("paint");
+			win.setTitle("untitled - Paint");
+			win.setCancellable(false);
+			win.setIcon('images/paint_icon.png')
 			manager.addWindow(win);
 			
 			game.state.add("Paint",paint);
