@@ -130,7 +130,7 @@ public class Server {
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Protected resource."));
 		}
 		
-		Path expPath = Paths.get(directory + "/" + experienceName);
+		Path expPath = Paths.get(directory + File.separator + experienceName);
 		
 		try {
 			FileUtils.deleteDirectory(new File(expPath.toAbsolutePath().toString()));
@@ -188,7 +188,7 @@ public class Server {
 	public Object handle(Request request, Response response) {
 		
 		String experience = request.params(":experience");
-		String expDirectory = directory + "/" + experience;
+		String expDirectory = directory + File.separator + experience;
 		
 		int uniqueId = 1;
 		
@@ -285,7 +285,7 @@ public class Server {
 		}
 		
 		try {
-			FileUtils.deleteDirectory(new File(directory + "/" + experienceName + "/" + sceneName));
+			FileUtils.deleteDirectory(new File(directory + File.separator + experienceName + File.separator + sceneName));
 			senseChanges();
 			return GSON.toJson(ImmutableMap.of("success", "true"));
 		} catch (IOException e) {
@@ -314,7 +314,7 @@ public class Server {
 		String sceneName = request.params(":scene");
 		System.out.println("Handling file upload...");
 		System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
-		Path sceneDir = Paths.get(directory + "/" + experienceName + "/" + sceneName);
+		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName);
 		
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(sceneDir.toAbsolutePath().toString());
 		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
@@ -381,7 +381,7 @@ public class Server {
 		
 		 System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
 		String experienceName = request.params(":experience");
-		Path assetsDir = Paths.get(directory + "/" + experienceName + "/assets");
+		Path assetsDir = Paths.get(directory + File.separator + experienceName + File.separator + "assets");
 		
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(assetsDir.toAbsolutePath().toString());
 		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
@@ -609,7 +609,7 @@ public class Server {
       String asset = req.params(":asset");
       System.out.println(req.params(":experience") + ", "
         + req.params(":asset"));
-      String path = (exp.directory + "/" + asset);
+      String path = (exp.directory + File.separator + asset);
 
       System.out.println("Trying to get asset: " + asset);
 
@@ -749,7 +749,7 @@ public class Server {
       String scene = req.params(":scene");
       String asset = req.params(":asset");
 
-      String path = (exp.directory + "/" + scene + "/" + asset);
+      String path = (exp.directory + File.separator + scene + File.separator + asset);
 
       System.out.println("Trying to get asset: " + asset);
 
