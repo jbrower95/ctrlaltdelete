@@ -152,6 +152,8 @@ SceneManager.prototype.registerScene = function(scene) {
  * the scene will be ejected using a left to right animation.
  */
 SceneManager.prototype.presentScene = function(sceneID) {
+
+  return new Promise($.proxy(function(resolve, reject) {
   var scene = this.scenes[sceneID];
 
 	if (scene == null) {
@@ -203,7 +205,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
     var current_requirement = scene.requires;
 
     if (current_requirement == null) {
-      console.error("[scenemanager.js] No required scene provided for this phantom scene.")
+      console.error("[scenemanager.js] No required scene provided for this phantom scene.");
     }
 
     while (current_requirement != null) {
@@ -283,6 +285,10 @@ SceneManager.prototype.presentScene = function(sceneID) {
   if (scene.onPresent) {
   	scene.onPresent();
   }
+
+}, this));
+
+
 };
 
 
