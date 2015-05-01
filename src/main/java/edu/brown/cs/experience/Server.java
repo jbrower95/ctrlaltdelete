@@ -94,6 +94,7 @@ public class Server {
 
     /* Maker Endpoints */
     Spark.get("/:experience/scenes", new ListAllScenesHandler());
+    Spark.get("/:experience/main/edit", new SceneIndexHandler());
     Spark.post("/:experience/:scene/edit", new SceneEditHandler());
     Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
     Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
@@ -196,13 +197,14 @@ public class Server {
 		Path tentativeSpot;
 		
 		while (true) {
-			
 			//see if this file exists
 			tentativeSpot = Paths.get(expDirectory + "/newScene" + uniqueId + ".scene");
 			
 			if (!Files.exists(tentativeSpot)) {
 				//awesome.
 				break;
+			} else {
+				uniqueId++;
 			}
 			
 			if (uniqueId > 500) {
@@ -252,7 +254,7 @@ public class Server {
 		}
 		
 		senseChanges();
-		
+		System.out.println("Got templates");
 		Experience e = experiences.get(experience);
 		
 		Optional<Scene> createdScene = e.getScenes().stream().filter(scene -> scene.getId().equals(baseName)).findAny();
@@ -369,6 +371,63 @@ public class Server {
 	}
 	  
   }
+
+	/**
+	 * Should return detailed and updated information about a specific scene.
+	 * @author Justin
+	 *
+	 */
+	public class SceneIndexHandler implements Route {
+
+		@Override
+		public Object handle(Request request, Response response) {
+			System.out.println("SceneIndexHandler!");
+			String experienceName = request.params(":experience");
+			senseChanges();
+			Experience experience = experiences.get(experienceName);
+
+			File inJs = new File(directory + File.separator + experience.filename + File.separator + "index.js");
+			File inHtml = new File(directory + File.separator + experience.filename + File.separator + "index.html");
+			File inCss = new File(directory + File.separator + experience.filename + File.separator + "index.css");
+
+			String js = "";
+			String html = "";
+			String css = "";
+
+			if (inJs.exists()) {
+				System.out.println("Found js file.");
+				try {
+					byte[] encoded = Files.readAllBytes(inJs.toPath());
+					js = new String(encoded, Charset.defaultCharset());
+				} catch (IOException e) {
+					System.err.println("Error: Couldn't read index.js");
+				}
+			}
+
+			if (inHtml.exists()) {
+				System.out.println("Found html file.");
+				try {
+					byte[] encoded = Files.readAllBytes(inHtml.toPath());
+					html = new String(encoded, Charset.defaultCharset());
+				} catch (IOException e) {
+					System.err.println("Error: Couldn't read html for index.html");
+				}
+			}
+
+			if (inCss.exists()) {
+				System.out.println("Found css file.");
+				try {
+					byte[] encoded = Files.readAllBytes(inCss.toPath());
+					css = new String(encoded, Charset.defaultCharset());
+				} catch (IOException e) {
+					System.err.println("Error: Couldn't read css for index.css");
+				}
+			}
+			Map<String, Object> files = ImmutableMap.of("js", js, "html", html, "css", css);
+			return GSON.toJson(files);
+		}
+
+	}
   
   /**
    * Handles uploading assets to an experience.

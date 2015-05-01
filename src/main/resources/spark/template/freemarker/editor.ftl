@@ -70,10 +70,13 @@
             font-family: 'Lato', sans-serif;
             font-size: 1.7em;
             font-weight: 800;
+            opacity: 1;
+            transition: opacity 0.2s;
         }
 
         .side-title:hover {
             cursor: pointer;
+            oapcity: 0.5;
         }
 
         .scene-list {
@@ -116,10 +119,17 @@
             color: white;
             font-size: 1.2em;
             margin-top: 10px;
+            opacity: 1;
+            transition: opacity 0.2s;
         }
 
         .list li:hover {
             cursor: pointer;
+            opacity: 0.5;
+        }
+
+        .curr, .list li.curr {
+            opacity: 0.5;
         }
 
         .main {
@@ -155,7 +165,7 @@
             font-family: 'Merriweather', serif;
             position: relative;
             width: 85%;
-            height: 15%;
+            height: 100px;
             resize: none;
             padding: 5px;
             opacity: 0.8;
@@ -416,6 +426,11 @@
             box-sizing: border-box;
             transition: height 0.2s;
         }
+
+        .inactive {
+            pointer-events: none;
+            opacity: 0.5;
+        }
     </style>
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
@@ -427,9 +442,9 @@
                     <!--<img src="images/left.svg">-->
                 </div>
                 <div class="right-bar">
-                    <span class="side-title">${title}</span>
+                    <span class="side-title curr">${title}</span>
                     <ul class="list">
-                        <li>Main</li>
+                        <li id="Main">Main</li>
                     </ul>
                 </div>
             </div>
@@ -457,12 +472,13 @@
                         </div>
                     </div>
 
-                    <div class="settings-bar">
+                    <!--<div class="settings-bar">
                         <div class="bar-block label">Previous Scene</div>
                         <div class="bar-block answers">
-                            <input type="text" name="prevScene" value=""/>
+                            <select>
+                            </select>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <!-- Scene.js -->
@@ -578,6 +594,7 @@
             var isNew = $(".container").attr('id');
 
             /* Globals */
+            var scenes = [];
             var onScene = false;
             var title = $("input[name=experienceTitle]").val();
             var id = $("input[name=id]").val();
@@ -596,7 +613,35 @@
 
             showCheckedColor(color);
             showCheckedScore(highToLow);
-            listScenes();
+            console.log(isNew);
+            if (isNew === "false") {
+                listScenes();
+            } else {
+                $(".list").append("<li id='newScene'>+</li>");
+            }
+            
+
+
+            /*function fillSelectOptions(scene) {
+                $("select").html("");
+                $("select").append("<option value=''></option>");
+                for (s of scenes) {
+                    if (s !== scene) {
+                        var option = "<option value='" + s + "'>" + s + "</option>";
+                        $("select").append(option);
+                    }
+                }
+            }
+
+            $("select").change(function() {
+                console.log($(this).val());
+                var val = $(this).val();
+                if (val === "") {
+                    htmlVisible(true);
+                } else {
+                    htmlVisible(false);
+                }
+            });*/
 
             /**
             * Change editing div from scene editor to general.
@@ -606,6 +651,30 @@
                     $("#sceneEdit").fadeOut();
                     $("#generalEdit").fadeIn();
                     onScene = false;
+                    $(".curr").removeClass("curr");
+                    $(this).addClass("curr");
+                }
+            });
+
+            $("ul.list li").click(function() {
+                if (!onScene) {
+                    onScene = true;
+                    $("#generalEdit").fadeOut();
+                    $("#sceneEdit").fadeIn();
+                }
+
+                $(".curr").removeClass("curr");
+                $(this).addClass("curr");
+
+                $(".inactive").removeClass("inactive");
+
+                $("input[name=sceneTitle]").val("");
+                $("input[name=sceneId]").val("");
+                $("input[name=sceneTitle]").addClass("inactive");
+                $(".settings").addClass("inactive");
+
+                if (isNew === "false") {
+                    fillMainInfo();
                 }
             });
 
@@ -621,9 +690,12 @@
                     var responseObject = JSON.parse(responseJSON);
                     for (o in responseObject) {
                         var scene = responseObject[o].id;
+                        scenes.push(scene);
                         var s = "<li id=" + scene + ">" + scene + "</li>";
                         list.append(s);
                     }
+
+                    $(".list").append("<li id='newScene'>+</li>");
 
                     // Pretty gross, but has to be done
                     $("ul.list li").click(function() {
@@ -633,15 +705,61 @@
                             $("#sceneEdit").fadeIn();
                         }
 
-                        var scene = $(this).attr('id');
-                        
+                        $(".curr").removeClass("curr");
+                        $(this).addClass("curr");
 
-                        if (scene === "Main") {
+                        $(".inactive").removeClass("inactive");
+
+                        var scene = $(this).attr('id');
+
+                        if (scene === "newScene") {
+                            fillNewScene();
                             return;
                         }
-
+                        
                         fillSceneInfo(scene);
                     });
+                });
+            }
+
+            function fillNewScene() {
+                $.ajax({
+                    type: "PUT",
+                    url: "/" + id + "/newscene",
+                    success: function(result) {
+                        console.log('Success : ' + result);
+                        result = JSON.parse(result);
+                        var id = result.scene.id;
+                        var js = result.scene.js;
+                        var html = result.scene.html;
+                        var css = result.scene.css;
+                        var scene = "New Scene";
+
+                        fillFields(scene, id, js, html, css);
+                    }
+                });
+            }
+
+            function fillMainInfo() {
+                $.get("/" + id + "/main/edit", function(responseJSON) {
+                    var responseObject = JSON.parse(responseJSON);
+                    console.log(responseObject);
+                    var sceneJs = responseObject.js;
+                    var sceneHtml = responseObject.html;
+                    var sceneCss = responseObject.css;
+
+                    $("input[name=sceneTitle]").val("");
+                    $("input[name=sceneId]").val("");
+                    $("input[name=sceneTitle]").addClass("inactive");
+                    $(".settings").addClass("inactive");
+
+                    $("#scenejs").html("index.js");
+                    $("#scenehtml").html("index.html");
+                    $("#scenecss").html("index.css");
+
+                    $("textarea[name=js]").val(sceneJs);
+                    $("textarea[name=html]").val(sceneHtml);
+                    $("textarea[name=css]").val(sceneCss);
                 });
             }
 
@@ -666,7 +784,22 @@
                     $("textarea[name=js]").val(sceneJs);
                     $("textarea[name=html]").val(sceneHtml);
                     $("textarea[name=css]").val(sceneCss);
+
+                   // fillSelectOptions(scene);
                 });
+            }
+
+            function fillFields(scene, sceneId, sceneJs, sceneHtml, sceneCss) {
+                $("input[name=sceneTitle]").val(scene);
+                $("input[name=sceneId]").val(sceneId);
+
+                $("#scenejs").html(sceneId + ".js");
+                $("#scenehtml").html(sceneId + ".html");
+                $("#scenecss").html(sceneId + ".css");
+
+                $("textarea[name=js]").val(sceneJs);
+                $("textarea[name=html]").val(sceneHtml);
+                $("textarea[name=css]").val(sceneCss);
             }
 
             $("textarea[name=js]").change(function() {
