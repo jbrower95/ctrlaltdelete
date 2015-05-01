@@ -177,3 +177,11 @@ body {
 	z-index: 20;
 	pointer-events: none;
 }
+
+.holder {
+	position: absolute;
+	width: 618px;
+	height: 411px;
+	top: 45px;
+	left: 62px;
+}
