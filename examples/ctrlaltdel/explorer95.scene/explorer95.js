@@ -6,11 +6,16 @@ var exported_scene = {
 			this.exportedVariables = {};
 		}
 
-		if (this.exportedVariables.clippy == null) {
+		if (this.exportedVariables.clippyAgent == null) {
 			console.error("[explorer95.js] Clippy is missing!");
 		}
 
-		var clippyAgent = this.exportedVariables.clippy;
+		if (this.exportedVariables.windowManager == null) {
+			console.error("[explorer95.js] The window manager is missing!");
+		}
+
+		var clippyAgent = this.exportedVariables.clippyAgent;
+		var manager = this.exportedVariables.windowManager;
 
 		AssetManager.getSharedInstance().preload(6);
 		AssetManager.getSharedInstance().preload(7);

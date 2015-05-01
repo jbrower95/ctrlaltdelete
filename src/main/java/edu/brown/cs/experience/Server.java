@@ -775,10 +775,11 @@ public class Server {
     /**
      * Escape '<' and '>' characters in a string for display in an HTML 
      * web page. Every '<' in the original string becomes '&lt;' and every
-     * '>' becomes '&gt;'.
+     * '>' becomes '&gt;'. Also, escape '&' and '"' characters.
      * 
      * @param original the string to sanitize
-     * @return the original string with '<' and '>' characters escaped
+     * @return the original string with '<', '"', '&', and '>' characters 
+     * 		escaped
      */
     private String sanitize(String original) {
     	String fixed = original.replaceAll("&", "&amp;")

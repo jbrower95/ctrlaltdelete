@@ -22,7 +22,7 @@ var exported_scene = {
                     scene.searchContent(".caption").eq(1).show();
                     gabe.animate({left: "5%", bottom: "58%"}, 800);
                     gabe.hide(2000, function() {
-                        SceneManager.getSharedInstance().presentScene("windows95");
+                        SceneManager.getSharedInstance().presentScene("clickthexs");
                     });
                 }, 5000);
             }, 600);
