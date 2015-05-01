@@ -319,8 +319,37 @@ public class Server {
 		System.out.println("Handling file upload...");
 		System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
 		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName);
-		
-		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(sceneDir.toAbsolutePath().toString());
+
+		QueryParamsMap qm = request.queryMap();
+		String type = qm.value("type");
+		String text = qm.value("text");
+
+		File file = new File(sceneDir + File.separator + "index." + type);
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				System.out
+						.println("ERROR: IOException in SceneEditHandler. Couldn't save " + file.getPath());
+				return GSON.toJson(false);
+			}
+		}
+
+		try {
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(text);
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out
+					.println("ERROR: IOException in SceneEditHandler. Couldn't write over " + file.getPath());
+			return GSON.toJson(false);
+		}
+
+		return GSON.toJson(true);
+		/*MultipartConfigElement multipartConfigElement = new MultipartConfigElement(sceneDir.toAbsolutePath().toString());
 		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
 		
 		try {
@@ -341,7 +370,7 @@ public class Server {
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "An IO exception has occurred."));
 		} 
 		System.out.println("Sweet.");
-		return GSON.toJson(ImmutableMap.of("success", "true"));
+		return GSON.toJson(ImmutableMap.of("success", "true"));*/
 	}
   }
   
@@ -1152,20 +1181,6 @@ public class Server {
         System.err.println("ERROR: Old directory " + oldId + " not found.");
         return null;
       }
-    }
-
-    /**
-     * Takes a name and removes all spaces.
-     * @param n The name.
-     * @return The name without the spaces.
-     */
-    private String removeTitleSpaces(String n) {
-      String[] s = n.split(" ");
-      StringBuilder builder = new StringBuilder();
-      for (String str : s) {
-        builder.append(str);
-      }
-      return builder.toString();
     }
     
     /**

@@ -804,15 +804,29 @@
 
             $("textarea[name=js]").change(function() {
                 if (onScene) {
-                    onSceneChange($("textarea[name=js]"), $("input[name=sceneId]").val());
+                    onSceneChange($("textarea[name=js]").val(), "js", $("input[name=sceneId]").val());
                 }
             });
 
-            function onSceneChange(editor, scene) {
-                /*$.post("/" + id + "/" + scene + "/edit", input, function(responseJSON){
-                    
-                });*/
-                var txt = new Blob([editor.val()], {type:'text/plain'});
+            $("textarea[name=html]").change(function() {
+                if (onScene) {
+                    onSceneChange($("textarea[name=html]").val(), "html", $("input[name=sceneId]").val());
+                }
+            });
+
+            $("textarea[name=css]").change(function() {
+                if (onScene) {
+                    onSceneChange($("textarea[name=css]").val(), "css", $("input[name=sceneId]").val());
+                }
+            });
+
+            function onSceneChange(text, type, scene) {
+                console.log("Scene changed!");
+                var input = {"text" : text, "type" : type};
+                $.post("/" + id + "/" + scene + "/edit", input, function(responseJSON){
+                    console.log(responseJSON);
+                });
+                /*var txt = new Blob([editor.val()], {type:'text/plain'});
                 $.ajax({
                     type: "POST",
                     url: "/" + id + "/" + scene + "/edit",
@@ -820,7 +834,7 @@
                     success: function(result) {
                         console.log('Success : ' + result);
                     }
-                });
+                });*/
             }
 
             /**
