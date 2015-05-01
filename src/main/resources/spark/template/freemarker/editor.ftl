@@ -562,6 +562,14 @@
 
             showCheckedColor(color);
             showCheckedScore(highToLow);
+            getScenes();
+
+            function getScenes() {
+                $.get("/" + id + "/scenes", function(responseJSON){
+                    var responseObject = JSON.parse(responseJSON);
+                    console.log(responseObject);
+                });
+            }
 
             /**
             * Changes the color of a given element.

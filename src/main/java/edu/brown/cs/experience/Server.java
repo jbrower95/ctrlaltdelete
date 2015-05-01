@@ -91,6 +91,14 @@ public class Server {
     Spark.get("/:experience/editor", new EditorHandler(),
       new FreeMarkerEngine());
 
+    /* Maker Endpoints */
+    Spark.get("/:experience/scenes", new ListAllScenesHandler());
+    Spark.post("/:experience/:scene/edit", new SceneEditHandler());
+    Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
+    Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
+    Spark.post("/:experience", new AssetUploadHandler());
+    Spark.put("/:experience/newscene", new SceneTemplateHandler());
+
     Spark.get("/:experience/play", new PlayHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.get("/:experience/scores", new GetScoresHandler());
@@ -101,13 +109,7 @@ public class Server {
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
     
-    /* Maker Endpoints */
-    Spark.get("/:experience/scenes", new ListAllScenesHandler());
-    Spark.post("/:experience/:scene/edit", new SceneEditHandler());
-    Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
-    Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
-    Spark.post("/:experience", new AssetUploadHandler());
-    Spark.put("/:experience/newscene", new SceneTemplateHandler());
+
   }
   
   /**
