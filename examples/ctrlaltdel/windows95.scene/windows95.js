@@ -68,6 +68,8 @@ var exported_scene = {
 						this.exportedVariables.clippyAgent = agent;
 						resolve();
 				    }, this));
+			} else {
+				resolve();
 			}
 		}, this));
     },

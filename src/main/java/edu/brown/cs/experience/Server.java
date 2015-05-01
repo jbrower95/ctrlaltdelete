@@ -326,7 +326,7 @@ public class Server {
 
 		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
 
-		if (!Paths.exists(file.toPath())) {
+		if (!Files.exists(file.toPath())) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
