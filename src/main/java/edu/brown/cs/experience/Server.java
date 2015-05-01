@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -114,38 +116,54 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		// TODO Auto-generated method stub
-		
-		String experienceName = request.params("experience");
+		String experienceName = request.params(":experience");
 		senseChanges();
 		Experience experience = experiences.get(experienceName);
-		
-		
-		
-		
-		return null;
+		return GSON.toJson(experience.getScenes().stream().map(scene -> ImmutableMap.of("id",scene.getId())).collect(Collectors.toList()));
 	}
   }
   
   /**
    * Allows edits to a scenes content by simply uploading files and replacing the 
    * existing scene.
+   * 
+   * POST /:experience/:scene/edit
+   * 
    * @author Justin
    */
   public class SceneEditHandler implements Route {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		// TODO Auto-generated method stub
+		String experienceName = request.params(":experience");
+		String sceneName = request.params(":scene");
+		System.out.println("Handling file upload...");
+		System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
+		Path sceneDir = Paths.get(directory + "/" + experienceName + "/" + sceneName);
 		
-		String experienceName = request.params("experience");
-		senseChanges();
-		Experience experience = experiences.get(experienceName);
+		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(sceneDir.toAbsolutePath().toString());
+		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
 		
-		
-		return null;
+		try {
+			Part file = request.raw().getPart("file");
+			if (!Files.exists(sceneDir)) {
+				System.out.println("Scene didn't exist...: " + sceneDir.toString());
+				//create the directory for assets
+				response.status(404);
+				return ImmutableMap.of("success", "false", "error", "This scene doesn't exist!");
+			}
+			
+			System.out.println("Uploading file: " + getFileName(file));
+			file.write(getFileName(file));
+			
+		} catch (IOException | ServletException e) {
+			System.err.println("Failed to edit scene.");
+			e.printStackTrace();
+			return GSON.toJson(ImmutableMap.of("success", "false", "error", "An IO exception has occurred."));
+		} 
+		System.out.println("Sweet.");
+		return GSON.toJson(ImmutableMap.of("success", "true"));
 	}
-	  
   }
   
   /**
@@ -157,12 +175,19 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		// TODO Auto-generated method stub
+		String experienceName = request.params(":experience");
+		String sceneName = request.params(":scene");
+		senseChanges();
+		Experience experience = experiences.get(experienceName);
 		
-		String experienceName = request.params("experience");
+		Optional<Scene> scene = experience.getScenes().stream().filter(anyScene -> anyScene.getId().equals(sceneName)).findAny();
 		
-		
-		return null;
+		if (scene.isPresent()) {
+			return GSON.toJson(scene);
+		} else {
+			response.status(404);
+			return response;
+		}
 	}
 	  
   }

@@ -67,8 +67,6 @@ public class Experience {
       throw new IllegalArgumentException(
         "Error: Manifest does not have correct 'files' and 'mainFile' components.");
     }
-
-    
     
     name = root.get("name").getAsString();
     color = root.get("themeColor").getAsString();
