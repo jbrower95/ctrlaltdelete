@@ -1,5 +1,5 @@
 var exported_scene = {
-	id : "sample",
+	id : "$(id)",
 	onPresent : function() {
 		//TODO: perform scene initialization / do things
 	},
