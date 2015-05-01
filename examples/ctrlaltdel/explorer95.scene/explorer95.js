@@ -16,25 +16,24 @@ var exported_scene = {
 
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		var manager = this.exportedVariables.windowManager;
-		var explorer = manager.getWindowWithId("explorer");
-		console.log(explorer);
+		var explorer = manager.getWindowWithId("myComputer");
 		explorer.setEnabled(true);
 
 		AssetManager.getSharedInstance().preload(6);
 		AssetManager.getSharedInstance().preload(7);
 
 		var scareClippy = function() {
-		        clippyAgent.moveTo(500,300);
-			 	console.log("Playing sound 7");
-			 	clippyAgent.speak('What are you doing in here? Get out! GET OUT!');
-			 	AssetManager.getSharedInstance().play(7);
-			 	clippyAgent.play('Save');
-		    };
+	        clippyAgent.moveTo(500,300);
+		 	console.log("Playing sound 7");
+		 	clippyAgent.speak('What are you doing in here? Get out! GET OUT!');
+		 	AssetManager.getSharedInstance().play(7);
+		 	clippyAgent.play('Save');
+	    };
 		
 		var gabeThoughts = function() {
-				console.log("Playing sound 6");
-				AssetManager.getSharedInstance().play(6);
-			};
+			console.log("Playing sound 6");
+			AssetManager.getSharedInstance().play(6);
+		};
 		
 		SceneManager.performSequence([gabeThoughts], [1000]);
 
