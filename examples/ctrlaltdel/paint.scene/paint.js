@@ -34,7 +34,6 @@ var exported_scene = {
 		console.log(this.exportedVariables);
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		console.log(clippyAgent);
-		clippyAgent.moveTo(400, 50);
 
 		var paintWindow = manager.getWindowWithId("paint");
 		paintWindow.setEnabled(true);
@@ -248,9 +247,13 @@ var exported_scene = {
 		$(document).keydown(function(e) {
 			var code = e.keyCode || e.which;
 			if(code == 85) {
+				AssetManager.getSharedInstance().fadeOutNamed("paintparty");
    				SceneManager.getSharedInstance().presentScene("explorer95");
  			}
 		});
+
+		AssetManager.getSharedInstance().preloadNamed("sounds/paintparty.mp3", "paintparty");
+		AssetManager.getSharedInstance().playNamed("paintparty");
 
 		$(document).ready(function() {
 			game.state.add("Paint", paint);
