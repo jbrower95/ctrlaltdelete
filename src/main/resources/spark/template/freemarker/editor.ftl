@@ -687,6 +687,7 @@
                 var list = $(".list");
 
                 $.get("/" + id + "/scenes", function(responseJSON){
+                	list.empty();
                     var responseObject = JSON.parse(responseJSON);
                     for (o in responseObject) {
                         var scene = responseObject[o].id;
@@ -736,6 +737,7 @@
                         var scene = "New Scene";
 
                         fillFields(scene, id, js, html, css);
+                        listScenes();
                     }
                 });
             }
