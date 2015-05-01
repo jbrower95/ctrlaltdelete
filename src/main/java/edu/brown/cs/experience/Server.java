@@ -239,7 +239,7 @@ public class Server {
 				byte[] input = Files.readAllBytes(file.toPath());
 				
 				String result = new String(input, Charset.defaultCharset());
-				result.replace("$(id)", baseName);
+				result = result.replace("$(id)", baseName);
 				
 				byte[] outputData = result.getBytes();
 				outputStream.write(outputData, 0, outputData.length);
