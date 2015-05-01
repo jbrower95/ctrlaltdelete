@@ -491,7 +491,7 @@
                         <div class="left" id="scenejs">
                             
                         </div>
-                        <div class="right">
+                        <div class="right" onclick="javascript:toggleJs()">
                             +
                         </div>
                     </div>
@@ -506,7 +506,7 @@
                         <div class="left" id="scenehtml">
                             
                         </div>
-                        <div class="right">
+                        <div class="right" onclick="javascript:toggleHtml()">
                             +
                         </div>
                     </div>
@@ -521,7 +521,7 @@
                         <div class="left" id="scenecss">
                             
                         </div>
-                        <div class="right">
+                        <div class="right" onclick="javascript:toggleCss()">
                             +
                         </div>
                     </div>
@@ -604,6 +604,30 @@
     <script src="http://codemirror.net/addon/edit/closebrackets.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
     <script>
+    	
+    	//hide/show JS, CSS, and HTML.
+    	function toggleJs() {
+    		var editors = $(".editor-bar");
+    		console.log(editors);
+    		$(editors[0]).find(".CodeMirror").toggle({duration: 200});
+    	}
+    	
+    	function toggleHtml() {
+    		var editors = $(".editor-bar");
+    		console.log(editors);
+    		$(editors[1]).find(".CodeMirror").toggle({duration: 200});
+    	}
+    	
+    	function toggleCss() {
+    		var editors = $(".editor-bar");
+    		console.log(editors);
+    		$(editors[2]).find(".CodeMirror").toggle({duration: 200});
+    	}
+    	
+    	
+    
+    
+    
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
 
