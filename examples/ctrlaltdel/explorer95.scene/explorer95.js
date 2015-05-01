@@ -70,7 +70,9 @@ var exported_scene = {
 
 		var recycleClip1 = function() {
 			lockScreen(true);
-			setTimeout(function () {lockScreen(false);}, 14000);
+			setTimeout(function () {
+				lockScreen(false);
+			}, 14000);
 			clippyAgent.moveTo(400, 400);
 			clippyAgent.speak("I had a family that loved me. Everyone around me loved me. I was perfect!");
 			clippyAgent.speak("I was going to get a promotion. I was going to move somewhere. I was on to big things!");
@@ -80,7 +82,9 @@ var exported_scene = {
 		}
 		var recycleClip2 = function() {
 			lockScreen(true);
-			setTimeout(function () {lockScreen(false);}, 42000);
+			setTimeout(function () {
+				lockScreen(false);
+			}, 42000);
 			clippyAgent.moveTo(600, 200);
 			var line0 = function() {clippyAgent.speak("I had dreams... we were going to move out west... be together forever.");};
 			var line1 = function() {clippyAgent.speak("Then I got turned into a paperclip...");};
@@ -95,7 +99,9 @@ var exported_scene = {
 		}
 		var recycleClip3 = function() {
 			lockScreen(true);
-			setTimeout(function () {lockScreen(false);}, 28000);
+			setTimeout(function () {
+				lockScreen(false);
+			}, 28000);
 			clippyAgent.moveTo(550, 350);
 			var line0 = function() {clippyAgent.speak("We can take him down, you know. Together... I'll help you.");};
 			var line1 = function() {clippyAgent.speak("We just have to go through th-that link over there.");};
@@ -109,22 +115,28 @@ var exported_scene = {
 
 		var scareClippy = function() {
 			lockScreen(true);
-			setTimeout(function () {lockScreen(false);}, 4000);
+			setTimeout(function () {
+				lockScreen(false);
+			}, 4000);
 	        clippyAgent.moveTo(500,300);
 		 	console.log("Playing sound 7");
 		 	clippyAgent.speak('What are you doing in here? Get out! GET OUT!');
 		 	AssetManager.getSharedInstance().play(7);
 		 	clippyAgent.play('Save');
 	    };
-		
+
 		var gabeThoughts = function() {
 			lockScreen(true);
 			setTimeout(function () {lockScreen(false);}, 3500);
 			console.log("Playing sound 6");
 			AssetManager.getSharedInstance().play(6);
 		};
-		
-		SceneManager.performSequence([gabeThoughts], [1000]);
+
+		lockScreen(true);
+		setTimeout(function () {
+			lockScreen(false);
+		}, 8000);
+		SceneManager.performSequence([gabeThoughts], [6000]);
 
 		var hasClippyBeenScared = false;
 		$('#myComputerContent').hover(function() {
@@ -176,15 +188,18 @@ var exported_scene = {
 			$(".windowIcon").draggable({
 		      	stop: function(event, ui) {
 		        	if (collision($("#recycle"), ui.offset)) {
-		        		$(this).remove();
-		        		AssetManager.getSharedInstance().playNamed("recycle");
-		        		if (!$(this).hasClass("clippyFile")) {
+		        		if (!$(this).hasClass('clippyFile')) {
+		        			if (!$(this).hasClass('folder')) {
+		        				$(this.remove());
+		        			}
 		        			$("#desktop").prepend("<div class='bluescreen'></div>");
 		        			$(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
 		        			$(document).keydown(function(e) {
 		        				$(".bluescreen").remove();
 		        			});
 		        		} else {
+		        			AssetManager.getSharedInstance().playNamed("recycle");
+		        			$(this).remove();
 		        			recycleClippyFile();
 		        		}
 		        		$("#recycleIcon").attr('src', "images/full_recycle_bin.png");
@@ -209,6 +224,14 @@ var exported_scene = {
 				});
 				// add class ".selectedIcon" to this icon
 		    	$(this).addClass("selectedIcon");
+        		AssetManager.getSharedInstance().playNamed("recycle");
+        		if (!$(this).hasClass("clippyFile") && !$(this).attr('data-opens')) {
+        			$("#desktop").prepend("<div class='bluescreen'></div>");
+        			$(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
+        			$(document).keydown(function(e) {
+        				$(".bluescreen").remove();
+        			});
+        		}
 		    	if ($(this).hasClass("folder")) {
 		    		console.log("Opening a new folder.");
 		    		var nextFolder = $(this).attr("data-opens");
@@ -242,5 +265,5 @@ var exported_scene = {
 	getHTML : function() {
 		return null;
 	},
-	requires : "clickthexs"
+	requires : "paint"
 };

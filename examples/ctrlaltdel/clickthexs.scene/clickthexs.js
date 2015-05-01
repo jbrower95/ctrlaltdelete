@@ -2,19 +2,43 @@ var exported_scene = {
     id : "clickthexs",
 	onPresent : function() {
 		localStorage.ctrlaltdel_save = 'clickthexs';
-		var manager = this.exportedVariables.windowManager;
-		console.log("Printing exported variables: ");
-		if (!this.exportedVariables['windowManager']) {
-			console.error("Shit didn't transition properly.");
-		}
-		if (!this.exportedVariables['clippyAgent']) {
-			console.error("Async shit didn't transition properly.");
-		}
-		console.log(this.exportedVariables);
-		var clippyAgent = this.exportedVariables.clippyAgent;
-		console.log(clippyAgent);
+
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
+		AssetManager.getSharedInstance().preload(4);
+
+		if (!this.exportedVariables) {
+			console.error("[clickthexs.js] Did not receive any export variables.");
+		}
+
+		var manager = this.exportedVariables.windowManager;
+		var clippyAgent = this.exportedVariables.clippyAgent;
+
+		if (!manager) {
+			console.error("[clickthexs.js] Did not receive the window manager.");
+		}
+
+		if (!clippyAgent) {
+			console.error("[clickthexs.js] Did not receive the Clippy agent.");
+		}
+
+		var taskManager = manager.getWindowWithId("taskManager");
+		if (taskManager) {
+			taskManager.setXHandler(function() {
+				console.log("x-ing out");
+				$(this.element).remove();
+				manager.removeWindow(taskManager);
+				clippyAgent.speak("Muahahaha...");
+				AssetManager.getSharedInstance().play(4);
+				clippyAgent.moveTo(400, 50);
+				clippyAgent.play("GetArtsy");
+				setTimeout(function() {
+					SceneManager.getSharedInstance().presentScene("paint");
+				}, 2000);
+			});
+		} else {
+			console.error("[clickthexs.js] Did not receive the task manager window.");
+		}
 
 		var lockScreen = function(lock) {
 			if (lock == true) {
@@ -33,7 +57,7 @@ var exported_scene = {
 					 	AssetManager.getSharedInstance().play(1);
 				 	}
 			}, this);
-		
+
 		var clickTheX = function() {
 			if (clippyAgent) {
 				clippyAgent.speak("Your windows are frozen! Click the x's!");
@@ -41,7 +65,7 @@ var exported_scene = {
 			console.log("Playing sound 3");
 			AssetManager.getSharedInstance().play(3);
 		};
-		
+
 		lockScreen(true);
 		setTimeout(function () {lockScreen(false);}, 8000);
 		SceneManager.performSequence([showClippy, clickTheX], [300, 4000]);
