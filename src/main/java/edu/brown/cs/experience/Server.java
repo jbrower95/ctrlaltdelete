@@ -99,7 +99,72 @@ public class Server {
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
     
+    /* Maker Endpoints */
+    Spark.get("/:experience/scenes", new ListAllScenesHandler());
+    Spark.post("/:experience/:scene/edit", new SceneEditHandler());
+    Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
     Spark.post("/:experience", new AssetUploadHandler());
+  }
+  
+  /**
+   * Lists all of the scenes associated with an experience.
+   * @author Justin
+   */
+  public class ListAllScenesHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		// TODO Auto-generated method stub
+		
+		String experienceName = request.params("experience");
+		senseChanges();
+		Experience experience = experiences.get(experienceName);
+		
+		
+		
+		
+		return null;
+	}
+  }
+  
+  /**
+   * Allows edits to a scenes content by simply uploading files and replacing the 
+   * existing scene.
+   * @author Justin
+   */
+  public class SceneEditHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		// TODO Auto-generated method stub
+		
+		String experienceName = request.params("experience");
+		senseChanges();
+		Experience experience = experiences.get(experienceName);
+		
+		
+		return null;
+	}
+	  
+  }
+  
+  /**
+   * Should return detailed and updated information about a specific scene.
+   * @author Justin
+   *
+   */
+  public class SceneGetterHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		// TODO Auto-generated method stub
+		
+		String experienceName = request.params("experience");
+		
+		
+		return null;
+	}
+	  
   }
   
   /**
