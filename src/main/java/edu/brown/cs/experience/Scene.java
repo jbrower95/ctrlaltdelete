@@ -49,8 +49,8 @@ public class Scene {
 	 */
 	public Scene(File location) {
 		
-		System.out.println("Initializing scene: ");
-		System.out.println("Name: " + location.getName());
+		//System.out.println("Initializing scene: ");
+		//System.out.println("Name: " + location.getName());
 		String name = location.getName();
 		File[] files = location.listFiles();
 		try {

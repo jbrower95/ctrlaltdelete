@@ -122,7 +122,7 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		
+		System.out.println("DeleteExperienceHandler!");
 		String experienceName = request.params(":experience");
 		
 		if (experienceName == "ctrlaltdel") {
@@ -163,6 +163,7 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
+		System.out.println("ListAllScenesHandler!");
 		String experienceName = request.params(":experience");
 		senseChanges();
 		Experience experience = experiences.get(experienceName);
@@ -186,7 +187,7 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		
+		System.out.println("SceneTemplateHandler!");
 		String experience = request.params(":experience");
 		String expDirectory = directory + File.separator + experience;
 		
@@ -275,6 +276,7 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
+		System.out.println("DeleteSceneHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		Experience exp = experiences.getOrDefault(experienceName, null);
@@ -310,6 +312,7 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
+		System.out.println("SceneEditHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		System.out.println("Handling file upload...");
@@ -350,6 +353,7 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
+		System.out.println("SceneGetterHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		senseChanges();
@@ -448,10 +452,10 @@ public class Server {
 
           experiences.put(exp.getId(), exp);
 
-          System.out.println("[server] Binding directory for experience: "
+          /*System.out.println("[server] Binding directory for experience: "
             + experienceFile.getPath());
           System.out.println("Successfully loaded experience: "
-            + experienceFile.getName());
+            + experienceFile.getName());*/
         } catch (FileNotFoundException e) {
           System.err.println(experienceFile.getName()
             + " is missing its config file. It will be omitted.");

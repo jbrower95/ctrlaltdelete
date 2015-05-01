@@ -444,8 +444,8 @@
         </div>
 
         <div class="main">
-            <div id="sceneEdit">
-                <input type="text" class="title" name="sceneTitle" value="Scene1" />
+            <div id="sceneEdit" style="display: none;">
+                <input type="text" class="title" name="sceneTitle" value="" />
 
                 <div class="settings">
                     <span class="settings-title">Settings</span>
@@ -453,7 +453,7 @@
                     <div class="settings-bar">
                         <div class="bar-block label">Scene ID</div>
                         <div class="bar-block answers">
-                            <input type="text" name="sceneId" value="scene1"/>
+                            <input type="text" name="sceneId" value=""/>
                         </div>
                     </div>
 
@@ -511,7 +511,7 @@
                 </div>
             </div>
 
-            <div id="generalEdit" style="display: none;">
+            <div id="generalEdit">
                 <input type="text" class="title" name="experienceTitle" value="${title}" />
 
                 <textarea class="description" name="experienceDesc">${description}</textarea>
@@ -598,6 +598,9 @@
             showCheckedScore(highToLow);
             listScenes();
 
+            /**
+            * Change editing div from scene editor to general.
+            */
             $(".side-title").click(function() {
                 if (onScene) {
                     $("#sceneEdit").fadeOut();
@@ -663,6 +666,27 @@
                     $("textarea[name=js]").val(sceneJs);
                     $("textarea[name=html]").val(sceneHtml);
                     $("textarea[name=css]").val(sceneCss);
+                });
+            }
+
+            $("textarea[name=js]").change(function() {
+                if (onScene) {
+                    onSceneChange($("textarea[name=js]"), $("input[name=sceneId]").val());
+                }
+            });
+
+            function onSceneChange(editor, scene) {
+                /*$.post("/" + id + "/" + scene + "/edit", input, function(responseJSON){
+                    
+                });*/
+                var txt = new Blob([editor.val()], {type:'text/plain'});
+                $.ajax({
+                    type: "POST",
+                    url: "/" + id + "/" + scene + "/edit",
+                    data: { myText: txt },
+                    success: function(result) {
+                        console.log('Success : ' + result);
+                    }
                 });
             }
 
