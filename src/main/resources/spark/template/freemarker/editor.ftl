@@ -60,6 +60,7 @@
             float: left;
             padding-top: 2.5%;
             padding-bottom: 2.5%;
+            overflow: hidden;
             box-sizing: border-box;
             transition: background-color 0.2s;
         }
@@ -67,7 +68,8 @@
         .sidebar-title {
             color: white;
             font-family: 'Lato', sans-serif;
-            font-size: 1.5em;
+            font-size: 1.7em;
+            font-weight: 800;
         }
 
         .scene-list {
@@ -78,19 +80,38 @@
         }
 
         .left-bar {
+            position: relative;
             float: left;
             width: 15%;
-            height: auto;
+            height: 100%;
             padding-left: 1%;
             box-sizing: border-box;
         }
 
         .right-bar {
+            position: relative;
             float: right;
             width: 84%;
-            height: auto;
+            height: 100%;
             padding-right: 1%;
             box-sizing: border-box;
+        }
+
+        .list {
+            list-style: none;
+            position: relative;
+            width: 80%;
+            height: auto;
+            overflow-x: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .list li {
+            font-family: 'Lato', sans-serif;
+            color: white;
+            font-size: 1.2em;
+            margin-top: 10px;
         }
 
         .main {
@@ -168,6 +189,15 @@
             margin-top: 5%;
         }
 
+        .scene-settings {
+            position: relative;
+            width: 30%;
+            height: auto;
+            font-family: 'Merriweather', serif;
+            color: white;
+            margin-top: 2%;
+        }
+
         .settings-title {
             color: white;
             font-family: 'Lato', sans-serif;
@@ -203,6 +233,10 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .answers.scene {
+            width: 50%;
         }
 
         input[type=radio] {
@@ -334,6 +368,46 @@
         #asset-upload-field:hover {
             border-color: rgba(255,255,255,1);
         }
+
+        .editor-bar {
+            position: relative;
+            width: 100%;
+            height: auto;
+            margin-top: 50px;
+        }
+
+        .editor-head {
+            position: relative;
+            width: 100%;
+            height: 45px;
+            font-family: 'Lato', sans-serif;
+            color: white;
+            font-size: 1.2em;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .left {
+            float: left;
+            width: auto;
+            padding-left: 20px;
+        }
+
+        .right {
+            float: right;
+            width: auto;
+            padding-right: 20px;
+        }
+
+        .editor {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background-color: rgba(255,255,255,0.5);
+            box-sizing: border-box;
+            transition: height 0.2s;
+        }
     </style>
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
@@ -342,19 +416,14 @@
         <div class="sidebar c${color}" id="${color}">
             <div class="scene-list clearfix">
                 <div class="left-bar">
+                    <!--<img src="images/left.svg">-->
                 </div>
                 <div class="right-bar">
                     <span class="side-title">${title}</span>
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />
-                    a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />
+                    <ul class="list">
+                        <li>Main</li>
+                        <li>Scene 1</li>
+                    </ul>
                 </div>
             </div>
             
@@ -368,59 +437,101 @@
         </div>
 
         <div class="main">
-            <input type="text" class="title" name="experienceTitle" value="${title}" />
+            <div id="sceneEdit">
+                <input type="text" class="title" name="sceneTitle" value="Scene1" />
 
-            <textarea class="description" name="experienceDesc">${description}</textarea>
+                <div class="settings">
+                    <span class="settings-title">Settings</span>
 
-            <div class="settings">
-                <span class="settings-title">Settings</span>
+                    <div class="settings-bar">
+                        <div class="bar-block label">Scene ID</div>
+                        <div class="bar-block answers">
+                            <input type="text" name="sceneId" value="scene1"/>
+                        </div>
+                    </div>
 
-                <div class="settings-bar">
-                    <div class="bar-block label">ID (this is your path)</div>
-                    <div class="bar-block answers">
-                        <input type="text" name="id" value="${id}"/>
+                    <div class="settings-bar">
+                        <div class="bar-block label">Previous Scene</div>
+                        <div class="bar-block answers">
+                            <input type="text" name="sceneId" value=""/>
+                        </div>
                     </div>
                 </div>
 
-                <div class="settings-bar">
-                    <div class="bar-block label">Order Scores</div>
-                    <div class="bar-block answers">
-                        <form name="score" id="${highToLow}">
-                            <!-- Low to High Score Ranking -->
-                            <input type="radio" name="scoreRanking" id="low-to-high" value="low-to-high" checked>
-                            <label for="low-to-high" class="button c${color}">Low to High</label>
-                            <!-- High to Low Score Ranking -->
-                            <input type="radio" name="scoreRanking" id="high-to-low" value="high-to-low">
-                            <label for="high-to-low" class="button c${color}">High to Low</label>
-                        </form>
+                <div class="editor-bar">
+                    <div class="editor-head clearfix">
+                        <div class="left">
+                            scene1.js
+                        </div>
+                        <div class="right">
+                            +
+                        </div>
                     </div>
-                </div>
 
-                <div class="settings-bar">
-                    <div class="bar-block label">Theme Color</div>
-                    <div class="bar-block answers">
-                        <form name="colors">
-                            <input type="radio" name="themeColor" id="00bad6" value="00bad6" />
-                            <label for="00bad6" class="color"><div class="color-block c00bad6"></div></label>
-
-                            <input type="radio" name="themeColor" id="ef563d" value="ef563d" />
-                            <label for="ef563d" class="color"><div class="color-block cef563d"></div></label>
-
-                            <input type="radio" name="themeColor" id="ffaf00" value="ffaf00" />
-                            <label for="ffaf00" class="color"><div class="color-block cffaf00"></div></label>
-
-                            <input type="radio" name="themeColor" id="F5C70C" value="F5C70C" />
-                            <label for="F5C70C" class="color"><div class="color-block cF5C70C"></div></label>
-                        </form>
-                    </div>
+                    <pre class="prettyprint linenums">
+                    <textarea name="js" class="editor">
+                        
+                            function
+                        
+                    </textarea></pre>
                 </div>
             </div>
 
-            <div class="save-bar">
+            <div id="generalEdit" style="display: none;">
+                <input type="text" class="title" name="experienceTitle" value="${title}" />
 
-                <button class="save button">Save
-                <div class="save-info"></div>
-                </button>
+                <textarea class="description" name="experienceDesc">${description}</textarea>
+
+                <div class="settings">
+                    <span class="settings-title">Settings</span>
+
+                    <div class="settings-bar">
+                        <div class="bar-block label">ID (this is your path)</div>
+                        <div class="bar-block answers">
+                            <input type="text" name="id" value="${id}"/>
+                        </div>
+                    </div>
+
+                    <div class="settings-bar">
+                        <div class="bar-block label">Order Scores</div>
+                        <div class="bar-block answers">
+                            <form name="score" id="${highToLow}">
+                                <!-- Low to High Score Ranking -->
+                                <input type="radio" name="scoreRanking" id="low-to-high" value="low-to-high" checked>
+                                <label for="low-to-high" class="button c${color}">Low to High</label>
+                                <!-- High to Low Score Ranking -->
+                                <input type="radio" name="scoreRanking" id="high-to-low" value="high-to-low">
+                                <label for="high-to-low" class="button c${color}">High to Low</label>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="settings-bar">
+                        <div class="bar-block label">Theme Color</div>
+                        <div class="bar-block answers">
+                            <form name="colors">
+                                <input type="radio" name="themeColor" id="00bad6" value="00bad6" />
+                                <label for="00bad6" class="color"><div class="color-block c00bad6"></div></label>
+
+                                <input type="radio" name="themeColor" id="ef563d" value="ef563d" />
+                                <label for="ef563d" class="color"><div class="color-block cef563d"></div></label>
+
+                                <input type="radio" name="themeColor" id="ffaf00" value="ffaf00" />
+                                <label for="ffaf00" class="color"><div class="color-block cffaf00"></div></label>
+
+                                <input type="radio" name="themeColor" id="F5C70C" value="F5C70C" />
+                                <label for="F5C70C" class="color"><div class="color-block cF5C70C"></div></label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="save-bar">
+
+                    <button class="save button">Save
+                    <div class="save-info"></div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -428,6 +539,7 @@
     <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="lib/notify.min.js"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
     <script>
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
