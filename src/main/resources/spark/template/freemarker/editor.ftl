@@ -8,6 +8,10 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css'>
 
+    <!-- Stylesheets -->
+    <link href="http://codemirror.net/lib/codemirror.css" rel='stylesheet' type='text/css'>
+    <link href="http://codemirror.net/theme/monokai.css" rel='stylesheet' type='text/css'>
+
     <style>
         html {
             position: relative;
@@ -588,7 +592,16 @@
 
     <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="lib/notify.min.js"></script>
+    <script src="lib/js/notify.min.js"></script>
+    <!-- CodeMirror Script -->
+    <script src="http://codemirror.net/lib/codemirror.js"></script>
+    <script src="http://codemirror.net/mode/javascript/javascript.js"></script>
+    <script src="http://codemirror.net/mode/css/css.js"></script>
+    <script src="http://codemirror.net/mode/htmlembedded/htmlembedded.js"></script>
+    <script src="http://codemirror.net/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="http://codemirror.net/addon/selection/active-line.js"></script>
+    <script src="http://codemirror.net/addon/edit/matchbrackets.js"></script>
+    <script src="http://codemirror.net/addon/edit/closebrackets.js"></script>
     <script>
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
@@ -618,8 +631,32 @@
             } else {
                 $(".list").append("<li id='newScene'>+</li>");
             }
-            
 
+            CodeMirror.fromTextArea(document.getElementById("scenejs"), {
+                value: "",
+                mode: "js",
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                theme: "monokai"
+              });
+
+            /*CodeMirror.fromTextArea(document.getElementById("scenehtml"), {
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                theme: "monokai"
+              });
+
+            CodeMirror.fromTextArea(document.getElementById("scenecss"), {
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                theme: "monokai"
+              });*/
 
             /*function fillSelectOptions(scene) {
                 $("select").html("");
