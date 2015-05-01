@@ -90,14 +90,14 @@ var exported_scene = {
 		AssetManager.getSharedInstance().preload(3);
 
 		return new Promise($.proxy(function(resolve, reject) { 
-
-			clippy.load('Clippy', $.proxy(function(agent) {
-					console.log("Loaded clippy!");
-					console.log(this);
-					this.exportedVariables.clippyAgent = agent;
-					resolve();
-			    }, this));
-
+			if (!this.exportedVariables.clippyAgent) {
+				clippy.load('Clippy', $.proxy(function(agent) {
+						console.log("Loaded clippy!");
+						console.log(this);
+						this.exportedVariables.clippyAgent = agent;
+						resolve();
+				    }, this));
+			}
 		}, this));
     },
 	getHTML : function() {
