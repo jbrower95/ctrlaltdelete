@@ -1,6 +1,7 @@
 var exported_scene = {
     id : "clickthexs",
 	onPresent : function() {
+		console.log("Click the x's!");
 		var manager = this.exportedVariables.windowManager;
 		console.log("Printing exported variables: ");
 		if (!this.exportedVariables['windowManager']) {

@@ -235,7 +235,7 @@ SceneManager.prototype.presentScene = function(sceneID) {
     }
 
     this.resolvePhantomDependencies(sceneID, requiredScenes).then($.proxy(function() {
-
+        console.log("Done resolving dependencies!");
         //copy over variables
         jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
         scene.element = this.activeScene.element;
@@ -366,6 +366,7 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
               //recur with the new, reduced stack.
                 console.log("proceeding...");
                 manager.resolvePhantomDependencies(sceneName, sceneStack);
+                resolve();
               });
             }
           } 
