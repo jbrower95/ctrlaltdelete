@@ -613,7 +613,6 @@
 
             showCheckedColor(color);
             showCheckedScore(highToLow);
-            console.log(isNew);
             if (isNew === "false") {
                 listScenes();
             } else {
@@ -682,45 +681,52 @@
             * Uses a get request to give a list of
             * scenes, then appends them to the scene list
             * in the sidebar.
+            *
+            * Returns a promise to load the scenes
             */
             function listScenes() {
-                var list = $(".list");
-
-                $.get("/" + id + "/scenes", function(responseJSON){
-                	list.empty();
-                    var responseObject = JSON.parse(responseJSON);
-                    for (o in responseObject) {
-                        var scene = responseObject[o].id;
-                        scenes.push(scene);
-                        var s = "<li id=" + scene + ">" + scene + "</li>";
-                        list.append(s);
-                    }
-
-                    $(".list").append("<li id='newScene'>+</li>");
-
-                    // Pretty gross, but has to be done
-                    $("ul.list li").click(function() {
-                        if (!onScene) {
-                            onScene = true;
-                            $("#generalEdit").fadeOut();
-                            $("#sceneEdit").fadeIn();
-                        }
-
-                        $(".curr").removeClass("curr");
-                        $(this).addClass("curr");
-
-                        $(".inactive").removeClass("inactive");
-
-                        var scene = $(this).attr('id');
-
-                        if (scene === "newScene") {
-                            fillNewScene();
-                            return;
-                        }
-                        
-                        fillSceneInfo(scene);
-                    });
-                });
+            
+            	return new Promise(function(resolve, reject) {
+            
+	                var list = $(".list");
+	
+	                $.get("/" + id + "/scenes", function(responseJSON){
+	                	list.empty();
+	                    var responseObject = JSON.parse(responseJSON);
+	                    for (o in responseObject) {
+	                        var scene = responseObject[o].id;
+	                        scenes.push(scene);
+	                        var s = "<li id=" + scene + ">" + scene + "</li>";
+	                        list.append(s);
+	                    }
+	
+	                    $(".list").append("<li id='newScene'>+</li>");
+	
+	                    // Pretty gross, but has to be done
+	                    $("ul.list li").click(function() {
+	                        if (!onScene) {
+	                            onScene = true;
+	                            $("#generalEdit").fadeOut();
+	                            $("#sceneEdit").fadeIn();
+	                        }
+	
+	                        $(".curr").removeClass("curr");
+	                        $(this).addClass("curr");
+	
+	                        $(".inactive").removeClass("inactive");
+	
+	                        var scene = $(this).attr('id');
+	
+	                        if (scene === "newScene") {
+	                            fillNewScene();
+	                        }
+	                        
+	                        fillSceneInfo(scene);
+	                        
+	                        resolve();
+	                    });
+	                });
+	        	});
             }
 
             function fillNewScene() {
@@ -736,11 +742,12 @@
                         var scene = "New Scene";
 
                         fillFields(scene, id, js, html, css);
-                        listScenes();
-                        console.log(id);
-                        console.log(document.getElementById(id));
-                        $(".curr").removeClass("curr");
-                        $("li#" + id).addClass("curr");
+                        listScenes().then(function() {
+                        	console.log(id);
+                        	console.log(document.getElementById(id));
+                        	$(".curr").removeClass("curr");
+                        	$("li#" + id).addClass("curr");
+                        });
                     }
                 });
             }
