@@ -23,6 +23,7 @@ var exported_scene = {
 
 		var paint = manager.getWindowWithId("paint");
 		if (paint) {
+			paint.setCancellable(true);
 			paint.setXHandler(function() {
 				$(this.element).remove();
 				manager.removeWindow(paint);
