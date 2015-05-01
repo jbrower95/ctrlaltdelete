@@ -496,7 +496,7 @@
                         </div>
                     </div>
 
-                    <textarea name="js" class="editor">
+                    <textarea name="js" class="editor" id="js">
                     </textarea>
                 </div>
 
@@ -511,7 +511,7 @@
                         </div>
                     </div>
 
-                    <textarea name="html" class="editor">
+                    <textarea name="html" class="editor" id="html">
                     </textarea>
                 </div>
 
@@ -526,7 +526,7 @@
                         </div>
                     </div>
 
-                    <textarea name="css" class="editor">
+                    <textarea name="css" class="editor" id="css">
                     </textarea>
                 </div>
             </div>
@@ -597,7 +597,7 @@
     <script src="http://codemirror.net/lib/codemirror.js"></script>
     <script src="http://codemirror.net/mode/javascript/javascript.js"></script>
     <script src="http://codemirror.net/mode/css/css.js"></script>
-    <script src="http://codemirror.net/mode/htmlembedded/htmlembedded.js"></script>
+    <script src="https://codemirror.net/mode/xml/xml.js"></script>
     <script src="http://codemirror.net/mode/htmlmixed/htmlmixed.js"></script>
     <script src="http://codemirror.net/addon/selection/active-line.js"></script>
     <script src="http://codemirror.net/addon/edit/matchbrackets.js"></script>
@@ -605,6 +605,34 @@
     <script>
         $(document).ready(function() {
             var isNew = $(".container").attr('id');
+
+            /* Editors */
+            var cmJs = CodeMirror.fromTextArea(document.getElementById("js"), {
+                mode: "javascript",
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                theme: "monokai"
+              });
+
+            var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
+                mode: "htmlmixed",
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                theme: "monokai"
+              });
+
+            var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
+                mode: "css",
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                theme: "monokai"
+              });
 
             /* Globals */
             var scenes = [];
@@ -632,31 +660,7 @@
                 $(".list").append("<li id='newScene'>+</li>");
             }
 
-            CodeMirror.fromTextArea(document.getElementById("scenejs"), {
-                value: "",
-                mode: "js",
-                lineNumbers: true,
-                styleActiveLine: true,
-                matchBrackets: true,
-                autoCloseBrackets: true,
-                theme: "monokai"
-              });
-
-            /*CodeMirror.fromTextArea(document.getElementById("scenehtml"), {
-                lineNumbers: true,
-                styleActiveLine: true,
-                matchBrackets: true,
-                autoCloseBrackets: true,
-                theme: "monokai"
-              });
-
-            CodeMirror.fromTextArea(document.getElementById("scenecss"), {
-                lineNumbers: true,
-                styleActiveLine: true,
-                matchBrackets: true,
-                autoCloseBrackets: true,
-                theme: "monokai"
-              });*/
+            
 
             /*function fillSelectOptions(scene) {
                 $("select").html("");
@@ -826,17 +830,8 @@
                     var sceneHtml = responseObject.value.html;
                     var sceneCss = responseObject.value.css;
 
-                    $("input[name=sceneTitle]").val(scene);
-                    $("input[name=sceneId]").val(sceneId);
-
-                    $("#scenejs").html(sceneId + ".js");
-                    $("#scenehtml").html(sceneId + ".html");
-                    $("#scenecss").html(sceneId + ".css");
-
-                    $("textarea[name=js]").val(sceneJs);
-                    $("textarea[name=html]").val(sceneHtml);
-                    $("textarea[name=css]").val(sceneCss);
-
+                    
+                    fillFields(scene, sceneId, sceneJs, sceneHtml, sceneCss);
                    // fillSelectOptions(scene);
                 });
             }
@@ -849,9 +844,21 @@
                 $("#scenehtml").html(sceneId + ".html");
                 $("#scenecss").html(sceneId + ".css");
 
-                $("textarea[name=js]").val(sceneJs);
-                $("textarea[name=html]").val(sceneHtml);
-                $("textarea[name=css]").val(sceneCss);
+                if (sceneJs === undefined || sceneJs === "") {
+                    sceneJs = "\t";
+                }
+
+                if (sceneHtml === undefined || sceneHtml === "") {
+                    sceneHtml = "\t";
+                }
+
+                if (sceneCss === undefined || sceneCss === "") {
+                    sceneCss = "\t";
+                }
+
+                cmJs.setValue(sceneJs);
+                cmHtml.setValue(sceneHtml);
+                cmCss.setValue(sceneCss);
             }
 
             $("textarea[name=js]").change(function() {
