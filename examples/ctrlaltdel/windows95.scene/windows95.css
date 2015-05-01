@@ -101,6 +101,10 @@ body {
 	font-family: "Microsoft Sans Serif", "MS Sans Serif", Arial, sans-serif;
 }
 
+.selectedIcon {
+	border: 1px dashed black;
+}
+
 #myComputer {
 	position: relative;
 	width: auto;
