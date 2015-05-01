@@ -17,7 +17,6 @@
 */
 function WindowManager(content_div_id) {
 	console.log("[windowmanager.js] Getting content div: " + content_div_id);
-	this.idCount = 0;
 	var existing_div = document.getElementById(content_div_id);
 
 	if (existing_div === null) {
@@ -51,7 +50,7 @@ WindowManager.prototype.addWindow = function(window_obj) {
 	$(window_obj.element).removeClass("hidden");
 
 	// Add to windows hashtable
-	this.windows[window_obj.winId] = window_obj.element;
+	this.windows[window_obj.winId] = window_obj;
 }
 
 /**
@@ -73,7 +72,8 @@ WindowManager.prototype.removeWindow = function(window_obj) {
 */
 WindowManager.prototype.getWindowWithId = function(window_id) {
 	// Check if windowId exists in the hashtable
-	if (!(windowId in this.windows)) {
+	console.log(this.windows);
+	if (!(window_id in this.windows)) {
 		console.error("[windowmanager.js] Window ID doesn't exist in the manager.");
 	} else {
 		return this.windows[window_id];
@@ -114,7 +114,7 @@ WindowManager.prototype.inflate = function(template) {
 
 	// Default position of (0,0)
 	var win = new Window(copy, 0, 0, draggable);
-	win.setId(this.idCount);
+	win.setId(template);
 	win.setXHandler($.proxy(this.removeWindow, this));
 
 	return win;

@@ -16,6 +16,9 @@ var exported_scene = {
 
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		var manager = this.exportedVariables.windowManager;
+		var explorer = manager.getWindowWithId("explorer");
+		console.log(explorer);
+		explorer.setEnabled(true);
 
 		AssetManager.getSharedInstance().preload(6);
 		AssetManager.getSharedInstance().preload(7);
@@ -25,7 +28,7 @@ var exported_scene = {
 			 	console.log("Playing sound 7");
 			 	clippyAgent.speak('What are you doing in here? Get out! GET OUT!');
 			 	AssetManager.getSharedInstance().play(7);
-			 	clippyAgent.animate();
+			 	clippyAgent.play('Save');
 		    };
 		
 		var gabeThoughts = function() {

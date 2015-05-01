@@ -24,7 +24,7 @@ var exported_scene = {
 					 	clippyAgent.speak("Looks like you're stuck inside the computer!");
 					 	AssetManager.getSharedInstance().play(1);
 				 	}
-		}, this);
+			}, this);
 		
 		var clickTheX = function() {
 			if (clippyAgent) {
