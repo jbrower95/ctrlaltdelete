@@ -17,6 +17,7 @@ var exported_scene = {
 			game.load.image('window', 'phaser.scene/windows.png');
 			game.load.image('clippy', 'phaser.scene/pixel-clippy.png');
 			game.load.image('spike', 'phaser.scene/spike.png');
+			game.load.image('spikeTop', 'phaser.scene/spike-top.png');
 			game.load.spritesheet('gebu', 'phaser.scene/gebusheet.png',71, 79);
 			game.load.tilemap('map', 'phaser.scene/paint.json', null, Phaser.Tilemap.TILED_JSON);
 		}
@@ -67,13 +68,19 @@ var exported_scene = {
 			blueBlocks.enableBody = true;
 
 			var b = blueBlocks.create(450, 0, 'bigBlueBlock');
+			b.body.gravity.y = 500;
 			b = blueBlocks.create(1300, 0, 'bigBlueBlock');
+			b.body.gravity.y = 500;
+			b = blueBlocks.create(1840, 800, 'bigBlueBlock');
+			b.body.gravity.y = 500;
+			b = blueBlocks.create(2140, 1090, 'bigBlueBlock');
 			b.body.gravity.y = 500;
 
 			// Spikes
 			spikes = game.add.group();
 			spikes.enableBody = true;
 			var s;
+			s = spikes.create(0, 420, 'spike');
 			for (var i = 0; i <= 10; i++) {
 				s = spikes.create(1640 + i*20, 760, 'spike');
 			}
@@ -92,12 +99,26 @@ var exported_scene = {
 			for (i = 0; i <= 4; i++) {
 				s = spikes.create(1640 + i*20, 1380, 'spike');
 			}
-			for (i = 0; i <= 2; i++) {
+			for (i = 0; i <= 3; i++) {
 				s = spikes.create(1920 + i*20, 1380, 'spike');
+			}
+			for (i = 0; i <= 13; i++) {
+				s = spikes.create(280 + i*20, 920, 'spikeTop');
+			}
+			for (i = 0; i <= 8; i++) {
+				s = spikes.create(600 + i*20, 920, 'spikeTop');
+			}
+
+			// Ladder
+			ladder = game.add.group();
+			ladder.enableBody = true;
+			var l;
+			for (i = 0; i <= 43; i++) {
+				l = ladder.create(2300, i*20, 'ladderBlock');
 			}
 
 			// Player
-			player = game.add.sprite(1920, 1300, 'gebu');//150, 50, 'gebu');
+			player = game.add.sprite(150, 300, 'gebu');
 			game.physics.arcade.enable(player);
 			player.body.bounce.y = 0.2;
 			player.body.gravity.y = 300;
@@ -128,7 +149,7 @@ var exported_scene = {
 		}
 
 		function killPlayer(player, thing) {
-			//player.kill();
+			player.kill();
 			// NEEDS TO RESTART
 		}
 
@@ -138,6 +159,7 @@ var exported_scene = {
 			game.physics.arcade.collide(blueBlocks, base);
 			game.physics.arcade.collide(clippy, base);
 			game.physics.arcade.collide(clippy, blueBlocks);
+			game.physics.arcade.collide(blueBlocks, blueBlocks);
 
 			game.physics.arcade.overlap(player, spikes, killPlayer, null, this);
 			game.physics.arcade.overlap(windows, base, killWindow, null, this);
