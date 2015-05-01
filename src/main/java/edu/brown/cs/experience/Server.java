@@ -21,6 +21,7 @@ import javax.servlet.http.Part;
 
 import org.eclipse.jetty.io.EofException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -98,7 +99,7 @@ public class Server {
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
     
-    Spark.put("/:experience/:asset", new AssetUploadHandler());
+    Spark.post("/:experience", new AssetUploadHandler());
   }
   
   public class AssetUploadHandler implements Route {
@@ -106,29 +107,65 @@ public class Server {
 	@Override
 	public Object handle(Request request, Response response) {
 		
-		MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
+		System.out.println("Handling file upload...");
+		
+		 System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
+		String experienceName = request.params(":experience");
+		Path assetsDir = Paths.get(directory + "/" + experienceName + "/assets");
+		
+		
+		
+		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(assetsDir.toAbsolutePath().toString());
 		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
-		   
-		String assetName = request.queryMap().value("experience");
-		String experienceName = request.queryMap().value("asset");
-		Path assetsDir = Paths.get(experienceName + "/assets");
+		
+		
 		try {
-			Part file = request.raw().getPart("asset");
-			
+			Part file = request.raw().getPart("file");
 			if (!Files.exists(assetsDir)) {
+				System.out.println("Creating assets directory...: " + assetsDir.toString());
 				//create the directory for assets
-				new File(assetsDir.toString()).mkdir();
+				Files.createDirectories(assetsDir);
 			}
 			
-			file.write(experienceName + "/assets/" + assetName);
+			File outputFile = new File(experienceName + "/assets/" + getFileName(file));
+			System.out.println("Uploading file: " + getFileName(file));
+			//IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(outputFile));
+			file.write(getFileName(file));
+			
 		} catch (IOException | ServletException e) {
+			System.err.println("Failed.");
 			e.printStackTrace();
 			return GSON.toJson(ImmutableMap.of("success", "false"));
 		} 
-		
+		System.out.println("Sweet.");
 		return GSON.toJson(ImmutableMap.of("success", "true"));
 	}
   }
+  
+  
+  /**
+   * This has been proposed to be part of the javax.servlet.http.Part spec,
+   * but they never added it. This simply gets the filename of a part.
+   * 
+   * (source: https://java.net/jira/browse/SERVLET_SPEC-57)
+   * 
+   * @param filePart The part object
+   * @return The filename associated with the part.
+   */
+  public static String getFileName(Part filePart)
+  {
+      String header = filePart.getHeader("content-disposition");
+      for(String headerPart : header.split(";"))
+      {
+          if(headerPart.trim().startsWith("filename"))
+          {
+              return headerPart.substring(headerPart.indexOf('=') + 1).trim()
+                               .replace("\"", "");
+          }
+      }
+      return null;
+  }
+  
 
   public void senseChanges() {
     System.out.println("[server] Binding file directory: " + directory);

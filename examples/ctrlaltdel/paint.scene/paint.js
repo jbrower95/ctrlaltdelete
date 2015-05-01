@@ -1,6 +1,20 @@
 var exported_scene = {
-    id : "phaser",
+    id : "paint",
 	onPresent : function() {
+		console.log("Paint!");
+		var manager = this.exportedVariables.windowManager;
+		console.log("Printing exported variables: ");
+		if (!this.exportedVariables['windowManager']) {
+			console.error("Shit didn't transition properly.");
+		}
+		if (!this.exportedVariables['clippyAgent']) {
+			console.error("Async shit didn't transition properly.");
+		}
+		console.log(this.exportedVariables);
+		var clippyAgent = this.exportedVariables.clippyAgent;
+		console.log(clippyAgent);
+		AssetManager.getSharedInstance().preload(1);
+		AssetManager.getSharedInstance().preload(3);
 
 		var game = new Phaser.Game(618, 411, Phaser.AUTO, 'holder');
 
@@ -17,22 +31,20 @@ var exported_scene = {
 			this.firingTimer = 0;
 			this.clippy;
 			this.spikes;
-		}
-
-		
+		}		
 
 		paint.prototype = {
 			preload : function() {
-				game.load.image('redBlock', 'phaser.scene/small-red-block.png');
-				game.load.image('blueBlock', 'phaser.scene/small-blue-block.png');
-				game.load.image('bigBlueBlock', 'phaser.scene/blue-block.png');
-				game.load.image('ladderBlock', 'phaser.scene/ladder-block.png');
-				game.load.image('window', 'phaser.scene/windows.png');
-				game.load.image('clippy', 'phaser.scene/pixel-clippy.png');
-				game.load.image('spike', 'phaser.scene/spike.png');
-				game.load.image('spikeTop', 'phaser.scene/spike-top.png');
-				game.load.spritesheet('gebu', 'phaser.scene/gebusheet.png',71, 79);
-				game.load.tilemap('map', 'phaser.scene/paint.json', null, Phaser.Tilemap.TILED_JSON);
+				game.load.image('redBlock', 'paint.scene/small-red-block.png');
+				game.load.image('blueBlock', 'paint.scene/small-blue-block.png');
+				game.load.image('bigBlueBlock', 'paint.scene/blue-block.png');
+				game.load.image('ladderBlock', 'paint.scene/ladder-block.png');
+				game.load.image('window', 'paint.scene/windows.png');
+				game.load.image('clippy', 'paint.scene/pixel-clippy.png');
+				game.load.image('spike', 'paint.scene/spike.png');
+				game.load.image('spikeTop', 'paint.scene/spike-top.png');
+				game.load.spritesheet('gebu', 'paint.scene/gebusheet.png',71, 79);
+				game.load.tilemap('map', 'paint.scene/paint.json', null, Phaser.Tilemap.TILED_JSON);
 			},
 			create : function() {
 				game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -206,24 +218,15 @@ var exported_scene = {
 		}
 
 		$(document).ready(function(){
-			var wm = new WindowManager("container");
-			var win = wm.inflate("windowTemplate");
-			wm.addWindow(win);
+			var win = manager.inflate("paint");
+			manager.addWindow(win);
 			
 			game.state.add("Paint",paint);
 			game.state.start("Paint");
 		});
 	},
-	onDestroy: function() {
-	},
 	getHTML : function() {
-		return "phaser.scene/game.html"
-	}
+		return null;
+	},
+	requires : "windows95"
 };
-
-
-
-
-
-
-

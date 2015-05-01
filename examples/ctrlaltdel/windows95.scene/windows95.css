@@ -178,6 +178,14 @@ body {
 	pointer-events: none;
 }
 
+.holder {
+	position: absolute;
+	width: 618px;
+	height: 411px;
+	top: 45px;
+	left: 62px;
+}
+
 .bluescreen {
 	position: absolute;
 	top: 0;
@@ -195,4 +203,3 @@ body {
 	margin: auto;
 	z-index: 100001;
 }
-

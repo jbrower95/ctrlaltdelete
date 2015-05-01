@@ -17,5 +17,6 @@ Scene.load("windows95.scene/windows95.js");
 Scene.load("explorer95.scene/explorer95.js");
 Scene.load("gabeshouse.scene/gabeshouse.js");
 Scene.load("clickthexs.scene/clickthexs.js");
+Scene.load("paint.scene/paint.js");
 
 
