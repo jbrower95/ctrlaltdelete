@@ -105,7 +105,9 @@ public class Server {
     Spark.get("/:experience/scenes", new ListAllScenesHandler());
     Spark.post("/:experience/:scene/edit", new SceneEditHandler());
     Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
+    Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
     Spark.post("/:experience", new AssetUploadHandler());
+    Spark.put("/:experience/newscene", new SceneTemplateHandler());
   }
   
   /**
@@ -120,6 +122,57 @@ public class Server {
 		senseChanges();
 		Experience experience = experiences.get(experienceName);
 		return GSON.toJson(experience.getScenes().stream().map(scene -> ImmutableMap.of("id",scene.getId())).collect(Collectors.toList()));
+	}
+  }
+  
+  /**
+   * SceneTemplateHandler is responsible for copying in the template files for a new scene, as well as determining a name for a new scene.
+   * @author Justin
+   *
+   */
+  public class SceneTemplateHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	  
+	 
+	  
+  }
+  
+  /**
+   * Deletes a scene.
+   * 
+   * DELETE /:experience/:scene/edit
+   * 
+   * @author Justin
+   */
+  public class DeleteSceneHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		String experienceName = request.params(":experience");
+		String sceneName = request.params(":scene");
+		Experience exp = experiences.getOrDefault(experienceName, null);
+		
+		if (exp == null) {
+			response.status(404);
+			return ImmutableMap.of("success", "false", "error", "Unknown experience!");
+		}
+		
+		try {
+			FileUtils.deleteDirectory(new File(directory + "/" + experienceName + "/" + sceneName));
+			senseChanges();
+			return ImmutableMap.of("success", "true");
+		} catch (IOException e) {
+			e.printStackTrace();
+			response.status(404);
+			//TODO: update status code to real status code for this operation failing
+			return ImmutableMap.of("success", "false", "error", "Deletion failed!");
+		}
+		
 	}
   }
   
