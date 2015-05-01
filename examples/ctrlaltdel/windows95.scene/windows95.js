@@ -89,8 +89,21 @@ var exported_scene = {
 		        }
 		    });
 		    $(".windowIcon").dblclick(function(e) {
+		    	// remove class ".selectedIcon" from all other icons
+				$(".selectedIcon").map(function() {
+			   		$(this).removeClass("selectedIcon");
+				});
+				// add class ".selectedIcon" to this icon
+		    	$(this).addClass("selectedIcon");
 		    	if ($(this).hasClass("folder")) {
 		    		console.log("should open a new folder!");
+		    		var nextFolder = $(this).attr("data-opens");
+		    		var nextFolder = manager.inflate(nextFolder);
+					nextFolder.setTitle("Explorer");
+					nextFolder.setIcon("images/open_folder.png");
+					nextFolder.setActive(true);
+					nextFolder.moveTo(140, 80);
+					manager.addWindow(nextFolder);
 		    	}
 		    });
 		    $(".drop").droppable();
