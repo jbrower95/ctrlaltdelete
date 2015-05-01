@@ -245,6 +245,13 @@ var exported_scene = {
 			}
 		}
 
+		$(document).keydown(function(e) {
+			var code = e.keyCode || e.which;
+			if(code == 85) {
+   				SceneManager.getSharedInstance().presentScene("explorer95");
+ 			}
+		});
+
 		$(document).ready(function() {
 			game.state.add("Paint", paint);
 			game.state.start("Paint");
