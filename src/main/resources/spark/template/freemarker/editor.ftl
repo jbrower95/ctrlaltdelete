@@ -728,7 +728,6 @@
                     type: "PUT",
                     url: "/" + id + "/newscene",
                     success: function(result) {
-                        console.log('Success : ' + result);
                         result = JSON.parse(result);
                         var id = result.scene.id;
                         var js = result.scene.js;
@@ -738,6 +737,10 @@
 
                         fillFields(scene, id, js, html, css);
                         listScenes();
+                        console.log(id);
+                        console.log(document.getElementById(id));
+                        $(".curr").removeClass("curr");
+                        $("li#" + id).addClass("curr");
                     }
                 });
             }
