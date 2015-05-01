@@ -98,6 +98,7 @@ public class Server {
     Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
     Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
     Spark.post("/:experience", new AssetUploadHandler());
+    Spark.delete("/:experience", new DeleteExperienceHandler());
     Spark.put("/:experience/newscene", new SceneTemplateHandler());
 
     Spark.get("/:experience/play", new PlayHandler());
@@ -112,6 +113,47 @@ public class Server {
     
 
   }
+  
+  /**
+   * Deletes an experience. Does this by removing the directory and then sensing changes.
+   * @author Justin
+   */
+  public class DeleteExperienceHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		
+		String experienceName = request.params(":experience");
+		
+		if (experienceName == "ctrlaltdel") {
+			System.err.println("Don't delete this, you idiot.");
+			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Protected resource."));
+		}
+		
+		Path expPath = Paths.get(directory + "/" + experienceName);
+		
+		try {
+			FileUtils.deleteDirectory(new File(expPath.toAbsolutePath().toString()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.status(404);
+			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Couldn't delete experience!"));
+		}
+		
+		int numExperiences = experiences.size();
+		
+		senseChanges();
+		
+		assert (experiences.size() < numExperiences);
+		
+		return GSON.toJson(ImmutableMap.of("success", "true"));
+	}
+	  
+	  
+	  
+  }
+  
   
   /**
    * Lists all of the scenes associated with an experience.
@@ -217,7 +259,7 @@ public class Server {
 		if (createdScene.isPresent()) {
 			return GSON.toJson(ImmutableMap.of("success", "true", "scene", createdScene.get()));
 		} else {
-			return ImmutableMap.of("success", "false", "error", "Couldn't create scene!");
+			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Couldn't create scene!"));
 		}
 	}
   }
@@ -239,18 +281,18 @@ public class Server {
 		
 		if (exp == null) {
 			response.status(404);
-			return ImmutableMap.of("success", "false", "error", "Unknown experience!");
+			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Unknown experience!"));
 		}
 		
 		try {
 			FileUtils.deleteDirectory(new File(directory + "/" + experienceName + "/" + sceneName));
 			senseChanges();
-			return ImmutableMap.of("success", "true");
+			return GSON.toJson(ImmutableMap.of("success", "true"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			response.status(404);
 			//TODO: update status code to real status code for this operation failing
-			return ImmutableMap.of("success", "false", "error", "Deletion failed!");
+			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Deletion failed!"));
 		}
 		
 	}
@@ -319,7 +361,7 @@ public class Server {
 			return GSON.toJson(scene);
 		} else {
 			response.status(404);
-			return response;
+			return GSON.toJson(response);
 		}
 	}
 	  
