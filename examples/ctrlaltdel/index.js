@@ -7,8 +7,12 @@ window.onbeforeunload = function() {
     return "You're about to lose your progress. Don't leave!";
 }
 
+function startGame() {
+    SceneManager.getSharedInstance().presentScene("copyright");
+}
+
 SceneManager.initialize("content");
-Scene.load("copyright.scene/copyright.js", startGame);
+Scene.load("copyright.scene/copyright.js").then(startGame);
 Scene.load("scores.scene/scores.js");
 Scene.load("credits.scene/credits.js");
 Scene.load("mainmenu.scene/mainMenu.js");
@@ -19,6 +23,3 @@ Scene.load("gabeshouse.scene/gabeshouse.js");
 Scene.load("clickthexs.scene/clickthexs.js");
 
 
-function startGame() {
-    SceneManager.getSharedInstance().presentScene("copyright");
-}
