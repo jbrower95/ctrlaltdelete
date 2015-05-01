@@ -294,7 +294,6 @@ public class Server {
 			//TODO: update status code to real status code for this operation failing
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Deletion failed!"));
 		}
-		
 	}
   }
   
