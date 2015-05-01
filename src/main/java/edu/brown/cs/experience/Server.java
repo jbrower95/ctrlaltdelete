@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Part;
 
 import org.eclipse.jetty.io.EofException;
@@ -111,8 +113,8 @@ public class Server {
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
+  
     
-
   }
   
   /**
@@ -735,22 +737,20 @@ public class Server {
           response.header("Content-Disposition",
             String.format("attachment; filename=\"%s\"", asset));
           response.header("Connection", "close");
-          response.raw().setContentLength(contents.length);
+          response.raw().setContentLength(contents.length+1);
 
           final OutputStream os = response.raw().getOutputStream();
 
+          ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
           try {
-            for (byte b : contents) {
-              os.write(b);
-            }
+        	  servletoutputstream.write(contents); // this throws EofException
           } catch (EofException e) {
-            System.err.println("[server/write] EOF exception.");
+        	  System.err.println("Client closed connection early.");
+          } finally {
+        	  servletoutputstream.flush();
           }
 
-          in.close();
-          os.close();
-
-          return null;
+          return GSON.toJson(ImmutableMap.of("success", "true"));
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -873,7 +873,7 @@ public class Server {
           final FileInputStream in = new FileInputStream(path);
           Response response = res;
           byte[] contents = Files.readAllBytes(Paths.get(path));
-          System.out.println("Serving asset: " + asset);
+          System.out.println("Serving asset (SceneContentHandler): " + asset);
           response.header("Content-Disposition",
             String.format("attachment; filename=\"%s\"", asset));
           response.header("Connection", "close");
@@ -881,14 +881,22 @@ public class Server {
 
           final OutputStream os = response.raw().getOutputStream();
 
-          for (byte b : contents) {
-            os.write(b);
+          ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
+          try {
+        	  servletoutputstream.write(contents); // this throws EofException
+          } catch (EofException e) {
+        	  System.err.println("Client closed connection early.");
+          } finally {
+        	  servletoutputstream.flush();
+        	  in.close();
+        	  os.close();
           }
+          
 
-          in.close();
-          os.close();
+          //in.close();
+          //os.close();
 
-          return null;
+          return GSON.toJson(ImmutableMap.of("success", "true"));
         }
       } catch (Exception e) {
         e.printStackTrace();
