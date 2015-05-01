@@ -127,6 +127,11 @@ public class Server {
   
   /**
    * SceneTemplateHandler is responsible for copying in the template files for a new scene, as well as determining a name for a new scene.
+   * 
+   * PUT /:experience/newscene
+   * 
+   * returns: the scene object that was created.
+   * 
    * @author Justin
    *
    */
