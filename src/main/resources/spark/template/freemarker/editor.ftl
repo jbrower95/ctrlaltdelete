@@ -307,12 +307,14 @@
         
         #asset-upload-field {
         background-color: #ffffff;
-        border-radius: 15px;
-        border: 2px dotted solid black;
+        border: 4px dashed gray;
         height: 200px;
         width: 80%;
+        float: bottom;
         }
     </style>
+    <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+    <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
 <body>
     <div class="container" id="${isNew}">
