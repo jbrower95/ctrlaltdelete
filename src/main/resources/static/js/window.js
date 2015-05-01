@@ -29,9 +29,9 @@ function Window(element, x, y, draggable) {
 	this.cancellable = true;
 
 	// Windows x-handler, to be called on close
-	this.xOut = function(w) {
+	this.xOut = function() {
 		console.log("x-ing out");
-		$(this.element).remove();
+		var rm = $(this.element).remove();
 	};
 
 	// Make sure to initialize with the window class
@@ -46,7 +46,10 @@ function Window(element, x, y, draggable) {
 				        + '<div class="close right button"><img src="images/close.png"></div>'
 				        + '<div class="right button"><img src="images/maximize.png"></div>'
 				        + '<div class="right button"><img src="images/minimize.png"></div></div>';
-		$(this.element).prepend(dragDiv);
+		// this next check is quite janky and might be the result of poor design
+		if ($(this.element).find(".dragbar").attr('class') == null) {
+			$(this.element).prepend(dragDiv);
+		}
 
 		// Dragging
 		this.mouse_offset_x = 0;
@@ -128,8 +131,10 @@ Window.prototype.setId = function(newId) {
 * Runs the close handler.
 */
 Window.prototype.xHandler = function() {
+	console.log("xhandler called");
 	if (this.cancellable === true) {
-		this.xOut(this);
+		console.log("window is cancellable...");
+		this.xOut();
 	}
 }
 
@@ -186,6 +191,7 @@ Window.prototype.setIcon = function(new_icon) {
 *
 */
 Window.prototype.setXHandler = function(x_handler) {
+	console.log("Setting xOut to: " + x_handler);
 	this.xOut = x_handler;
 	//this.dragbar.find(".close").mousedown($.proxy(this.xHandler, this));
 }

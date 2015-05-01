@@ -20,6 +20,7 @@ var exported_scene = {
 			taskManager.setXHandler(function() {
 				console.log("x-ing out");
 				$(this.element).remove();
+				manager.removeWindow(taskManager);
 				SceneManager.getSharedInstance().presentScene("explorer95");
 			});
 			manager.addWindow(taskManager);
@@ -29,6 +30,11 @@ var exported_scene = {
 			myComputer.setIcon("images/my_computer_icon.png");
 			myComputer.moveTo(140, 50);
 			myComputer.setEnabled(false);
+			myComputer.setXHandler(function() {
+				console.log("x-ing out");
+				$(this.element).remove();
+				manager.removeWindow(myComputer);
+			});
 			manager.addWindow(myComputer);
 
 			this.exportedVariables['windowManager'] = manager;
@@ -40,74 +46,6 @@ var exported_scene = {
 
 
 		}
-
-
-		
-		function collision(obj1, ui_pos) {
-	      	var x1 = obj1.offset().left;
-	      	var y1 = obj1.offset().top;
-	      	var h1 = obj1.outerHeight(true);
-	      	var w1 = obj1.outerWidth(true);
-	      	var b1 = y1 + h1;
-	      	var r1 = x1 + w1;
-	      	var x2 = ui_pos.left;
-	      	var y2 = ui_pos.top;
-	      	var h2 = 80;
-	      	var w2 = 80;
-	      	var b2 = y2 + h2;
-	      	var r2 = x2 + w2;
-	        
-	      	if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
-	      	return true;
-	    }
-
-	    //recycle bin functionality
-		$(function() {
-			$(".windowIcon").draggable({
-		      	stop: function(event, ui) {
-		        	if (collision($("#recycle"), ui.offset)) {
-		        		$(this).remove();
-		        		if (!$(this).hasClass("clippyFile")) {
-		        			$("#desktop").prepend("<div class='bluescreen'></div>");
-		        			$(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
-		        			$(document).keydown(function(e) {
-		        				$(".bluescreen").remove();
-		        			});
-		        		}
-		        		$("#recycleIcon").attr('src', "images/full_recycle_bin.png");
-		        	}
-		      	},
-		      	revert : function(event, ui) {
-		      		if (!$(this)) {
-		      			return false;
-		      		}
-		            $(this).data("ui-draggable").originalPosition = {
-		                top : 0,
-		                left : 0
-		            };
-		            return !event;
-		        }
-		    });
-		    $(".windowIcon").dblclick(function(e) {
-		    	// remove class ".selectedIcon" from all other icons
-				$(".selectedIcon").map(function() {
-			   		$(this).removeClass("selectedIcon");
-				});
-				// add class ".selectedIcon" to this icon
-		    	$(this).addClass("selectedIcon");
-		    	if ($(this).hasClass("folder")) {
-		    		console.log("should open a new folder!");
-		    		var nextFolder = $(this).attr("data-opens");
-		    		var nextFolder = manager.inflate(nextFolder);
-					nextFolder.setTitle("Explorer");
-					nextFolder.setIcon("images/open_folder.png");
-					nextFolder.setActive(true);
-					nextFolder.moveTo(140, 80);
-					manager.addWindow(nextFolder);
-		    	}
-		    });
-		    $(".drop").droppable();
-		});
 
 		var clippyAgent;
 

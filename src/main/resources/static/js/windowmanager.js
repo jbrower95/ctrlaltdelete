@@ -60,6 +60,7 @@ WindowManager.prototype.addWindow = function(window_obj) {
 *		window_obj: The Window to be removed.
 */
 WindowManager.prototype.removeWindow = function(window_obj) {
+	console.log("removing window from window manager");
 	delete this.windows[window_obj.winId];
 	$(window_obj.element).addClass("hidden");
 }
@@ -74,7 +75,7 @@ WindowManager.prototype.getWindowWithId = function(window_id) {
 	// Check if windowId exists in the hashtable
 	console.log(this.windows);
 	if (!(window_id in this.windows)) {
-		console.error("[windowmanager.js] Window ID doesn't exist in the manager.");
+		return null;
 	} else {
 		return this.windows[window_id];
 	}
@@ -115,7 +116,6 @@ WindowManager.prototype.inflate = function(template) {
 	// Default position of (0,0)
 	var win = new Window(copy, 0, 0, draggable);
 	win.setId(template);
-	win.setXHandler($.proxy(this.removeWindow, this));
 
 	return win;
 }
