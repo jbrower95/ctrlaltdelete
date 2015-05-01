@@ -72,6 +72,10 @@
             font-weight: 800;
         }
 
+        .side-title:hover {
+            cursor: pointer;
+        }
+
         .scene-list {
             position: relative;
             width: 100%;
@@ -574,6 +578,7 @@
             var isNew = $(".container").attr('id');
 
             /* Globals */
+            var onScene = false;
             var title = $("input[name=experienceTitle]").val();
             var id = $("input[name=id]").val();
             var oldId;
@@ -593,6 +598,14 @@
             showCheckedScore(highToLow);
             listScenes();
 
+            $(".side-title").click(function() {
+                if (onScene) {
+                    $("#sceneEdit").fadeOut();
+                    $("#generalEdit").fadeIn();
+                    onScene = false;
+                }
+            });
+
             /**
             * Uses a get request to give a list of
             * scenes, then appends them to the scene list
@@ -611,7 +624,19 @@
 
                     // Pretty gross, but has to be done
                     $("ul.list li").click(function() {
+                        if (!onScene) {
+                            onScene = true;
+                            $("#generalEdit").fadeOut();
+                            $("#sceneEdit").fadeIn();
+                        }
+
                         var scene = $(this).attr('id');
+                        
+
+                        if (scene === "Main") {
+                            return;
+                        }
+
                         fillSceneInfo(scene);
                     });
                 });
