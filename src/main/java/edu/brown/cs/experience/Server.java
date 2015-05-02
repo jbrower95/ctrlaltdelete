@@ -315,6 +315,8 @@ public class Server {
 		String type = qm.value("type");
 		String text = qm.value("text");
 
+		SceneChange change = request.body();
+		
 		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
 
 		if (file.getAbsoluteFile().exists()) {

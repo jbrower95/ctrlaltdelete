@@ -698,7 +698,7 @@
 			 /* Handlers for saving the files */
            cmCss.on("change", function(cm, change) {
            
-           		$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           		$.post("/" + id + "/" + currentSceneId + "/edit", {"change" : change, "file" : "css"}, function(response) {
            			console.log(response);
            		});
            		console.log(change);
@@ -706,7 +706,7 @@
 			  
 			cmJs.on("change", function(cm, change) {
 				
-				$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+				$.post("/" + id + "/" + currentSceneId + "/edit", {"change" : change, "file" : "js"}, function(response) {
            			console.log(response);
            		});
            		console.log(change);
@@ -714,7 +714,7 @@
 			  
 			cmHtml.on("change", function(cm, change) {
 			
-				$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+				$.post("/" + id + "/" + currentSceneId + "/edit", {"change" : change, "file" : "html"}, function(response) {
            			console.log(response);
            		});
            		console.log(change);
