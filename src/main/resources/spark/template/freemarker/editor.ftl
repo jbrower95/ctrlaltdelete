@@ -671,6 +671,7 @@
             /* Globals */
             var scenes = [];
             var onScene = false;
+            var currentSceneId = null;
             var title = $("input[name=experienceTitle]").val();
             var id = $("input[name=id]").val();
             var oldId;
@@ -697,26 +698,26 @@
 			 /* Handlers for saving the files */
            cmCss.on("change", function(cm, change) {
            
-           		$.post( );
-           
+           		$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           			console.log(response);
+           		});
            		console.log(change);
-  				console.log("Saving css! (" + change.origin + ")");
 			  });
 			  
 			cmJs.on("change", function(cm, change) {
 				
-				$.post( );
-			
+				$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           			console.log(response);
+           		});
            		console.log(change);
-  				console.log("Saving javascript! (" + change.origin + ")");
 			  });
 			  
 			cmHtml.on("change", function(cm, change) {
 			
-				$.post( );
-				
+				$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           			console.log(response);
+           		});
            		console.log(change);
-  				console.log("Saving html! (" + change.origin + ")");
 			  });
 
             
@@ -843,7 +844,7 @@
                         var html = result.scene.html;
                         var css = result.scene.css;
                         var scene = "New Scene";
-
+						currentSceneId = id;
                         fillFields(scene, id, js, html, css);
                         listScenes().then(function() {
                         	console.log(id);
@@ -888,7 +889,8 @@
                     var sceneJs = responseObject.value.js;
                     var sceneHtml = responseObject.value.html;
                     var sceneCss = responseObject.value.css;
-
+	
+					currentScene = sceneId;
                     
                     fillFields(scene, sceneId, sceneJs, sceneHtml, sceneCss);
                    // fillSelectOptions(scene);
