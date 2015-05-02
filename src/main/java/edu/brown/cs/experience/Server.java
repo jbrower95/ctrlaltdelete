@@ -1146,7 +1146,7 @@ public class Server {
       private final boolean orderScoresHighToLow;
       private final List<String> files;
 
-      public Config(String title, String eyed, String color, String cDescription,
+      public Config(final String title, final String eyed, final String color, final String cDescription,
         boolean highToLow) {
         name = title;
         id = eyed;

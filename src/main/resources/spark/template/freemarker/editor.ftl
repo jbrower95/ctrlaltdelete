@@ -643,6 +643,8 @@
                 autoCloseBrackets: true,
                 theme: "monokai"
               });
+              
+           
 
             var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
                 mode: "htmlmixed",
@@ -653,6 +655,8 @@
                 theme: "monokai"
               });
 
+			
+
             var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
                 mode: "css",
                 lineNumbers: true,
@@ -661,10 +665,13 @@
                 autoCloseBrackets: true,
                 theme: "monokai"
               });
+              
+          
 
             /* Globals */
             var scenes = [];
             var onScene = false;
+            var currentSceneId = null;
             var title = $("input[name=experienceTitle]").val();
             var id = $("input[name=id]").val();
             var oldId;
@@ -687,6 +694,31 @@
             } else {
                 $(".list").append("<li id='newScene'>+</li>");
             }
+			
+			 /* Handlers for saving the files */
+           cmCss.on("change", function(cm, change) {
+           
+           		$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           			console.log(response);
+           		});
+           		console.log(change);
+			  });
+			  
+			cmJs.on("change", function(cm, change) {
+				
+				$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           			console.log(response);
+           		});
+           		console.log(change);
+			  });
+			  
+			cmHtml.on("change", function(cm, change) {
+			
+				$.post("/" + id + "/" + currentSceneId + "/edit", change, function(response) {
+           			console.log(response);
+           		});
+           		console.log(change);
+			  });
 
             
 
@@ -812,7 +844,7 @@
                         var html = result.scene.html;
                         var css = result.scene.css;
                         var scene = "New Scene";
-
+						currentSceneId = id;
                         fillFields(scene, id, js, html, css);
                         listScenes().then(function() {
                         	console.log(id);
@@ -857,7 +889,8 @@
                     var sceneJs = responseObject.value.js;
                     var sceneHtml = responseObject.value.html;
                     var sceneCss = responseObject.value.css;
-
+	
+					currentScene = sceneId;
                     
                     fillFields(scene, sceneId, sceneJs, sceneHtml, sceneCss);
                    // fillSelectOptions(scene);
