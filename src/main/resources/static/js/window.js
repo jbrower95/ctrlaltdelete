@@ -56,6 +56,7 @@ function Window(element, x, y, draggable) {
 		this.mouse_offset_y = 0;
 		this.dragbar = $(this.element).find(".dragbar");
 		this.dragbar.find(".close").mousedown($.proxy(this.xHandler, this));
+		$(this.element).mousedown($.proxy(function() {this.setActive(true);}, this));
 		this.dragbar.mousedown($.proxy(this.mouseDown, this));
 		$(window).mouseup($.proxy(this.mouseUp, this));
 	}

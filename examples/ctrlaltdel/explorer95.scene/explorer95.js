@@ -186,11 +186,16 @@ var exported_scene = {
 			$(".drop").off();
 			// enable each handler
 			$(".windowIcon").draggable({
+				start : function(event, ui) {
+					$(this).data().originalPosition = ui.position;
+				},
 		      	stop: function(event, ui) {
 		        	if (collision($("#recycle"), ui.offset)) {
 		        		if (!$(this).hasClass('clippyFile')) {
 		        			if (!$(this).hasClass('folder')) {
-		        				$(this.remove());
+		        				$(this).remove();
+		        			} else {
+		        				$(this).animate($(this).data().originalPosition, "slow");
 		        			}
 		        			$("#desktop").prepend("<div class='bluescreen'></div>");
 		        			$(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
