@@ -136,6 +136,26 @@
                 a {
                 text-decoration: none;
                 }
+
+                .new {
+                    background-color: rgba(255,255,255,0);
+                    transition: background-color 0.2s;
+                }
+
+                .new-overlay {
+                    box-sizing: border-box;
+                    border: 15px solid white;
+                    background-color: transparent;
+                }
+
+                .new-overlay:hover {
+                    opacity: 1;
+                }
+
+                .new:hover {
+                    opacity: 1;
+                    background-color: rgba(255,255,255,1);
+                }
      </style>
 
       <!--[if lt IE 9]>
@@ -159,6 +179,13 @@
                     </div>
                 </a>
             </#list>
+            <a href="/make">
+                <div class="block new">
+                    <div class="block-overlay new-overlay">
+                        <img src="/lib/images/plus.svg">
+                    </div>
+                </div>
+            </a>
         </div>
     </body>
  </html>
