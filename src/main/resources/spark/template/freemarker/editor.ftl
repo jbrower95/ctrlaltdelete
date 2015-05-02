@@ -643,6 +643,8 @@
                 autoCloseBrackets: true,
                 theme: "monokai"
               });
+              
+           
 
             var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
                 mode: "htmlmixed",
@@ -653,6 +655,8 @@
                 theme: "monokai"
               });
 
+			
+
             var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
                 mode: "css",
                 lineNumbers: true,
@@ -661,6 +665,8 @@
                 autoCloseBrackets: true,
                 theme: "monokai"
               });
+              
+          
 
             /* Globals */
             var scenes = [];
@@ -687,6 +693,31 @@
             } else {
                 $(".list").append("<li id='newScene'>+</li>");
             }
+			
+			 /* Handlers for saving the files */
+           cmCss.on("change", function(cm, change) {
+           
+           		$.post( );
+           
+           		console.log(change);
+  				console.log("Saving css! (" + change.origin + ")");
+			  });
+			  
+			cmJs.on("change", function(cm, change) {
+				
+				$.post( );
+			
+           		console.log(change);
+  				console.log("Saving javascript! (" + change.origin + ")");
+			  });
+			  
+			cmHtml.on("change", function(cm, change) {
+			
+				$.post( );
+				
+           		console.log(change);
+  				console.log("Saving html! (" + change.origin + ")");
+			  });
 
             
 
