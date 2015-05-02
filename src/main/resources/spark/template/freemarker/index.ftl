@@ -28,18 +28,49 @@
 	 	}
 
 		.head {
-			background-color: #222128;
-			position: relative;
-			margin: 0;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 5%;
-			padding: 3%;
-			padding-left: 10%;
-			box-sizing: border-box;
-			color: white;
-		}
+	        background-color: #121212;
+	        position: relative;
+	        margin: 0;
+	        top: 0;
+	        left: 0;
+	        width: 100%;
+	        height: 2%;
+	        padding: 3%;
+	        padding-left: 10.5%;
+	        padding-right: 10.5%;
+	        display: flex;
+	        flex-direction: row;
+	        align-items: center;
+	        justify-content: space-between;
+	        box-sizing: border-box;
+	        color: white;
+        }
+
+        .nav {
+            position: relative;
+            height: 100%;
+            width: 45%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .head h1 {
+            display: block;
+            width: auto;
+            height: auto;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+
+        .head h1:hover {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .head h1.active {
+            opacity: 1;
+        }
 
 		.container {
 			position: relative;
@@ -121,13 +152,26 @@
 		}
 
 		h1 {
-			font-size: 3em;
-		    font-family: 'Lato', sans-serif;
-		}
+	        font-size: 1.8em;
+	        font-weight: 400;
+	        font-family: 'Lato', sans-serif;
+        }
 
-		a {
-			text-decoration: none;
-		}
+		.head h1.bold {
+            font-weight: 800;
+            font-size: 2.1em;
+            opacity: 1;
+            font-family: 'Merriweather', serif;
+        }
+
+        .head h1.bold:hover {
+            opacity: 1;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
 	 </style>
 
 	  <!--[if lt IE 9]>
@@ -137,8 +181,12 @@
 	
 	<body>
 		<div class="head">
-			<h1>Stories</h1>
-		</div>
+            <div class="nav">
+                <h1 class="bold">Experience</h1>
+                <h1 class="active"><a href="/">Play</a></h1>
+                <h1><a href="/maker">Make</a></h1>
+            </div>
+        </div>
 		<div class="container">
 			<!--<form id="file-form">
               <input type="file" id="file-select" name="file-select" onchange="handleFiles(this)" multiple/>
