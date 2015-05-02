@@ -103,10 +103,9 @@ public class Server {
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.post("/:experience/saveedit", new SaveEditedExperienceHandler());
     Spark.get("/:experience/lib/*", new LibHandler());
+    Spark.get("/lib/*", new LibHandler());
     Spark.get("/:experience/:asset", new GameHandler());
-    Spark.get("/:experience/lib/:asset", new LibHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
-  
     
   }
   
