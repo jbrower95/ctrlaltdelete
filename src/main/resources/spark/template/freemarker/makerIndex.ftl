@@ -217,7 +217,7 @@
             <a href="/make">
                 <div class="block new">
                     <div class="block-overlay new-overlay">
-                        <img src="lib/images/plus.svg">
+                        <img src="/lib/images/plus.svg">
                     </div>
                 </div>
             </a>
