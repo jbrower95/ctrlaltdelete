@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.MultipartConfigElement;
@@ -26,7 +24,6 @@ import javax.servlet.http.Part;
 
 import org.eclipse.jetty.io.EofException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -38,7 +35,6 @@ import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -50,10 +46,7 @@ public class Server {
   private final static Gson GSON = new Gson();
   private final String directory;
   private int newExpId;
-  private final static Map<String, String> contentTypes = getContentTypes();
-  private final static Set<String> typesWithoutBytes = ImmutableSet.of(
-    "text/html", "text/css", "application/javascript");
-
+  
   public static Map<String, String> getContentTypes() {
     Map<String, String> types = new HashMap<>();
 
@@ -461,9 +454,7 @@ public class Server {
 				Files.createDirectories(assetsDir);
 			}
 			
-			File outputFile = new File(experienceName + "/assets/" + getFileName(file));
 			System.out.println("Uploading file: " + getFileName(file));
-			//IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(outputFile));
 			file.write(getFileName(file));
 			
 		} catch (IOException | ServletException e) {
@@ -1163,7 +1154,7 @@ public class Server {
         description = cDescription;
         orderScoresHighToLow = highToLow;
         files = new ArrayList<>();
-        mainFile = "";
+        mainFile = "index.html";
       }
     }
   }
