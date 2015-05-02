@@ -649,7 +649,7 @@ public class Server {
 	  try {
 	        byte[] contents = Files.readAllBytes(assetPath);
 	        
-	        response.header("Content-Type", "application/json");
+	        response.header("Content-Type", Files.probeContentType(assetPath));
 	        response.header("Content-Disposition",
 	          String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
 	        response.header("Connection", "close");
