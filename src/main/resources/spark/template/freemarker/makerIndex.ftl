@@ -187,6 +187,12 @@
                     color: white;
                     text-decoration: none;
                 }
+
+                img {
+                    position: relative;
+                    width: 25%;
+                    height: auto;
+                }
      </style>
 
       <!--[if lt IE 9]>
