@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.MultipartConfigElement;
@@ -26,7 +24,6 @@ import javax.servlet.http.Part;
 
 import org.eclipse.jetty.io.EofException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -38,7 +35,6 @@ import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -50,10 +46,7 @@ public class Server {
   private final static Gson GSON = new Gson();
   private final String directory;
   private int newExpId;
-  private final static Map<String, String> contentTypes = getContentTypes();
-  private final static Set<String> typesWithoutBytes = ImmutableSet.of(
-    "text/html", "text/css", "application/javascript");
-
+  
   public static Map<String, String> getContentTypes() {
     Map<String, String> types = new HashMap<>();
 
@@ -152,9 +145,6 @@ public class Server {
 		
 		return GSON.toJson(ImmutableMap.of("success", "true"));
 	}
-	  
-	  
-	  
   }
   
   
@@ -352,28 +342,6 @@ public class Server {
 		}
 
 		return GSON.toJson(true);
-		/*MultipartConfigElement multipartConfigElement = new MultipartConfigElement(sceneDir.toAbsolutePath().toString());
-		   request.raw().setAttribute("org.eclipse.multipartConfig", multipartConfigElement);
-		
-		try {
-			Part file = request.raw().getPart("file");
-			if (!Files.exists(sceneDir)) {
-				System.out.println("Scene didn't exist...: " + sceneDir.toString());
-				//create the directory for assets
-				response.status(404);
-				return ImmutableMap.of("success", "false", "error", "This scene doesn't exist!");
-			}
-			
-			System.out.println("Uploading file: " + getFileName(file));
-			file.write(getFileName(file));
-			
-		} catch (IOException | ServletException e) {
-			System.err.println("Failed to edit scene.");
-			e.printStackTrace();
-			return GSON.toJson(ImmutableMap.of("success", "false", "error", "An IO exception has occurred."));
-		} 
-		System.out.println("Sweet.");
-		return GSON.toJson(ImmutableMap.of("success", "true"));*/
 	}
   }
   
@@ -401,7 +369,6 @@ public class Server {
 			return GSON.toJson(response);
 		}
 	}
-	  
   }
 
 	/**
@@ -458,7 +425,6 @@ public class Server {
 			Map<String, Object> files = ImmutableMap.of("js", js, "html", html, "css", css);
 			return GSON.toJson(files);
 		}
-
 	}
   
   /**
@@ -488,9 +454,7 @@ public class Server {
 				Files.createDirectories(assetsDir);
 			}
 			
-			File outputFile = new File(experienceName + "/assets/" + getFileName(file));
 			System.out.println("Uploading file: " + getFileName(file));
-			//IOUtils.copyLarge(file.getInputStream(), new FileOutputStream(outputFile));
 			file.write(getFileName(file));
 			
 		} catch (IOException | ServletException e) {
@@ -665,30 +629,51 @@ public class Server {
    */
   public class LibHandler implements Route {
     @Override
-    public Object handle(Request req, Response res) {
-      String asset = req.splat()[0];
-      
+    public Object handle(Request request, Response response) {
+      String asset = request.splat()[0];
       System.out.println("Trying to get library!: " + asset);
-      
       Path assetPath = Paths.get("src").resolve("main").resolve("resources").resolve("static").resolve(asset);
-      
       System.out.println("Serving library: " + assetPath);
 
-      try {
-        String[] contents = Files.readAllLines(assetPath).toArray(
-          new String[1]);
-        StringBuilder result = new StringBuilder();
-        // flatten contents
-        for (String x : contents) {
-          result.append(x + "\n");
-        }
-        return result.toString();
-      } catch (Exception e) {
-        e.printStackTrace();
-        return e.getMessage();
-      }
+      return serveAsset(response, assetPath);
     }
   }
+  
+    /**
+     * Serves a file to the connection.
+     * @param response The response which must contain the file.
+     * @param assetPath The path to the asset to serve.
+     * @return
+     */
+  private String serveAsset(Response response, Path assetPath) {
+	  
+	  try {
+	        byte[] contents = Files.readAllBytes(assetPath);
+	        
+	        response.header("Content-Type", "application/json");
+	        response.header("Content-Disposition",
+	          String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
+	        response.header("Connection", "close");
+	        response.raw().setContentLength(contents.length);
+
+	        ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
+	        try {
+	      	  servletoutputstream.write(contents); // this throws EofException
+	        } catch (EofException e) {
+	      	  e.printStackTrace();
+	      	  System.err.println("Client closed connection early.");
+	        } finally {
+	      	  servletoutputstream.flush();
+	        }
+	        
+	        return GSON.toJson(ImmutableMap.of("success", "true"));
+	      } catch (Exception e) {
+	        e.printStackTrace();
+	        response.status(404);
+	        return GSON.toJson(ImmutableMap.of("success", "false", "error", "Couldn't locate asset."));
+	      }
+  }
+  
 
   /**
    * Handle requests directed to each experience's small files.
@@ -704,8 +689,8 @@ public class Server {
       String asset = req.params(":asset");
       System.out.println(req.params(":experience") + ", "
         + req.params(":asset"));
-      String path = (exp.directory + File.separator + asset);
-
+      String pathName = (exp.directory + File.separator + asset);
+      Path path = Paths.get(pathName);
       System.out.println("[gamehandler] Trying to get asset: " + asset);
 
       if (!experienceCanAccessAsset(exp, asset)) {
@@ -713,50 +698,10 @@ public class Server {
           + asset + " -  Not declared in manifest.");
       }
 
-      try {
-        String[] assetParts = asset.split("[.]");
-        String type = contentTypes.getOrDefault(
-          assetParts[assetParts.length - 1], "application/octet-stream");
-        if (typesWithoutBytes.contains(type)) {
-        	System.out.println("Serving file as text.");
-          String[] contents = Files.readAllLines(Paths.get(path)).toArray(
-            new String[1]);
-          StringBuilder result = new StringBuilder();
-          // flatten contents
-          for (String x : contents) {
-            result.append(x + '\n');
-          }
-          return result.toString();
-        } else {
-        	System.out.println("Serving file as bytes");
-          Response response = res;
-          byte[] contents = Files.readAllBytes(Paths.get(path));
-          System.out.println("Serving asset: " + asset);
-          response.header("Content-Type", "application/json");
-          response.header("Content-Disposition",
-            String.format("attachment; filename=\"%s\"", asset));
-          response.header("Connection", "close");
-          response.raw().setContentLength(contents.length);
-
-          ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
-          try {
-        	  servletoutputstream.write(contents); // this throws EofException
-          } catch (EofException e) {
-        	  e.printStackTrace();
-        	  System.err.println("Client closed connection early.");
-          } finally {
-        	  servletoutputstream.flush();
-          }
-
-          return GSON.toJson(ImmutableMap.of("success", "true"));
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-        return "Error: Couldn't load asset.";
-      }
+      return serveAsset(res, path);
     }
   }
-
+  
   /**
    * Returns true if an experience can access a file.
    *
@@ -833,15 +778,13 @@ public class Server {
     @Override
     public Object handle(Request req, Response res)
       throws IllegalArgumentException {
-      Path currentRelativePath = Paths.get("");
-      String s = currentRelativePath.toAbsolutePath().toString();
       
       Experience exp = experiences.get(req.params(":experience"));
       String scene = req.params(":scene");
       String asset = req.params(":asset");
 
       String path = (exp.directory + File.separator + scene + File.separator + asset);
-
+      Path p = Paths.get(path);
       System.out.println("[scenecontenthandler] Trying to get asset: " + asset);
 
       // access control
@@ -849,49 +792,10 @@ public class Server {
         throw new IllegalArgumentException("Error: Can't access asset "
           + path + " -  Not declared in manifest.");
       }
-
-      try {
-        String[] assetParts = asset.split("[.]");
-        String type = contentTypes.getOrDefault(
-          assetParts[assetParts.length - 1], "application/octet-stream");
-        System.out.println("Asset: " + asset + " is of type: " + type);
-        if (typesWithoutBytes.contains(type)) {
-          String[] contents = Files.readAllLines(Paths.get(path)).toArray(
-            new String[1]);
-          StringBuilder result = new StringBuilder();
-          // flatten contents
-          for (String x : contents) {
-            result.append(x + '\n');
-          }
-          return result.toString();
-        } else {
-          final FileInputStream in = new FileInputStream(path);
-          Response response = res;
-          byte[] contents = Files.readAllBytes(Paths.get(path));
-          System.out.println("Serving asset (SceneContentHandler): " + asset);
-          response.header("Content-Disposition",
-            String.format("attachment; filename=\"%s\"", asset));
-          response.header("Connection", "close");
-          response.raw().setContentLength(contents.length);
-
-          ServletOutputStream servletoutputstream = response.raw().getOutputStream();
-          try {
-        	  servletoutputstream.write(contents); // this throws EofException
-          } catch (EofException e) {
-        	  e.printStackTrace();
-        	  System.err.println("Client closed connection early.");
-          } finally {
-        	  servletoutputstream.flush();
-          }
-
-          return GSON.toJson(ImmutableMap.of("success", "true"));
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-        return "Error: Couldn't load asset.";
-      }
-    }
+      
+      return serveAsset(res, p);
   }
+ }
 
   /**
    * Handle requests directed to each experience's content database.
@@ -1250,7 +1154,7 @@ public class Server {
         description = cDescription;
         orderScoresHighToLow = highToLow;
         files = new ArrayList<>();
-        mainFile = "";
+        mainFile = "index.html";
       }
     }
   }
