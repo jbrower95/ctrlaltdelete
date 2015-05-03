@@ -448,7 +448,7 @@
                 <div class="right-bar">
                     <span class="side-title curr">${title}</span>
                     <ul class="list">
-                        <li id="Main">Main</li>
+                        
                     </ul>
                 </div>
             </div>
@@ -750,6 +750,7 @@
             */
             $(".side-title").click(function() {
                 if (onScene) {
+                    $(".inactive").removeClass("inactive");
                     $("#sceneEdit").fadeOut();
                     $("#generalEdit").fadeIn();
                     onScene = false;
@@ -758,27 +759,7 @@
                 }
             });
 
-            $("ul.list li").click(function() {
-                if (!onScene) {
-                    onScene = true;
-                    $("#generalEdit").fadeOut();
-                    $("#sceneEdit").fadeIn();
-                }
-
-                $(".curr").removeClass("curr");
-                $(this).addClass("curr");
-
-                $(".inactive").removeClass("inactive");
-
-                $("input[name=sceneTitle]").val("");
-                $("input[name=sceneId]").val("");
-                $("input[name=sceneTitle]").addClass("inactive");
-                $(".settings").addClass("inactive");
-
-                if (isNew === "false") {
-                    fillMainInfo();
-                }
-            });
+            
 
             /**
             * Uses a get request to give a list of
@@ -792,9 +773,11 @@
             	return new Promise(function(resolve, reject) {
             
 	                var list = $(".list");
+
+                    list.empty();
+                    list.append("<li id='Main'>Main</li>");
 	
 	                $.get("/" + id + "/scenes", function(responseJSON){
-	                	list.empty();
 	                    var responseObject = JSON.parse(responseJSON);
 	                    for (o in responseObject) {
 	                        var scene = responseObject[o].id;
@@ -805,30 +788,32 @@
 	
 	                    $(".list").append("<li id='newScene'>+</li>");
 	
-	                    // Pretty gross, but has to be done
+	                    // Set up scene click handlers
 	                    $("ul.list li").click(function() {
-	                        if (!onScene) {
-	                            onScene = true;
-	                            $("#generalEdit").fadeOut();
-	                            $("#sceneEdit").fadeIn();
-	                        }
-	
-	                        $(".curr").removeClass("curr");
-	                        $(this).addClass("curr");
-	
-	                        $(".inactive").removeClass("inactive");
-	
-	                        var scene = $(this).attr('id');
-	
-	                        if (scene === "newScene") {
-	                            fillNewScene();
-	                            return;
-	                        }
-	                        
-	                        fillSceneInfo(scene);
-	                        
-	                    });
-	                    
+                            if (!onScene) {
+                                onScene = true;
+                                $("#generalEdit").fadeOut();
+                                $("#sceneEdit").fadeIn();
+                            }
+
+                            $(".curr").removeClass("curr");
+                            $(this).addClass("curr");
+
+                            $(".inactive").removeClass("inactive");
+
+                            var scene = $(this).attr('id');
+
+                            if (scene === "newScene") {
+                                fillNewScene();
+                                return;
+                            }
+                            
+                            if (scene === "Main") {
+                                fillMainInfo();
+                            } else {
+                               fillSceneInfo(scene); 
+                           }
+                        });
 	                    
 	                    resolve();
 	                });
@@ -875,9 +860,9 @@
                     $("#scenehtml").html("index.html");
                     $("#scenecss").html("index.css");
 
-                    $("textarea[name=js]").val(sceneJs);
-                    $("textarea[name=html]").val(sceneHtml);
-                    $("textarea[name=css]").val(sceneCss);
+                    cmJs.setValue(sceneJs);
+                    cmHtml.setValue(sceneHtml);
+                    cmCss.setValue(sceneCss);
                 });
             }
 
