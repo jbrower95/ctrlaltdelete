@@ -69,18 +69,25 @@
             transition: background-color 0.2s;
         }
 
-        .sidebar-title {
-            color: white;
+        .side-title {
             font-family: 'Lato', sans-serif;
-            font-size: 1.7em;
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 2%;
+            color: white;
             font-weight: 800;
             opacity: 1;
-            transition: opacity 0.2s;
+            padding-right: 2%;
+            padding-left: 18%;
+            width: 100%;
+            background-color: rgba(0,0,0,0);
+            box-sizing: border-box;
+            transition: background-color 0.2s;
         }
 
         .side-title:hover {
             cursor: pointer;
-            oapcity: 0.5;
+            background-color: rgba(0,0,0,0.1);
         }
 
         .scene-list {
@@ -88,6 +95,7 @@
             width: 100%;
             height: 78%;
             overflow: auto;
+            box-sizing: border-box;
         }
 
         .left-bar {
@@ -95,45 +103,45 @@
             float: left;
             width: 15%;
             height: 100%;
-            padding-left: 1%;
-            box-sizing: border-box;
-        }
-
-        .right-bar {
-            position: relative;
-            float: right;
-            width: 84%;
-            height: 100%;
-            padding-right: 1%;
             box-sizing: border-box;
         }
 
         .list {
             list-style: none;
             position: relative;
-            width: 80%;
+            width: 100%;
             height: auto;
             overflow-x: hidden;
             padding: 0;
             margin: 0;
+            box-sizing: border-box;
         }
 
         .list li {
             font-family: 'Lato', sans-serif;
             color: white;
             font-size: 1.2em;
-            margin-top: 10px;
             opacity: 1;
-            transition: opacity 0.2s;
+            transition: background-color 0.2s;
+            padding-right: 2%;
+            padding-left: 18%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            box-sizing: border-box;
+            background-color: rgba(0,0,0,0);
+        }
+
+        .list li#Main {
+            font-weight: 800;
         }
 
         .list li:hover {
             cursor: pointer;
-            opacity: 0.5;
+            background-color: rgba(0,0,0,0.1);
         }
 
         .curr, .list li.curr {
-            opacity: 0.5;
+            background-color: rgba(0,0,0,0.3);
         }
 
         .main {
@@ -187,15 +195,6 @@
             font-size: 2.3em;
             display: block;
             margin-bottom: 2%;
-        }
-
-        .side-title {
-            font-family: 'Lato', sans-serif;
-            font-size: 1.4em;
-            display: block;
-            margin-bottom: 2%;
-            color: white;
-            font-weight: 700;
         }
 
         .description {
@@ -435,22 +434,26 @@
             pointer-events: none;
             opacity: 0.5;
         }
+
+        .back {
+            position: relative;
+            width: 60%;
+            height: auto;
+        }
     </style>
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
 <body>
     <div class="container clearfix" id="${isNew}">
         <div class="sidebar c${color}" id="${color}">
-            <div class="scene-list clearfix">
-                <div class="left-bar">
-                    <!--<img src="images/left.svg">-->
-                </div>
-                <div class="right-bar">
-                    <span class="side-title curr">${title}</span>
-                    <ul class="list">
-                        
-                    </ul>
-                </div>
+            <div class="scene-list">
+                <!--<div class="left-bar">
+                    <img class="back" src="lib/images/left.svg">
+                </div>-->
+                <span class="side-title curr">${title}</span>
+                <ul class="list">
+                    
+                </ul>
             </div>
             
             <div class="asset-zone">
@@ -691,8 +694,6 @@
             showCheckedScore(highToLow);
             if (isNew === "false") {
                 listScenes();
-            } else {
-                $(".list").append("<li id='newScene'>+</li>");
             }
 			
 			 /* Handlers for saving the files */
