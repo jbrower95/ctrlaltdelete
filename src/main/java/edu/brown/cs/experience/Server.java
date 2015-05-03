@@ -316,23 +316,23 @@ public class Server {
 		System.out.println("SceneEditHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
-		System.out.println("Handling file upload...");
-		System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
 		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName);
 
 		
 		
-		Map<String, String> bodyObject = new HashMap<String, String>();
+		System.out.println(request.body());
 		
-		bodyObject = GSON.fromJson(request.body(), bodyObject.getClass());
+		String type = request.queryParams("type");
+		String text = request.body().substring(4);
 		
-		QueryParamsMap qm = request.queryMap();
-		String type = qm.value("type");
-		String text = qm.value("text");
+		if (type == null || text == null) {
+			response.status(400);
+			return GSON.toJson(false);
+		}
 		
-		
-		
-		
+		/*System.out.println("Asset Modified For Scene: " + sceneName + "." + type);
+		System.out.println("Contents: " + text);
+		*/
 		
 		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
 
