@@ -334,8 +334,20 @@ public class Server {
 		System.out.println("Contents: " + text);
 		*/
 		
-		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
-
+		Path assetPath = sceneDir.resolve(sceneName + "." + type);
+		
+		if (!Files.exists(assetPath)) {
+			try {
+				Files.createFile(assetPath);
+			} catch (IOException e) {
+				response.status(500);
+				e.printStackTrace();
+				return GSON.toJson(false);
+			}
+		}
+		
+		File file = new File(assetPath.toAbsolutePath().toString());
+		
 		if (file.getAbsoluteFile().exists()) {
 			try {
 				System.out.println("[sceneeditor] Creating file: " + file.getAbsolutePath());
