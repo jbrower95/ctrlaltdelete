@@ -877,7 +877,7 @@
                     var sceneCss = responseObject.value.css;
 	
 					currentScene = sceneId;
-                    
+                    currentSceneId = sceneId;
                     fillFields(scene, sceneId, sceneJs, sceneHtml, sceneCss);
                    // fillSelectOptions(scene);
                 });
