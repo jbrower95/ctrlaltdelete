@@ -193,6 +193,7 @@ var exported_scene = {
 		        	if (collision($("#recycle"), ui.offset)) {
 		        		if (!$(this).hasClass('clippyFile')) {
 		        			if (!$(this).hasClass('folder')) {
+		        				AssetManager.getSharedInstance().playNamed("recycle");
 		        				$(this).remove();
 		        			} else {
 		        				$(this).animate($(this).data().originalPosition, "slow");
@@ -229,7 +230,6 @@ var exported_scene = {
 				});
 				// add class ".selectedIcon" to this icon
 		    	$(this).addClass("selectedIcon");
-        		AssetManager.getSharedInstance().playNamed("recycle");
         		if (!$(this).hasClass("clippyFile") && !$(this).attr('data-opens')) {
         			$("#desktop").prepend("<div class='bluescreen'></div>");
         			$(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");

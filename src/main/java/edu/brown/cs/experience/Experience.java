@@ -39,7 +39,6 @@ public class Experience {
     
     filename = file.getName();
     this.directory = directory;
-
     
     File[] results = new File(this.directory).listFiles(new FilenameFilter(){
 

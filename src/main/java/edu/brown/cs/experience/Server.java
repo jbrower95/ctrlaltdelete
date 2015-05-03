@@ -90,7 +90,7 @@ public class Server {
     /* Maker Endpoints */
     Spark.get("/:experience/scenes", new ListAllScenesHandler());
     Spark.get("/:experience/main/edit", new SceneIndexHandler());
-    Spark.post("/:experience/:scene/edit", new SceneEditHandler());
+    //Spark.post("/:experience/:scene/edit", new SceneEditHandler());
     Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
     Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
     Spark.post("/:experience", new AssetUploadHandler());
@@ -299,7 +299,7 @@ public class Server {
    * POST /:experience/:scene/edit
    * 
    * @author Justin
-   */
+   *
   public class SceneEditHandler implements Route {
 
 	@Override
@@ -345,6 +345,7 @@ public class Server {
 		return GSON.toJson(true);
 	}
   }
+  */
   
   /**
    * Should return detailed and updated information about a specific scene.
@@ -647,32 +648,31 @@ public class Server {
      * @return
      */
   private String serveAsset(Response response, Path assetPath) {
-	  
 	  try {
-	        byte[] contents = Files.readAllBytes(assetPath);
-	        
-	        response.header("Content-Type", Files.probeContentType(assetPath));
-	        response.header("Content-Disposition",
-	          String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
-	        response.header("Connection", "close");
-	        response.raw().setContentLength(contents.length);
+      byte[] contents = Files.readAllBytes(assetPath);
+      
+      response.header("Content-Type", Files.probeContentType(assetPath));
+      response.header("Content-Disposition",
+        String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
+      response.header("Connection", "close");
+      response.raw().setContentLength(contents.length);
 
-	        ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
-	        try {
-	      	  servletoutputstream.write(contents); // this throws EofException
-	        } catch (EofException e) {
-	      	  e.printStackTrace();
-	      	  System.err.println("Client closed connection early.");
-	        } finally {
-	      	  servletoutputstream.flush();
-	        }
-	        
-	        return GSON.toJson(ImmutableMap.of("success", "true"));
-	      } catch (Exception e) {
-	        e.printStackTrace();
-	        response.status(404);
-	        return GSON.toJson(ImmutableMap.of("success", "false", "error", "Couldn't locate asset."));
-	      }
+      ServletOutputStream servletoutputstream = ((ServletResponse) response.raw()).getOutputStream();
+      try {
+    	  servletoutputstream.write(contents); // this throws EofException
+      } catch (EofException e) {
+    	  e.printStackTrace();
+    	  System.err.println("Client closed connection early.");
+      } finally {
+    	  servletoutputstream.flush();
+      }
+      
+      return GSON.toJson(ImmutableMap.of("success", "true"));
+    } catch (Exception e) {
+      e.printStackTrace();
+      response.status(404);
+      return GSON.toJson(ImmutableMap.of("success", "false", "error", "Couldn't locate asset."));
+    }
   }
   
 
@@ -799,7 +799,7 @@ public class Server {
  }
 
   /**
-   * Handle requests directed to each experience's content database.
+   * Handle requests to start each experience. Return the experience's mainFile.
    *
    * @author joengelm
    */
@@ -808,8 +808,21 @@ public class Server {
     public Object handle(Request req, Response res) {
       System.out.println("PlayHandler");
       Experience exp = experiences.get(req.params(":experience"));
-      res.redirect(exp.mainFile);
-      return res;
+      String path = exp.directory + '/' + exp.mainFile;
+      try {
+	      String[] contents = Files.readAllLines(Paths.get(path)).toArray(
+	        new String[1]);
+	      StringBuilder result = new StringBuilder();
+	      // flatten contents
+	      for (String x : contents) {
+	        result.append(x + '\n');
+	      }
+	      return result.toString();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    	res.status(500);
+	    	return "Error! Notify the author of this story that everything is broken.";
+	    }
     }
   }
 
