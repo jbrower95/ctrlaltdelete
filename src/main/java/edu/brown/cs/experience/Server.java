@@ -24,6 +24,7 @@ import javax.servlet.http.Part;
 
 import org.eclipse.jetty.io.EofException;
 import org.apache.commons.io.FileUtils;
+import org.apache.tika.Tika;
 
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -633,13 +634,14 @@ public class Server {
     @Override
     public Object handle(Request request, Response response) {
       String asset = request.splat()[0];
-      System.out.println("Trying to get library!: " + asset);
       Path assetPath = Paths.get("src").resolve("main").resolve("resources").resolve("static").resolve(asset);
       System.out.println("Serving library: " + assetPath);
 
       return serveAsset(response, assetPath);
     }
   }
+  
+  private final Tika tika = new Tika();
   
     /**
      * Serves a file to the connection.
@@ -651,9 +653,10 @@ public class Server {
 	  try {
       byte[] contents = Files.readAllBytes(assetPath);
       
-      response.header("Content-Type", Files.probeContentType(assetPath));
-      response.header("Content-Disposition",
-        String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
+      
+      response.header("Content-Type", tika.detect(assetPath.toFile()));
+      //response.header("Content-Disposition",
+        //String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
       response.header("Connection", "close");
       response.raw().setContentLength(contents.length);
 
