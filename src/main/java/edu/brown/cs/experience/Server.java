@@ -91,7 +91,7 @@ public class Server {
     /* Maker Endpoints */
     Spark.get("/:experience/scenes", new ListAllScenesHandler());
     Spark.get("/:experience/main/edit", new SceneIndexHandler());
-    //Spark.post("/:experience/:scene/edit", new SceneEditHandler());
+    Spark.post("/:experience/:scene/edit", new SceneEditHandler());
     Spark.get("/:experience/:scene/edit", new SceneGetterHandler());
     Spark.delete("/:experience/:scene/edit", new DeleteSceneHandler());
     Spark.post("/:experience", new AssetUploadHandler());
@@ -300,9 +300,17 @@ public class Server {
    * POST /:experience/:scene/edit
    * 
    * @author Justin
-   *
+   */
   public class SceneEditHandler implements Route {
 
+	  class Edit {
+		  
+		  String text;
+		  String type;
+		  
+		  public Edit(String text, String type) {};
+	  }
+	  
 	@Override
 	public Object handle(Request request, Response response) {
 		System.out.println("SceneEditHandler!");
@@ -312,16 +320,25 @@ public class Server {
 		System.out.println("Current directory: " + Paths.get(".").toAbsolutePath().toString());
 		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName);
 
+		
+		
+		Map<String, String> bodyObject = new HashMap<String, String>();
+		
+		bodyObject = GSON.fromJson(request.body(), bodyObject.getClass());
+		
 		QueryParamsMap qm = request.queryMap();
 		String type = qm.value("type");
 		String text = qm.value("text");
-
-		SceneChange change = request.body();
+		
+		
+		
+		
 		
 		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
 
 		if (file.getAbsoluteFile().exists()) {
 			try {
+				System.out.println("[sceneeditor] Creating file: " + file.getAbsolutePath());
 				file.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -346,7 +363,6 @@ public class Server {
 		return GSON.toJson(true);
 	}
   }
-  */
   
   /**
    * Should return detailed and updated information about a specific scene.
@@ -635,8 +651,6 @@ public class Server {
     public Object handle(Request request, Response response) {
       String asset = request.splat()[0];
       Path assetPath = Paths.get("src").resolve("main").resolve("resources").resolve("static").resolve(asset);
-      System.out.println("Serving library: " + assetPath);
-
       return serveAsset(response, assetPath);
     }
   }
@@ -653,10 +667,9 @@ public class Server {
 	  try {
       byte[] contents = Files.readAllBytes(assetPath);
       
+      System.out.println("[serveAsset] " + assetPath);
       
       response.header("Content-Type", tika.detect(assetPath.toFile()));
-      //response.header("Content-Disposition",
-        //String.format("attachment; filename=\"%s\"", assetPath.getFileName()));
       response.header("Connection", "close");
       response.raw().setContentLength(contents.length);
 
