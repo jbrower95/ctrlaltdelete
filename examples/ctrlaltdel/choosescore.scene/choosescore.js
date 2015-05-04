@@ -14,7 +14,8 @@ var exported_scene = {
         scoreWindow.setCancellable(false);
         manager.addWindow(scoreWindow);
 
-        $('#okButton').click(function() {
+        $('#okButton').click(function(event) {
+            event.preventDefault();
             $.post('scores', $('form#scoreForm').serialize(), function(data) {
                 if (data == 'true') {
                     SceneManager.getSharedInstance().presentScene("mainMenu");

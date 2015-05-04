@@ -16,16 +16,14 @@ body {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	text-align: center;
 	z-index: 1;
 }
 
 #scores {
 	margin: auto;
 	color: white;
-	text-align: center;
 	position: relative;
-	width: 40%;
+	width: 50%;
 	top: 10%;
 	border: 4px solid white;
 	padding-top: 20px;
@@ -41,11 +39,13 @@ span {
 
 .name {
 	font-weight: 800;
-	margin-right: 30px;
+	margin-left: 30px;
 }
 
 .value {
 	font-weight: 400;
+	margin-right: 30px;
+	float: right;
 }
 
 #back {

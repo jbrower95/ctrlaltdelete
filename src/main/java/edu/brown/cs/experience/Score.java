@@ -25,8 +25,8 @@ public class Score {
   private static String checkName(String name) {
     if (name.length() < 1) {
       name = "Anonymous";
-    } else if (name.length() > 20) {
-      name = name.substring(0, 20);
+    } else if (name.length() > 50) {
+      name = name.substring(0, 50);
     }
     return name;
   }

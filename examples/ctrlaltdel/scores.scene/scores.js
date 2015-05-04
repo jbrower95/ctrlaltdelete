@@ -4,11 +4,21 @@ var exported_scene = {
         var getScores = function() {
             var params = {limit: 10};
             $.get("scores", params, function(scores) {
+                console.log("Getting!");
                 var parsed = JSON.parse(scores);
                 for (var i = 0; i < parsed.length; i++) {
                     var name = parsed[i].name;
+                    var shortened_name = name;
+                    if (name.length > 15) {
+                        shortened_name = name.substring(0, 12);
+                        shortened_name += "...";
+                    }
                     var value = parsed[i].value;
-                    var el = "<span class='name'>" + name + "</span><span class='value'>" + value + "</span><br />";
+                    var shortened_value = value;
+                    if (value > 99999999) {
+                        shortened_value = '99999999';
+                    }
+                    var el = "<span class='name' title='"+name+"'>" + shortened_name + "</span><span class='value'>" + shortened_value + "</span><br />";
                     $("#scores").append(el);
                 }
             });
