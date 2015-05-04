@@ -102,9 +102,10 @@ var exported_scene = {
 					object.position.x = camera.position.x + 15;
 					object.position.z = camera.position.z;
 					object.position.y = camera.position.y;
-					object.scale.x = 30;
-					object.scale.y = 30;
-					object.scale.z = 30;
+					object.scale.x = 10;
+					object.scale.y = 10;
+					object.scale.z = 10;
+
 
 					camera.position.z = camera.position.z + 5;
 
