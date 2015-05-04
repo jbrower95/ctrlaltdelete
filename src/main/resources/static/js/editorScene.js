@@ -103,6 +103,7 @@ function sceneIdChange() {
         listScenes();
         currentSceneId = newSceneName;
         $("#" + currentSceneId).addClass("curr");
+        changeHeaders(currentSceneId);
         $.notify("Remember to change your scene ID anywhere you reference this scene!", "warning");
     }).fail(function(response) {
       var reason = "An unknown error occurred.";
@@ -115,6 +116,15 @@ function sceneIdChange() {
       $.notify("Couldn't change scene ID: " + reason, "error");
     });
   } 
+}
+
+/**
+* Changes the editor headers to the right id.
+*/
+function changeHeaders(newSceneId) {
+  $("#scenejs").html(newSceneId + ".js");
+  $("#scenehtml").html(newSceneId + ".html");
+  $("#scenecss").html(newSceneId + ".css");
 }
 
 $("#sceneIdInput").blur(sceneIdChange);
@@ -202,9 +212,7 @@ function fillMainInfo() {
       $("input[name=sceneTitle]").addClass("inactive");
       $(".settings").addClass("inactive");
 
-      $("#scenejs").html("index.js");
-      $("#scenehtml").html("index.html");
-      $("#scenecss").html("index.css");
+      changeHeaders("index");
 
       cmJs.setValue(sceneJs);
       cmHtml.setValue(sceneHtml);
@@ -235,9 +243,7 @@ function fillSceneInfo(scene) {
 function fillFields(sceneId, sceneJs, sceneHtml, sceneCss) {
   $("input[name=sceneId]").val(sceneId);
 
-  $("#scenejs").html(sceneId + ".js");
-  $("#scenehtml").html(sceneId + ".html");
-  $("#scenecss").html(sceneId + ".css");
+  changeHeaders(sceneId);
 
   if (sceneJs === undefined || sceneJs === "") {
       sceneJs = "\t";
