@@ -34,11 +34,11 @@ var exported_scene = {
 		console.log(this.exportedVariables);
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		console.log(clippyAgent);
+		clippyAgent.speak("I'm here!");
 
 		var paintWindow = manager.getWindowWithId("paint");
 		paintWindow.setEnabled(true);
 		paintWindow.setActive(true);
-
 
 		AssetManager.getSharedInstance().preload(1);
 		AssetManager.getSharedInstance().preload(3);
@@ -70,7 +70,7 @@ var exported_scene = {
 				game.load.image('clippy', 'paint.scene/pixel-clippy.png');
 				game.load.image('spike', 'paint.scene/spike.png');
 				game.load.image('spikeTop', 'paint.scene/spike-top.png');
-				game.load.spritesheet('gebu', 'paint.scene/gebusheet.png',71, 79);
+				game.load.spritesheet('gebu', 'paint.scene/gebusheet.png', 71, 79);
 				game.load.tilemap('map', 'paint.scene/paint.json', null, Phaser.Tilemap.TILED_JSON);
 			},
 			create : function() {

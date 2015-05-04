@@ -237,7 +237,6 @@ SceneManager.prototype.presentScene = function(sceneID) {
     }
 
     this.resolvePhantomDependencies(sceneID, requiredScenes).then($.proxy(function() {
-        console.log("Done resolving dependencies!");
         //copy over variables
         jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
         scene.element = this.activeScene.element;
@@ -344,17 +343,23 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
           rs = this.scenes[requiredScene];
           
           console.log("[scenemanager.js/phantom] Resolving dependency " + rs.id + " for scene: " + sceneName);
-          
+          //let the current active scene know it's being destroyed.          
+          if (this.activeScene && this.activeScene.onDestroy) {
+            this.activeScene.onDestroy();
+          }
+
           if (!rs.isPhantom()) {
-            //this is NOT a phantom scene. inject the HTML.
             $(this.contentDiv).empty();
             if (!rs.element) {
               //don't reload stuff if we don't need to.
               var newScene = document.createElement("div");
               newScene.className = "__scene__";
+              console.log("Getting HTML for scene: " + rs.id);
               newScene.innerHTML = rs.getHTML();
               this.contentDiv.appendChild(newScene);
               rs.element = newScene;
+            } else {
+              this.contentDiv.appendChild(rs.element);
             }
           } else {
             rs.preloadPhantom();
