@@ -39,25 +39,13 @@
 
         <div class="main">
             <div id="sceneEdit" style="display: none;">
-                <input type="text" class="title" name="sceneTitle" value="" />
-
                 <div class="settings">
-                    <span class="settings-title">Settings</span>
-
                     <div class="settings-bar">
                         <div class="bar-block label">Scene ID</div>
                         <div class="bar-block answers">
                             <input type="text" name="sceneId" id="sceneIdInput" value=""/>
                         </div>
                     </div>
-
-                    <!--<div class="settings-bar">
-                        <div class="bar-block label">Previous Scene</div>
-                        <div class="bar-block answers">
-                            <select>
-                            </select>
-                        </div>
-                    </div>-->
                 </div>
 
                 <!-- Scene.js -->
