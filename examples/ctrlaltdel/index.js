@@ -19,5 +19,6 @@ Scene.load("gabeshouse.scene/gabeshouse.js");
 Scene.load("clickthexs.scene/clickthexs.js");
 Scene.load("paint.scene/paint.js");
 Scene.load("choosescore.scene/choosescore.js");
+Scene.load("killbill.scene/killbill.js");
 
 
