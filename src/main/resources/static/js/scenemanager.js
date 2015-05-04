@@ -1,18 +1,18 @@
 /**  SceneManager:
   *
-  *		A very simple HTML-injection based scene transition manager
-  *		written in javascript. This allows for games to be made in a 
-  *		compartmentalized way, without focusing on transitions or game flow.
+  *   A very simple HTML-injection based scene transition manager
+  *   written in javascript. This allows for games to be made in a 
+  *   compartmentalized way, without focusing on transitions or game flow.
   *
-  *		To avoid redundant HTML / possible unsmooth 'scene' transitions, you can omit the HTML of a scene
-  *		and the HTML of the last scene will be used. This allows you to still have discrete scenes, but 
-  *		also ones that are non-destructive.
+  *   To avoid redundant HTML / possible unsmooth 'scene' transitions, you can omit the HTML of a scene
+  *   and the HTML of the last scene will be used. This allows you to still have discrete scenes, but 
+  *   also ones that are non-destructive.
   *
-  *		The scene manager maintains a map of scene names to Scene objects (scene.js). The scene
-  *		manager then invokes the correct javascript and handles scope by passing around Scene instances.
+  *   The scene manager maintains a map of scene names to Scene objects (scene.js). The scene
+  *   manager then invokes the correct javascript and handles scope by passing around Scene instances.
   *
-  *		Relies On:
-  *				- jQuery (1.6+)
+  *   Relies On:
+  *       - jQuery (1.6+)
   *
   *
   *      There is only ONE scene manager. This makes accessing it a bit less painful throughout scenes.
@@ -29,14 +29,14 @@
   *     accessing the current running scene from within a scene's javascript).
   *
   *
-  *		Instance Methods:
-  *			  # Presents a scene object with the given scene ID.
-  *			- (void) presentScene(SceneID)
+  *   Instance Methods:
+  *       # Presents a scene object with the given scene ID.
+  *     - (void) presentScene(SceneID)
   *
-  *					
-  *			  # Preloads a scene. This is essentially moot until Web Workers
-  * 		  # are implemented for background loading.
-  *			- (void) loadScene(Scene scene)
+  *         
+  *       # Preloads a scene. This is essentially moot until Web Workers
+  *       # are implemented for background loading.
+  *     - (void) loadScene(Scene scene)
   *
   *     Class Methods:
   *
@@ -49,10 +49,10 @@
   *
   *          + (SceneManager) SceneManager.getSharedInstance()
   *             Returns the shared scenemanager.
-  *		Constructors [DO NOT USE]:
+  *   Constructors [DO NOT USE]:
   *
-  *			  # SceneManager(contentDivID, scenes)
-  *			  [see below for documentation]
+  *       # SceneManager(contentDivID, scenes)
+  *       [see below for documentation]
   *
   */
 
@@ -63,52 +63,52 @@ $.fn.exists = function () {
 
 
 /*
-*	Constructs a new SceneManager
+* Constructs a new SceneManager
 *
-*		contentDiv - The div in which the scene manager should place its
-*					content. This is the ID of the div. 
+*   contentDiv - The div in which the scene manager should place its
+*         content. This is the ID of the div. 
 *
-*					If: 
-*						- a div with this id does not exist, one will be created
-*						- a div with this id DOES exist, and the class is set to 
-							'__stage__', its contents will be cleared and reused by the scene manager.
-*						- a NON DIV element with this id exists, an error will be written to the console.
+*         If: 
+*           - a div with this id does not exist, one will be created
+*           - a div with this id DOES exist, and the class is set to 
+              '__stage__', its contents will be cleared and reused by the scene manager.
+*           - a NON DIV element with this id exists, an error will be written to the console.
 *
-*		scenes:
-*				A map whose keys are scene names (e.g "intro") and values are
-*				valid 'Scene' objects.
+*   scenes:
+*       A map whose keys are scene names (e.g "intro") and values are
+*       valid 'Scene' objects.
 *
-*		initialScene:
-*				The initial scene to load. 
+*   initialScene:
+*       The initial scene to load. 
 */
 function SceneManager(contentDivID) {
+  console.log("[scenemanager.js] Initializing scene manager...");
 
-        console.log("[scenemanager.js] Initializing scene manager...");
+  var existingDiv = document.getElementById(contentDivID);
 
-		var existingDiv = document.getElementById(contentDivID);
+  if (existingDiv == null) {
+    //create a div
+    this.contentDiv = document.createElement("div");
+    this.contentDiv.className = "__stage__";
+    document.body.appendChild(this.contentDiv);
+  } else {
+    // is it a div
+    if (existingDiv.className == "__stage__" && existingDiv.tagName == "DIV") {
+      //we found love in a hopeless place
+      this.contentDiv = existingDiv;
+    } else {
+      console.error("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __stage__");
+      // to avoid getting into sticky situations, refuse to load the scenes.
+      return;
+    }
+  }
 
-		if (existingDiv == null) {
-			//create a div
-			this.contentDiv = document.createElement("div");
-			this.contentDiv.className = "__stage__";
-			document.body.appendChild(this.contentDiv);
-		} else {
-			// is it a div
-			if (existingDiv.className == "__stage__" && existingDiv.tagName == "DIV") {
-				//we found love in a hopeless place
-				this.contentDiv = existingDiv;
-			} else {
-				console.error("[scenemanager.js] Error: Couldn't load content div - tag must be a div and class must be __stage__");
-				// to avoid getting into sticky situations, refuse to load the scenes.
-				return;
-			}
-		}
-
-        this.scenes = {};
-        console.log("[scenemanager.js] SceneManager setup complete.");
+  this.scenes = {};
+  console.log("[scenemanager.js] SceneManager setup complete.");
 }
 
-//the singleton scene manager. To avoid polluting the global namespace, lots of underscores are used.
+// This is the singleton scene manager. To avoid polluting the global namespace, 
+// lots of underscores are used.
 var _____SCENEMANAGER = null;
 
 /**
@@ -138,13 +138,13 @@ SceneManager.getSharedInstance = function() {
  * @param scene The scene to add.
  */
 SceneManager.prototype.registerScene = function(scene) {
-	if (this.scenes[scene.id] != null) {
-		console.log("[Scene.js: NONFATAL] Error: Overwriting existing scene with id " + sceneID + ". Is this what you wanted?");
-	}
+  if (this.scenes[scene.id] != null) {
+    console.log("[scenemanager.js: NONFATAL] Error: Overwriting existing scene with id " + sceneID + ". Is this what you wanted?");
+  }
 
-	this.scenes[scene.id] = scene;
+  this.scenes[scene.id] = scene;
 
-    console.log("[scenemanager.js] Registered Scene: " + scene.id);
+  console.log("[scenemanager.js] Registered Scene: " + scene.id);
 };
 
 /**
@@ -152,95 +152,105 @@ SceneManager.prototype.registerScene = function(scene) {
  * the scene will be ejected using a left to right animation.
  */
 SceneManager.prototype.presentScene = function(sceneID) {
-
   return new Promise($.proxy(function(resolve, reject) {
-  var scene = this.scenes[sceneID];
+    var scene = this.scenes[sceneID];
 
-	if (scene == null) {
-		console.error("[scenemanager.js] Error: Couldn't load scene " + sceneID);
-		return;
-	} 
+    if (scene == null) {
+      console.error("[scenemanager.js] Error: Couldn't load scene " + sceneID);
+      return;
+    } 
 
-  if (!scene.getHTML && !scene.requires) {
-    console.error("[scenemanager.js] Scene didn't have a getHTML function or require a previous scene. This is probably a user mistake.");
-    console.error("[scenemanager.js] object: " + scene);
-    return;
-  }
+    if (!scene.getHTML && !scene.requires) {
+      console.error("[scenemanager.js] Scene didn't have a getHTML function or require a previous scene. This is probably a user mistake.");
+      console.error("[scenemanager.js] object: " + scene);
+      return;
+    }
 
-	if (!scene.isPhantom()) {
-    console.log("[scenemanager.js] Presenting non phantom scene: " + sceneID);
+    if (!scene.isPhantom()) {
+      console.log("[scenemanager.js] Presenting non phantom scene: " + sceneID);
+      console.log("[scenemanager.js] " + sceneID + " has exportedVariables:");
+      console.log(scene.exportedVariables);
+
+      console.log(this);
+      console.log(this.activeScene);
+      console.log(this.scenes);
+      console.log(this.contentDiv);
   
-		// If there is a scene already in the content div, move it out
-		if (this.activeScene) {
-			// since we reassign this.activeScene when the next animation completes,
-			if (this.activeScene.onDestroy) {
-				this.activeScene.onDestroy();
-			}
-      if (this.activeScene.element == null) {
-          console.error("[scenemanager] Existing scene was null..");
+      // If there is a scene already in the content div, move it out
+      if (this.activeScene) {
+        console.log("[scenemanager.js] Destroying active scene!");
+        // since we reassign this.activeScene when the next animation completes,
+        if (this.activeScene.onDestroy) {
+          this.activeScene.onDestroy();
+        }
+        if (this.activeScene.element == null) {
+            console.error("[scenemanager] Existing scene was null..");
+        }
+        $(this.contentDiv).empty();
+
+        // export variables to next scene
+        console.log("Exporting variables: " + this.activeScene.id + " -> " + scene.id);
+        $.extend(scene.exportedVariables, this.activeScene.exportedVariables);
+      } else {
+        console.log("[scenemanager.js] No active scene to destroy...");
       }
-      $(this.contentDiv).empty();
 
-      // export variables to next scene
-      $.extend(scene.exportedVariables, this.activeScene.exportedVariables);
-    }
+      var newScene = document.createElement("div");
+      newScene.className = "__scene__";
+      newScene.innerHTML = scene.getHTML();
 
-    var newScene = document.createElement("div");
-    newScene.className = "__scene__";
-    newScene.innerHTML = scene.getHTML();
+      scene.element = newScene;
+      this.contentDiv.appendChild(scene.element);
 
-    scene.element = newScene;
-    this.contentDiv.appendChild(scene.element);
+      if (scene.preload) {
+        scene.preload();
+      }
+    } else {
+      console.log("[scenemanager.js] Presenting phantom scene: " + sceneID);
+      
+      // reuse the scene HTML that's in there. just tell the active scene it's being destroyed
+      // resolve our dependencies
+      var requiredScenes = [];
 
-    if (scene.preload) {
-      scene.preload();
-    }
-	} else {
-    console.log("[scenemanager.js] Presenting phantom scene: " + sceneID);
-    
-		// reuse the scene HTML that's in there. just tell the active scene it's being destroyed
-    // resolve our dependencies
-    var requiredScenes = [];
+      // make sure we don't hit a cycle. If we do, this is a fatal error and the programmer should be alerted.
+      var visitedScenes = [];
+      visitedScenes.push(scene.id);
 
-    // make sure we don't hit a cycle. If we do, this is a fatal error and the programmer should be alerted.
-    var visitedScenes = [];
-    visitedScenes.push(scene.id);
+      var current_requirement = scene.requires;
 
-    var current_requirement = scene.requires;
+      if (current_requirement == null) {
+        console.error("[scenemanager.js] No required scene provided for this phantom scene.");
+      }
 
-    if (current_requirement == null) {
-      console.error("[scenemanager.js] No required scene provided for this phantom scene.");
-    }
+      while (current_requirement != null) {
+        console.log("[scenemanager.js] Resolving requirement: " + current_requirement);
+        var current_required_scene = this.getScene(current_requirement);
 
-    while (current_requirement != null) {
-      console.log("[scenemanager.js] Resolving requirement: " + current_requirement);
-      var current_required_scene = this.getScene(current_requirement);
+        if ((this.activeScene) && (current_required_scene.id == this.activeScene.id)) {
+            // We've hit our current scene in the dependency graph. That means, all content
+            //   we've accumulated up until now is all we need to present this scene.
+            // make sure the new scene can easily find things inside of itself.
+            console.log("[scenemanager.js/resolver] The dependency graph included the current scene! Short circuiting...");
+            break;
+        }
 
-      if ((this.activeScene) && (current_required_scene.id == this.activeScene.id)) {
-          // We've hit our current scene in the dependency graph. That means, all content
-          //   we've accumulated up until now is all we need to present this scene.
-          // make sure the new scene can easily find things inside of itself.
-          console.log("[scenemanager.js/resolver] The dependency graph included the current scene! Short circuiting...");
+        if (visitedScenes.indexOf(current_required_scene.id) > -1) {
+            console.error("[scenemanager.js/loader] Error: (1/2) You have a cyclic dependency in your scene graph. That is, the scene " + current_required_scene.id + " is required in a cyclic manner.");
+            console.error("[scenemanager.js/loader] (2/2) Please review your phantom scene 'requires' statements.");
+        }
+
+        visitedScenes.push(current_required_scene.id);
+        requiredScenes.push(current_required_scene.id);
+
+        if (!current_required_scene.isPhantom()) {
+          console.log("[scenemanager.js/resolver] The dependency graph hit a root dependency! Short circuiting...");
           break;
+        }
+
+        current_requirement = current_required_scene.requires;
       }
 
-      if (visitedScenes.indexOf(current_required_scene.id) > -1) {
-          console.error("[scenemanager.js/loader] Error: (1/2) You have a cyclic dependency in your scene graph. That is, the scene " + current_required_scene.id + " is required in a cyclic manner.");
-          console.error("[scenemanager.js/loader] (2/2) Please review your phantom scene 'requires' statements.");
-      }
-
-      visitedScenes.push(current_required_scene.id);
-      requiredScenes.push(current_required_scene.id);
-
-      if (!current_required_scene.isPhantom()) {
-        console.log("[scenemanager.js/resolver] The dependency graph hit a root dependency! Short circuiting...");
-        break;
-      }
-
-      current_requirement = current_required_scene.requires;
-    }
-
-    this.resolvePhantomDependencies(sceneID, requiredScenes).then($.proxy(function() {
+      this.resolvePhantomDependencies(sceneID, requiredScenes).then($.proxy(function() {
         //copy over variables
         jQuery.extend(scene.exportedVariables, this.activeScene.exportedVariables);
         scene.element = this.activeScene.element;
@@ -269,29 +279,32 @@ SceneManager.prototype.presentScene = function(sceneID) {
         };
 
         console.log("[scenemanager.js] Presented scene: " + scene.id);
+
         // pass the torch to the new scene
         this.activeScene = scene;
         if (scene.onPresent) {
           scene.onPresent();
         }
-    }, this));
-    return;
-	}
+      }, this));
 
-  // make sure the new scene can easily find things inside of itself.
-  scene.searchContent = function(id) {
-    return $(newScene).find(id);
-  };
-  console.log("[scenemanager.js] Presented scene: " + scene.id);
-  // pass the torch to the new scene
-  this.activeScene = scene;
-  if (scene.onPresent) {
-  	scene.onPresent();
-  }
+      return;
+    }
 
-}, this));
+    // make sure the new scene can easily find things inside of itself.
+    scene.searchContent = function(id) {
+      return $(newScene).find(id);
+    };
 
+    console.log("[scenemanager.js] Presented scene: " + scene.id);
+    // pass the torch to the new scene
+    this.activeScene = scene;
+    console.log("[scenemanager.js] New active scene: ");
+    console.log(this.activeScene);
+    if (scene.onPresent) {
+      scene.onPresent();
+    }
 
+  }, this));
 };
 
 
@@ -305,26 +318,25 @@ SceneManager.prototype.presentScene = function(sceneID) {
  * 
  * ex:
  * 
- * 	SceneManager.performSequence([doFirstAnim, moveCharacter, doSecondAnim], [100, 200, 300]);
+ *  SceneManager.performSequence([doFirstAnim, moveCharacter, doSecondAnim], [100, 200, 300]);
  * 
- * 	(wait 100ms) -> perform 'doFirstAnim()' -> wait 200ms -> 'perform moveCharacter()' -> wait 300ms
+ *  (wait 100ms) -> perform 'doFirstAnim()' -> wait 200ms -> 'perform moveCharacter()' -> wait 300ms
  * -> perform 'doSecondAnim()'
  */
 SceneManager.performSequence = function(funcs, timeouts, context) {
-	
-	if (!funcs || !timeouts || funcs.length == 0  || timeouts.length == 0) {
-		return;
-	}
-	
-	//if context isn't supplied, default to the caller.
-	context = context || this;
-	
-	var timeout = timeouts.shift();
-	setTimeout($.proxy(function() {
-		//get the first function, call it, and recur.
-		(funcs.shift())();
-		SceneManager.performSequence(funcs, timeouts, context);
-		}, context), timeout);
+  if (!funcs || !timeouts || funcs.length == 0  || timeouts.length == 0) {
+    return;
+  }
+  
+  //if context isn't supplied, default to the caller.
+  context = context || this;
+  
+  var timeout = timeouts.shift();
+  setTimeout($.proxy(function() {
+    //get the first function, call it, and recur.
+    (funcs.shift())();
+    SceneManager.performSequence(funcs, timeouts, context);
+  }, context), timeout);
 };
 
 
@@ -333,16 +345,13 @@ SceneManager.performSequence = function(funcs, timeouts, context) {
 *  @return a promise to resolve these scenes.
 */
 SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneStack) {
-
     var manager = this;
 
     console.log("[scenemanager.js/phantom] Resolving dependencies for phantom scene: " + sceneName);
     console.log("Remaining: " + sceneStack.length);
     return new Promise($.proxy(function(resolve, reject) {
-
         //preload all dependencies
         if (sceneStack.length > 0) {
-
           requiredScene = sceneStack.pop();
           rs = this.scenes[requiredScene];
           
@@ -395,14 +404,13 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
  * Preloads the resources associated with a given scene.
  */
 SceneManager.prototype.loadScene = function(sceneID) {
+  var scene = this.scenes[sceneID];
 
-	var scene = this.scenes[sceneID];
-
-	if (scene.preload) {
-		// custom preloading is available for this scene
-		// TODO: use web workers to make this REAL fast. As of right now, without threads this is useless (amounts to single-threaded loading).
-		scene.preload();
-	}
+  if (scene.preload) {
+    // custom preloading is available for this scene
+    // TODO: use web workers to make this REAL fast. As of right now, without threads this is useless (amounts to single-threaded loading).
+    scene.preload();
+  }
 };
 
 
