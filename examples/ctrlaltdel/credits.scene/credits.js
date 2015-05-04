@@ -48,11 +48,17 @@ var exported_scene = {
             $("#credit4").show({duration: 2000});
         };
 
+        var chooseScore = this.exportedVariables && this.exportedVariables.gameWon;
+
         var exit = function() {
             //do that sweet fade
             $("video").hide(1000, function() {
                 $("video").trigger("stop");
-                SceneManager.getSharedInstance().presentScene("choosescore");
+                if (chooseScore) {
+                    SceneManager.getSharedInstance().presentScene("choosescore");
+                } else {
+                    SceneManager.getSharedInstance().presentScene("mainMenu");
+                }
             });
         };
 

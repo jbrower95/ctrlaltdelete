@@ -167,6 +167,7 @@ var exported_scene = {
 	    //recycle bin functionality
 	    var recycleCount = 0;
 	    var numClippyFiles = 5;
+	    this.exportedVariables.gameWon = true;
 
 	    var recycleClippyFile = function() {
 	    	recycleCount++;

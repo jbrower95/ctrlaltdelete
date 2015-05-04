@@ -53,7 +53,6 @@ var exported_scene = {
                 $('.container').append(win);
                 numWindows++;
                 var dur = Math.floor((Math.random() * 4000) + 2000);
-                console.log(dur);
                 rain(win, dur);
             }
         }

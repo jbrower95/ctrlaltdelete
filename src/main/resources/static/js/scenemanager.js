@@ -180,7 +180,11 @@ SceneManager.prototype.presentScene = function(sceneID) {
           console.error("[scenemanager] Existing scene was null..");
       }
       $(this.contentDiv).empty();
+
+      // export variables to next scene
+      $.extend(scene.exportedVariables, this.activeScene.exportedVariables);
     }
+
     var newScene = document.createElement("div");
     newScene.className = "__scene__";
     newScene.innerHTML = scene.getHTML();
