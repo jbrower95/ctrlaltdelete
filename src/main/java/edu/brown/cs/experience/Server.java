@@ -364,6 +364,13 @@ public class Server {
 		
 		String type = request.queryParams("type");
 		
+		if (sceneName == "null") {
+			//special case for the 'main'.
+			sceneName = "index";
+			sceneDir = Paths.get(directory).resolve(experienceName);
+		}
+		
+		
 		if (type == null || text == null) {
 			response.status(400);
 			return GSON.toJson(false);
