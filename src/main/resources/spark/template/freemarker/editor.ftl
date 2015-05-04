@@ -330,20 +330,31 @@
 				
 				console.log("Saving new scene name...");
 				
-				var newSceneName = $("sceneIdInput").val();
+				var newSceneName = $("#sceneIdInput").val();
 				
 				if (newSceneName != currentSceneId) {
 					
 					//a change occurred
-					var url = "/" + id + "/" + currentSceneId + "/refactor?new=" + newSceneName;
+					var url = "/" + id + "/" + currentSceneId + "/refactor?newid=" + newSceneName;
+           		
+           			console.log("new scene name: " + newSceneName);
+           			console.log("old scene name: " + currentSceneId);
            		
 					$.post(url, function(response) {
-						if (response === true) {
 							//it worked
 							listScenes();
 							currentSceneId = newSceneName;
 							$("#" + currentSceneId).addClass("curr");
+							$.notify("Remember to change your scene ID anywhere you reference this scene!", "warning");
+					}).fail(function(response) {
+						var reason = "An unknown error occurred.";
+						var responseObj = JSON.parse(response.responseText);
+						if (responseObj.error) {
+							reason = responseObj.error;
 						}
+					
+						$("#sceneIdInput").val(currentSceneId);
+						$.notify("Couldn't change scene ID: " + reason, "error");
 					});
 				} 
 			}

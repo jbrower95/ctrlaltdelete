@@ -130,7 +130,7 @@ public class Server {
 		
 		if (Files.exists(newDirectory)) {
 			response.status(400);
-			return GSON.toJson(ImmutableMap.of("error", "Error: Target scene already exists."));
+			return GSON.toJson(ImmutableMap.of("error", "Target scene already exists at " + newDirectory));
 		}
 		
 		try {
@@ -139,7 +139,7 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 			response.status(400);
-			return GSON.toJson(ImmutableMap.of("error", "Error: Couldn't rename scene."));
+			return GSON.toJson(ImmutableMap.of("error", "Couldn't rename scene."));
 		}
 		
 		return GSON.toJson(true);
