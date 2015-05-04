@@ -98,12 +98,16 @@
             box-sizing: border-box;
         }
 
-        .left-bar {
-            position: relative;
-            float: left;
-            width: 15%;
+        .over {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 18%;
             height: 100%;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .list {
@@ -437,8 +441,16 @@
 
         .back {
             position: relative;
-            width: 60%;
-            height: auto;
+            height: 20px;
+            width: auto;
+            top: 4px;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+
+        .back:hover {
+            cursor: pointer;
+            opacity: 0.5;
         }
     </style>
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
@@ -447,9 +459,9 @@
     <div class="container clearfix" id="${isNew}">
         <div class="sidebar c${color}" id="${color}">
             <div class="scene-list">
-                <!--<div class="left-bar">
+                <div class="over">
                     <img class="back" src="lib/images/left.svg">
-                </div>-->
+                </div>
                 <span class="side-title curr">${title}</span>
                 <ul class="list">
                     
@@ -666,6 +678,7 @@
                 styleActiveLine: true,
                 matchBrackets: true,
                 autoCloseBrackets: true,
+                lineWrapping: true,
                 theme: "monokai"
               });
               
@@ -761,6 +774,9 @@
                 }
             });
 
+            $(".back").click(function() {
+                window.location.replace("/maker");
+            });
             
 
             /**
