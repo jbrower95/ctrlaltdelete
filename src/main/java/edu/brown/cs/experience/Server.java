@@ -216,31 +216,30 @@ public class Server {
 		String sceneTemplateDirectory = "src/main/resources/static/template/scene";
 		
 		try {
-			
+
 			File[] files = new File(sceneTemplateDirectory).listFiles();
-			
+
 			//copy all of the template files.
 			for (File file : files) {
-				
+
 				String fileExtension = file.getName().split("\\.")[1];
-				
+
 				String location = tentativeSpot.resolve(baseName + "." + fileExtension).toAbsolutePath().toString();
-				
+
 				InputStream inputStream = new FileInputStream(file);
 				FileOutputStream outputStream = new FileOutputStream(new File(location));
-				
+
 				byte[] input = Files.readAllBytes(file.toPath());
-				
+
 				String result = new String(input, Charset.defaultCharset());
 				result = result.replaceAll("SCENENAME", baseName);
-				
+
 				byte[] outputData = result.getBytes();
 				outputStream.write(outputData, 0, outputData.length);
-				
+
 				inputStream.close();
 				outputStream.close();
 			}
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -314,17 +313,19 @@ public class Server {
 	  
 	@Override
 	public Object handle(Request request, Response response) {
+		
+		String text = request.body();
+		
+		
 		System.out.println("SceneEditHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
-		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName + ".scene");
+		Path sceneDir = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
 		
 		String type = request.queryParams("type");
-		String body = request.body();
 		
-		System.out.println("Body: '" + body + "'");
+		System.out.println("Body: '" + text + "'");
 		
-		String text = null;
 		if (type == null || text == null) {
 			response.status(400);
 			return GSON.toJson(false);
