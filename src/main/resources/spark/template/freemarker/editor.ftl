@@ -588,6 +588,17 @@
                 cmCss.setValue(sceneCss);
             }
 
+            function resetEditor() {
+                currentSceneId = null;
+                $(".inactive").removeClass("inactive");
+                $("#sceneEdit").fadeOut();
+                $("#generalEdit").fadeIn();
+                onScene = false;
+                listScenes();
+                $(".curr").removeClass("curr");
+                $(".side-title").addClass("curr");
+            }
+
             $("textarea[name=js]").change(function() {
                 if (onScene) {
                     onSceneChange($("textarea[name=js]").val(), "js", $("input[name=sceneId]").val());
@@ -813,6 +824,7 @@
                     success: function(result) {
                         console.log("Successfully deleted.");
                         $.notify("Scene deleted! Get rid of this notification!", "success");
+                        resetEditor();
                     },
                     error: function(result) {
                         $.notify("Scene couldn't be deleted.", "error");
