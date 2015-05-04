@@ -1029,6 +1029,7 @@ public class Server {
     public String handle(Request req, Response res) {
       System.out.println("SaveEditedExperienceHandler");
       String filename = req.params(":experience");
+      senseChanges();
       Experience exp = experiences.get(filename);
 
       // Get data
