@@ -73,14 +73,14 @@ AssetManager.prototype.preload = function(id) {
  * @param reload If you want the sound to be reloaded.
  * note: If reload is omitted and the sound has already been loaded, this will be a no op. (no work will be done)
  */
-AssetManager.prototype.preloadNamed = function(soundPath, soundName, reload) {
+AssetManager.prototype.preloadNamed = function(soundPath, soundName, loop, reload) {
 
     if (this.namedSounds[soundName] && (!reload)) {
         //this sound has already been loaded.
         return;
     }
     console.log("Loading sound: " + soundPath);
-    this.namedSounds[soundName] = new buzz.sound(soundPath);
+    this.namedSounds[soundName] = new buzz.sound(soundPath, {'loop': loop});
     this.namedSounds[soundName].load();
 };
 

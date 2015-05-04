@@ -34,7 +34,6 @@ var exported_scene = {
 		console.log(this.exportedVariables);
 		var clippyAgent = this.exportedVariables.clippyAgent;
 		console.log(clippyAgent);
-		clippyAgent.speak("I'm here!");
 
 		var paintWindow = manager.getWindowWithId("paint");
 		paintWindow.setEnabled(true);
@@ -257,7 +256,7 @@ var exported_scene = {
  			}
 		});
 
-		AssetManager.getSharedInstance().preloadNamed("sounds/paintparty.mp3", "paintparty");
+		AssetManager.getSharedInstance().preloadNamed("sounds/paintparty.mp3", "paintparty", true);
 		AssetManager.getSharedInstance().playNamed("paintparty");
 
 		$(document).ready(function() {

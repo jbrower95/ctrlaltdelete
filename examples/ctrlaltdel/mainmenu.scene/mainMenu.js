@@ -5,7 +5,7 @@ var exported_scene = {
         var statue = this.searchContent("#statue");
         var options = this.searchContent("#options");
 
-        AssetManager.getSharedInstance().preloadNamed("sounds/eno95.mp3", "main menu music");
+        AssetManager.getSharedInstance().preloadNamed("sounds/eno95.mp3", "main menu music", true);
         AssetManager.getSharedInstance().preloadNamed("sounds/ding.mp3", "button ding");
 
         this.searchContent("#start").click($.proxy(function() {

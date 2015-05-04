@@ -23,7 +23,6 @@ var exported_scene = {
                 SceneManager.getSharedInstance().presentScene("mainMenu");
             });
         }
-
         animate("white", 3000);
 	},
 	onDestroy: function() {
