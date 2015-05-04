@@ -309,12 +309,13 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		System.out.println("DeleteSceneHandler!");
+		
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		Experience exp = experiences.getOrDefault(experienceName, null);
 		
 		if (exp == null) {
+			System.out.println("Couldn't get experience: " + experienceName);
 			response.status(404);
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Unknown experience!"));
 		}
@@ -323,6 +324,7 @@ public class Server {
 		
 		try {
 			FileUtils.deleteDirectory(new File(sceneDirectory.toAbsolutePath().toString()));
+			System.out.println("[DeleteSceneHandler] Deleted directory: " + sceneDirectory);
 			senseChanges();
 			return GSON.toJson(ImmutableMap.of("success", "true"));
 		} catch (IOException e) {
@@ -752,7 +754,7 @@ public class Server {
 	  try {
       byte[] contents = Files.readAllBytes(assetPath);
       
-      System.out.println("[serveAsset] " + assetPath);
+      //System.out.println("[serveAsset] " + assetPath);
       
       response.header("Content-Type", tika.detect(assetPath.toFile()));
       response.header("Connection", "close");

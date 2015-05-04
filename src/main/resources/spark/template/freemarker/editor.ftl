@@ -373,27 +373,33 @@
            		console.log(typeof code);
            		var baseUrl = "/" + id + "/" + currentSceneId + "/edit?type=";
            		$.post(baseUrl + "css", code, function(response) {
-           			console.log(response);
-           		});
-           		console.log(change);
+           			$.notify("Saved!", "success");
+                    console.log("Update succeeded! (css)");
+           		}).fail(function(){
+                    $.notify("Couldn't save CSS.", "error");
+                });
 			  });
 			  
 			cmJs.on("change", function(cm, change) {
 				var code = cmJs.getValue();
 				console.log(code);
 				$.post("/" + id + "/" + currentSceneId + "/edit?type=js", code , function(response) {
-           			console.log(response);
-           		});
-           		console.log(change);
+                    $.notify("Saved!", "success");
+           			console.log("Update succeeded! (js).");
+           		}).fail(function(){
+                    $.notify("Couldn't save Javascript.", "error");
+                });
 			  });
 			  
 			cmHtml.on("change", function(cm, change) {
 				var code = cmHtml.getValue();
 				console.log(code);
 				$.post("/" + id + "/" + currentSceneId + "/edit?type=html", code, function(response) {
-           			console.log(response);
-           		});
-           		console.log(change);
+                    $.notify("Saved!", "success");
+           			console.log("Updated succeeded! (html)");
+           		}).fail(function() {
+                    $.notify("Couldn't save HTML.", "error");
+                });
 			  });
 
             
@@ -804,6 +810,7 @@
             });
 
             function deleteScene() {
+                console.log("Meoooowwwww");
                 $.ajax({
                     url: '/' + id + '/' + currentSceneId + '/edit',
                     type: 'DELETE',
@@ -820,9 +827,7 @@
             /**
             * Delete scene on click.
             */
-            $("#deleteScene").click(function() {
-                deleteeScene();
-            });
+            $("#sceneDelete").click(deleteScene);
 
         });
     </script>
