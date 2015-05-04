@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.servlet.MultipartConfigElement;
@@ -45,7 +46,7 @@ import com.google.gson.JsonParseException;
 import edu.brown.cs.joengelm.sqldb.Database;
 
 public class Server {
-  Map<String, Experience> experiences = new HashMap<>();
+  Map<String, Experience> experiences = new ConcurrentHashMap<>();
   private final static Gson GSON = new Gson();
   private final String directory;
   private int newExpId;
@@ -99,7 +100,7 @@ public class Server {
     Spark.post("/:experience", new AssetUploadHandler());
     Spark.delete("/:experience", new DeleteExperienceHandler());
     Spark.put("/:experience/newscene", new SceneTemplateHandler());
-
+    
     Spark.get("/:experience/play", new PlayHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.get("/:experience/scores", new GetScoresHandler());
@@ -156,17 +157,18 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		System.out.println("DeleteExperienceHandler!");
+		
 		String experienceName = request.params(":experience");
 		
-		if (experienceName == "ctrlaltdel") {
+		if (experienceName.equals("ctrlaltdel")) {
 			System.err.println("Don't delete this, you idiot.");
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Protected resource."));
 		}
 		
-		Path expPath = Paths.get(directory + File.separator + experienceName);
+		Path expPath = Paths.get(directory).resolve(experienceName);
 		
 		try {
+			System.out.println("Deleting directory: " + expPath);
 			FileUtils.deleteDirectory(new File(expPath.toAbsolutePath().toString()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -595,6 +597,7 @@ public class Server {
     System.out.println("[server] Binding file directory: " + directory);
     File dir = new File(directory);
     File[] directoryListing = dir.listFiles();
+    experiences.clear();
     if (directoryListing != null) {
       for (File experienceFile : directoryListing) {
         if (experienceFile.isHidden()) {
@@ -681,6 +684,7 @@ public class Server {
   public class IndexHandler implements TemplateViewRoute {
     @Override
     public ModelAndView handle(Request req, Response res) {
+    	senseChanges();
       List<String> experienceNames = new ArrayList<>();
       List<String> experienceFileNames = new ArrayList<>();
       List<String> experienceColors = new ArrayList<>();
@@ -978,6 +982,7 @@ public class Server {
   public class MakerHandler implements TemplateViewRoute {
     @Override
     public ModelAndView handle(Request req, Response res) {
+    	senseChanges();
       List<String> experienceNames = new ArrayList<>();
       List<String> experienceFileNames = new ArrayList<>();
       List<String> experienceColors = new ArrayList<>();
