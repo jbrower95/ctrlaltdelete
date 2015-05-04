@@ -14,6 +14,6 @@ var exported_scene = {
 	//requires : 'other scene'
 	/* If this scene has its own HTML, return the name of the file here. Alternatively, just return some HTML for the scene to load here. */
 	getHTML : function() {
-		return "SCENENAME.html";
+		return "SCENENAME.scene/SCENENAME.html";
 	}
 };

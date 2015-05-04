@@ -289,7 +289,17 @@ public class Server {
 		Experience e = experiences.get(experience);
 		
 		Optional<Scene> createdScene = e.getScenes().stream().filter(scene -> scene.getId().equals(baseName)).findAny();
-		
+		Config cfig = new Config(e.getName(), e.getId(), e.getColor(), e.getDescription(), e.hasScoresHighToLow());
+		for (JsonElement j : e.files) {
+			String file = j.getAsString();
+			cfig.addToFiles(file);
+		}
+		cfig.addToFiles(baseName + ".scene/*");
+		System.out.println(cfig.files);
+		saveExperience(new File(expDirectory + File.separator + ".config"),
+				cfig, expDirectory);
+		System.out.println("Successfully rewrote config file.");
+
 		if (createdScene.isPresent()) {
 			return GSON.toJson(ImmutableMap.of("success", "true", "scene", createdScene.get()));
 		} else {
@@ -894,6 +904,7 @@ public class Server {
       String asset = req.params(":asset");
 
       String path = (exp.directory + File.separator + scene + File.separator + asset);
+		System.out.println("Trying to get asset at path " + path + ".");
       Path p = Paths.get(path);
       System.out.println("[scenecontenthandler] Trying to get asset: " + asset);
 
@@ -901,7 +912,9 @@ public class Server {
       if (!experienceCanAccessAsset(exp, scene, asset)) {
         throw new IllegalArgumentException("Error: Can't access asset "
           + path + " -  Not declared in manifest.");
-      }
+      } else {
+		  System.out.println("Asset " + asset + " can be accessed.");
+	  }
       
       return serveAsset(res, p);
   }
@@ -1097,7 +1110,6 @@ public class Server {
 
       System.out.println(filename);
 
-      // TODO: Check that id is valid as filename
       // Set up directory path
       String dirPath = directory + File.separator
               + id;
@@ -1138,6 +1150,8 @@ public class Server {
                     .println("ERROR: IOException in SaveEditedExperienceHandler. No .config file created.");
             return GSON.toJson(getReturnVariables(false, "Couldn't create a new .config file for your experience."));
           }
+
+		  config.addToFiles("*");
 
           saveExperience(cfig, config, dirPath);
           System.out.println("Experience saved!");
@@ -1227,60 +1241,65 @@ public class Server {
     						   .replaceAll("\"", "&quot;");
     	return fixed;
     }
-
-    /**
-     * Takes a Config object, serializes it, and writes it to
-     * a given config file, then adds the resulting experience
-     * to the hashtable.
-     * @param file The .config file to write to.
-     * @param config The Config object.
-     * @param dirPath The path of the directory.
-     * @return True if it worked, false otherwise.
-     */
-    private boolean saveExperience(File file, Config config, String dirPath) {
-      String json = GSON.toJson(config);
-
-      try {
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(json);
-        bw.close();
-      } catch (IOException e) {
-    	  e.printStackTrace();
-        System.out
-                .println("ERROR: IOException in SaveEditedExperienceHandler");
-        return false;
-      }
-
-      try {
-        System.out.println(dirPath);
-        Experience exp = new Experience(dirPath);
-        experiences.put(exp.getId(), exp);
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-        System.out
-                .println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
-        return false;
-      }
-
-      return true;
-    }
-
-    private class Config {
-      private final String name, themeColor, description, mainFile, id;
-      private final boolean orderScoresHighToLow;
-      private final List<String> files;
-
-      public Config(final String title, final String eyed, final String color, final String cDescription,
-        boolean highToLow) {
-        name = title;
-        id = eyed;
-        themeColor = color;
-        description = cDescription;
-        orderScoresHighToLow = highToLow;
-        files = new ArrayList<>();
-        mainFile = "index.html";
-      }
-    }
   }
+
+	/**
+	 * Takes a Config object, serializes it, and writes it to
+	 * a given config file, then adds the resulting experience
+	 * to the hashtable.
+	 * @param file The .config file to write to.
+	 * @param config The Config object.
+	 * @param dirPath The path of the directory.
+	 * @return True if it worked, false otherwise.
+	 */
+	private boolean saveExperience(File file, Config config, String dirPath) {
+		String json = GSON.toJson(config);
+
+		try {
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(json);
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out
+					.println("ERROR: IOException in SaveEditedExperienceHandler");
+			return false;
+		}
+
+		try {
+			System.out.println(dirPath);
+			Experience exp = new Experience(dirPath);
+			experiences.put(exp.getId(), exp);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out
+					.println("ERROR: FileNotFoundException in SaveEditedExperienceHandler");
+			return false;
+		}
+
+		return true;
+	}
+
+	private class Config {
+		private final String name, themeColor, description, mainFile, id;
+		private final boolean orderScoresHighToLow;
+		private final List<String> files;
+
+		public Config(final String title, final String eyed, final String color, final String cDescription,
+					  boolean highToLow) {
+			name = title;
+			id = eyed;
+			themeColor = color;
+			description = cDescription;
+			orderScoresHighToLow = highToLow;
+			files = new ArrayList<>();
+			mainFile = "index.html";
+		}
+
+		public void addToFiles(String file) {
+			files.add(file);
+		}
+	}
+
 }

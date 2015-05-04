@@ -206,39 +206,4 @@
 	</body>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script>
-
-	/*var files;
-
-	function handleFiles(input) {
-		files = input.files;
-		console.log(files);
-	}
-
-	$("#upload-button").click(function(e) {
-		e.preventDefault();
-		var formData = new FormData($("#file-form"));
-		for(file in files) {
-			console.log(file);
-			formData.append('files', file, file.name);
-		}
-		console.log(formData);
-		//formData.append('hello', "hello!");
-		//var data = {'formData': formData};
-		var data = {'formData': JSON.stringify(formData)};*/
-		/*$.ajax({
-            url: '/test',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-				console.log("success");
-			}
-		  });*/
-		$.post("/test", data, function(responseJSON){
-
-		});
-	});
-	</script>
 </html>
