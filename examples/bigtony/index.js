@@ -1,6 +1,7 @@
 
 /* Do not touch, initializes the scenemanager. */
 SceneManager.initialize("content");
+
 /* ------------------------------------------- */
 
 
