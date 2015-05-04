@@ -452,6 +452,23 @@
             cursor: pointer;
             opacity: 0.5;
         }
+
+        svg:hover {
+            cursor: pointer;
+        }
+        svg rect {
+            fill: white;
+        }
+        svg rect {
+          -webkit-transition: all 200ms;
+          -webkit-transform: scaleY(1);
+          -webkit-transform-origin: 50% 50%;
+        }
+        svg.minus #Layer_1 rect {
+          -webkit-transition: all 200ms;
+          -webkit-transform: scaleY(0);
+          -webkit-transform-origin: 50% 50%;
+        }
     </style>
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
@@ -507,7 +524,15 @@
                             
                         </div>
                         <div class="right" onclick="javascript:toggleJs()">
-                            +
+                            <svg x="0px" y="0px" width="20px" onclick="javascript:toggleCss()"
+                                 height="20px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" class="minus">
+                            <g id="Layer_1">
+                                <rect x="175" width="50" height="400"/>
+                            </g>
+                            <g id="Layer_2">
+                                <rect y="175" fill="#575fcf" width="400" height="50"/>
+                            </g>
+                            </svg>
                         </div>
                     </div>
 
@@ -522,7 +547,15 @@
                             
                         </div>
                         <div class="right" onclick="javascript:toggleHtml()">
-                            +
+                            <svg x="0px" y="0px" width="20px" onclick="javascript:toggleCss()"
+                                 height="20px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" class="minus">
+                            <g id="Layer_1">
+                                <rect x="175" width="50" height="400"/>
+                            </g>
+                            <g id="Layer_2">
+                                <rect y="175" fill="#575fcf" width="400" height="50"/>
+                            </g>
+                            </svg>
                         </div>
                     </div>
 
@@ -536,8 +569,16 @@
                         <div class="left" id="scenecss">
                             
                         </div>
-                        <div class="right" onclick="javascript:toggleCss()">
-                            +
+                        <div class="right">
+                            <svg x="0px" y="0px" width="20px" onclick="javascript:toggleCss()"
+                                 height="20px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" class="minus">
+                            <g id="Layer_1">
+                                <rect x="175" width="50" height="400"/>
+                            </g>
+                            <g id="Layer_2">
+                                <rect y="175" fill="#575fcf" width="400" height="50"/>
+                            </g>
+                            </svg>
                         </div>
                     </div>
 
@@ -619,6 +660,38 @@
     <script src="http://codemirror.net/addon/edit/closebrackets.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
     <script>
+
+        // Shim jQuery to add/remove/toggle SVG classes
+        $.fn.addClassSVG = function(className) {
+          $(this).attr('class', function(index, existingClassNames) {
+            return existingClassNames + ' ' + className;
+          });
+          return this;
+        }
+
+        $.fn.removeClassSVG = function(className) {
+          $(this).attr('class', function(index, existingClassNames) {
+            var re = new RegExp(className, 'g');
+            return existingClassNames.replace(re, '');
+          });
+          return this;
+        }
+
+        $.fn.toggleClassSVG = function(className) {
+          var elClass = $(this).attr('class'),
+              re = new RegExp(className, 'g');
+          if (re.test(elClass)) {
+            $(this).removeClassSVG(className);
+          } else {
+            $(this).addClassSVG(className);
+          }
+          return this;
+        }
+
+        // Trigger transition on click
+        $('svg').on('click', function() {
+          $(this).toggleClassSVG('minus');
+        });
     	
     	//hide/show JS, CSS, and HTML.
     	function toggleJs() {
@@ -627,19 +700,19 @@
     		
     		var indicator = $(editors[0]).find("right");
     		
-    		$(editors[0]).find(".CodeMirror").toggle({duration: 200});
+    		$(editors[0]).find(".CodeMirror").slideToggle({duration: 200});
     	}
     	
     	function toggleHtml() {
     		var editors = $(".editor-bar");
     		console.log(editors);
-    		$(editors[1]).find(".CodeMirror").toggle({duration: 200});
+    		$(editors[1]).find(".CodeMirror").slideToggle({duration: 200});
     	}
     	
     	function toggleCss() {
     		var editors = $(".editor-bar");
     		console.log(editors);
-    		$(editors[2]).find(".CodeMirror").toggle({duration: 200});
+    		$(editors[2]).find(".CodeMirror").slideToggle({duration: 200});
     	}
     	
     	
