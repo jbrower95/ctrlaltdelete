@@ -279,7 +279,13 @@ html {
             width: 85%;
             height: auto;
             margin-top: 8%;
+            margin-right: 0;
+            padding-right: 0;
             text-align: right;
+        }
+
+        .save-bar.scene {
+            width: 100%;
         }
 
         .button {
@@ -289,7 +295,7 @@ html {
             width: 38.5%;
         }
 
-        .save, .delete {
+        .save, .delete, .test {
             position: relative;
             width: 31%;
             padding-top: 1%;
@@ -303,7 +309,6 @@ html {
         }
 
         .delete {
-            margin-right: 30px;
             border-color: #ef563d;
             color: #ef563d;
         }
@@ -313,11 +318,15 @@ html {
             color: darkslategray;
         }
 
+        .right-margin {
+            margin-right: 15px;
+        }
+
         .button:hover {
             cursor: pointer;
         }
 
-        .save:hover, .active {
+        .save:hover, .test:hover, .active {
             background-color: rgba(255,255,255,1);
             color: darkslategray;
         }

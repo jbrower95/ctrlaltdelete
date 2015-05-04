@@ -117,9 +117,9 @@
                     </textarea>
                 </div>
 
-                <div class="save-bar">
-                    <button class="delete button" id="sceneDelete">Delete</button>
-                    <button class="test button">Test</button>
+                <div class="save-bar scene">
+                    <button class="delete button right-margin" id="sceneDelete">Delete</button>
+                    <button class="test button">Test Experience</button>
                 </div>
             </div>
 
@@ -173,7 +173,8 @@
                 </div>
 
                 <div class="save-bar">
-                    <button class="delete button" id="deleteExperience">Delete</button>
+                    <button class="delete button right-margin" id="deleteExperience">Delete</button>
+                    <button class="test button right-margin">Test Experience</button>
                     <button class="save button">Save
                     <div class="save-info"></div>
                     </button>

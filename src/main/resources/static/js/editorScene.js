@@ -300,3 +300,17 @@ function deleteScene() {
 * Delete scene on click.
 */
 $("#sceneDelete").click(deleteScene);
+
+/**
+* Opens up "play" window of experience
+* in new tab.
+*/
+function testExperience() {
+  console.log(id);
+  window.open(
+    'play',
+    '_blank'
+  );
+}
+
+$(".test").click(testExperience);
