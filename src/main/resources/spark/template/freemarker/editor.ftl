@@ -128,6 +128,11 @@
                     <textarea name="css" class="editor" id="css">
                     </textarea>
                 </div>
+
+                <div class="save-bar">
+                    <button class="delete button" id="sceneDelete">Delete</button>
+                    <button class="test button">Test</button>
+                </div>
             </div>
 
             <div id="generalEdit">
@@ -180,7 +185,7 @@
                 </div>
 
                 <div class="save-bar">
-                    <button class="delete button">Delete</button>
+                    <button class="delete button" id="deleteExperience">Delete</button>
                     <button class="save button">Save
                     <div class="save-info"></div>
                     </button>
@@ -330,20 +335,31 @@
 				
 				console.log("Saving new scene name...");
 				
-				var newSceneName = $("sceneIdInput").val();
+				var newSceneName = $("#sceneIdInput").val();
 				
 				if (newSceneName != currentSceneId) {
 					
 					//a change occurred
-					var url = "/" + id + "/" + currentSceneId + "/refactor?new=" + newSceneName;
+					var url = "/" + id + "/" + currentSceneId + "/refactor?newid=" + newSceneName;
+           		
+           			console.log("new scene name: " + newSceneName);
+           			console.log("old scene name: " + currentSceneId);
            		
 					$.post(url, function(response) {
-						if (response === true) {
 							//it worked
 							listScenes();
 							currentSceneId = newSceneName;
 							$("#" + currentSceneId).addClass("curr");
+							$.notify("Remember to change your scene ID anywhere you reference this scene!", "warning");
+					}).fail(function(response) {
+						var reason = "An unknown error occurred.";
+						var responseObj = JSON.parse(response.responseText);
+						if (responseObj.error) {
+							reason = responseObj.error;
 						}
+					
+						$("#sceneIdInput").val(currentSceneId);
+						$.notify("Couldn't change scene ID: " + reason, "error");
 					});
 				} 
 			}
@@ -351,33 +367,35 @@
 			$("#sceneIdInput").blur(sceneIdChange);
 			
 			 /* Handlers for saving the files */
-           cmCss.on("change", function(cm, change) {
+           cmCss.on("blur", function(cm) {
            		var code = cmCss.getValue();
-           		console.log(code);
-           		console.log(typeof code);
            		var baseUrl = "/" + id + "/" + currentSceneId + "/edit?type=";
            		$.post(baseUrl + "css", code, function(response) {
-           			console.log(response);
-           		});
-           		console.log(change);
+           			$.notify("Saved!", "success");
+                    console.log("Update succeeded! (css)");
+           		}).fail(function(){
+                    $.notify("Couldn't save CSS.", "error");
+                });
 			  });
 			  
-			cmJs.on("change", function(cm, change) {
+			cmJs.on("blur", function(cm) {
 				var code = cmJs.getValue();
-				console.log(code);
 				$.post("/" + id + "/" + currentSceneId + "/edit?type=js", code , function(response) {
-           			console.log(response);
-           		});
-           		console.log(change);
+                    $.notify("Saved!", "success");
+           			console.log("Update succeeded! (js).");
+           		}).fail(function(){
+                    $.notify("Couldn't save Javascript.", "error");
+                });
 			  });
 			  
-			cmHtml.on("change", function(cm, change) {
+			cmHtml.on("blur", function(cm) {
 				var code = cmHtml.getValue();
-				console.log(code);
 				$.post("/" + id + "/" + currentSceneId + "/edit?type=html", code, function(response) {
-           			console.log(response);
-           		});
-           		console.log(change);
+                    $.notify("Saved!", "success");
+           			console.log("Updated succeeded! (html)");
+           		}).fail(function() {
+                    $.notify("Couldn't save HTML.", "error");
+                });
 			  });
 
             
@@ -524,6 +542,7 @@
                     cmJs.setValue(sceneJs);
                     cmHtml.setValue(sceneHtml);
                     cmCss.setValue(sceneCss);
+                    currentSceneId = null;
                 });
             }
 
@@ -568,6 +587,17 @@
                 cmJs.setValue(sceneJs);
                 cmHtml.setValue(sceneHtml);
                 cmCss.setValue(sceneCss);
+            }
+
+            function resetEditor() {
+                currentSceneId = null;
+                $(".inactive").removeClass("inactive");
+                $("#sceneEdit").fadeOut();
+                $("#generalEdit").fadeIn();
+                onScene = false;
+                listScenes();
+                $(".curr").removeClass("curr");
+                $(".side-title").addClass("curr");
             }
 
             $("textarea[name=js]").change(function() {
@@ -763,29 +793,53 @@
             });
 
             function deleteExperience() {
-                $.ajax({
-                    url: '/' + id,
-                    type: 'DELETE',
-                    success: function(result) {
-                        if (JSON.parse(result).success === "true") {
-                            console.log("Successfully deleted.");
-                            window.location.replace("/maker");
-                        } else {
+                if (confirm("Are you sure you want to delete " + title + "?")) {
+                    $.ajax({
+                        url: '/' + id,
+                        type: 'DELETE',
+                        success: function(result) {
+                            if (JSON.parse(result).success === "true") {
+                                console.log("Successfully deleted.");
+                                window.location.replace("/maker");
+                            } else {
+                                $.notify("Experience couldn't be deleted.", "error");
+                            }
+                        },
+                        error: function(result) {
                             $.notify("Experience couldn't be deleted.", "error");
                         }
-                    },
-                    error: function(result) {
-                        $.notify("Experience couldn't be deleted.", "error");
-                    }
-                });
+                    });
+                }
             }
 
             /**
-            * Save on click of the save button.
+            * Delete experience on click.
             */
-            $(".delete").click(function() {
+            $("#deleteExperience").click(function() {
                 deleteExperience();
             });
+
+            function deleteScene() {
+                if (confirm("Are you sure you want to delete " + currentSceneId + "?")) {
+                    $.ajax({
+                        url: '/' + id + '/' + currentSceneId + '/edit',
+                        type: 'DELETE',
+                        success: function(result) {
+                            $.notify("Scene deleted.", "success");
+                            resetEditor();
+                        },
+                        error: function(result) {
+                            $.notify("Scene couldn't be deleted.", "error");
+                        }
+                    });
+                }
+            }
+
+            /**
+            * Delete scene on click.
+            */
+            $("#sceneDelete").click(deleteScene);
+
         });
     </script>
 </body>

@@ -130,7 +130,7 @@ public class Server {
 		
 		if (Files.exists(newDirectory)) {
 			response.status(400);
-			return GSON.toJson(ImmutableMap.of("error", "Error: Target scene already exists."));
+			return GSON.toJson(ImmutableMap.of("error", "Target scene already exists at " + newDirectory));
 		}
 		
 		try {
@@ -139,7 +139,7 @@ public class Server {
 		} catch (IOException e) {
 			e.printStackTrace();
 			response.status(400);
-			return GSON.toJson(ImmutableMap.of("error", "Error: Couldn't rename scene."));
+			return GSON.toJson(ImmutableMap.of("error", "Couldn't rename scene."));
 		}
 		
 		return GSON.toJson(true);
@@ -309,24 +309,26 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		System.out.println("DeleteSceneHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		Experience exp = experiences.getOrDefault(experienceName, null);
 		
 		if (exp == null) {
+			System.out.println("Couldn't get experience: " + experienceName);
 			response.status(404);
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Unknown experience!"));
 		}
 		
+		Path sceneDirectory = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
+		
 		try {
-			FileUtils.deleteDirectory(new File(directory + File.separator + experienceName + File.separator + sceneName));
+			FileUtils.deleteDirectory(new File(sceneDirectory.toAbsolutePath().toString()));
+			System.out.println("[DeleteSceneHandler] Deleted directory: " + sceneDirectory);
 			senseChanges();
 			return GSON.toJson(ImmutableMap.of("success", "true"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			response.status(404);
-			//TODO: update status code to real status code for this operation failing
+			response.status(400);
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Deletion failed!"));
 		}
 	}
@@ -361,6 +363,13 @@ public class Server {
 		Path sceneDir = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
 		
 		String type = request.queryParams("type");
+		
+		if (sceneName == null || sceneName.equals("null")) {
+			//special case for the 'main'.
+			sceneName = "index";
+			sceneDir = Paths.get(directory).resolve(experienceName);
+		}
+		
 		
 		if (type == null || text == null) {
 			response.status(400);
@@ -751,7 +760,7 @@ public class Server {
 	  try {
       byte[] contents = Files.readAllBytes(assetPath);
       
-      System.out.println("[serveAsset] " + assetPath);
+      //System.out.println("[serveAsset] " + assetPath);
       
       response.header("Content-Type", tika.detect(assetPath.toFile()));
       response.header("Connection", "close");
