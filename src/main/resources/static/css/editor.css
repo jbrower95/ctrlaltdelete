@@ -303,20 +303,21 @@ html {
         }
 
         .delete {
-            opacity: 0.5;
             margin-right: 30px;
-            transition: opacity 0.2s;
+            border-color: #ef563d;
+            color: #ef563d;
         }
 
         .delete:hover {
-            opacity: 1;
+            background-color: #ef563d;
+            color: darkslategray;
         }
 
         .button:hover {
             cursor: pointer;
         }
 
-        .save:hover, .delete:hover, .active {
+        .save:hover, .active {
             background-color: rgba(255,255,255,1);
             color: darkslategray;
         }
