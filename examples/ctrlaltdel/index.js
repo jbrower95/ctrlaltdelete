@@ -18,5 +18,6 @@ Scene.load("explorer95.scene/explorer95.js");
 Scene.load("gabeshouse.scene/gabeshouse.js");
 Scene.load("clickthexs.scene/clickthexs.js");
 Scene.load("paint.scene/paint.js");
+Scene.load("choosescore.scene/choosescore.js");
 
 

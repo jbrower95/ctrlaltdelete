@@ -36,7 +36,7 @@ body {
 	position:relative;
 	background-color: #00006f;
 	color: white;
-	font-family: 'MS Sans Serif', sans-serif;
+	font-family: "Microsoft Sans Serif", "MS Sans Serif", Arial, sans-serif;
 	font-size: .8em;
 	padding: 2px;
 	box-sizing: border-box;
@@ -140,6 +140,12 @@ body {
 }
 
 #taskManager {
+	width: auto;
+	height: auto;
+	position: absolute;
+}
+
+#scoreWindow {
 	width: auto;
 	height: auto;
 	position: absolute;

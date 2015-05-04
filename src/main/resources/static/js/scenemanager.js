@@ -379,7 +379,7 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
                 resolve();
               });
             }
-          } 
+          }
         } else {
           resolve("[scenemanager.js/phantomLoader] Ready for scene " + sceneName + "!");
         }

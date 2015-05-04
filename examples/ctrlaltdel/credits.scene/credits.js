@@ -52,7 +52,7 @@ var exported_scene = {
             //do that sweet fade
             $("video").hide(1000, function() {
                 $("video").trigger("stop");
-                SceneManager.getSharedInstance().presentScene("mainMenu");
+                SceneManager.getSharedInstance().presentScene("choosescore");
             });
         };
 

@@ -1,0 +1,33 @@
+input {
+	position: absolute;
+	left: 165;
+	border: none;
+	font-size: 13px;
+	font-family: "Microsoft Sans Serif", "MS Sans Serif", Arial, sans-serif;
+	width: 131px;
+	height: 19px;
+	padding-left: 5px;
+}
+
+input:focus {
+    outline-width: 0;
+}
+
+#username {
+	top: 69;
+}
+
+#score {
+	top: 101;
+}
+
+#okButton {
+	position: absolute;
+	padding-left: 0px;
+	top: 31;
+	left: 367;
+	font-size: 64px;
+	width: 78px;
+	opacity: 0;
+	cursor: pointer;
+}
