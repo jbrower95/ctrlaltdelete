@@ -792,21 +792,23 @@
             });
 
             function deleteExperience() {
-                $.ajax({
-                    url: '/' + id,
-                    type: 'DELETE',
-                    success: function(result) {
-                        if (JSON.parse(result).success === "true") {
-                            console.log("Successfully deleted.");
-                            window.location.replace("/maker");
-                        } else {
+                if (confirm("Are you sure you want to delete " + title + "?")) {
+                    $.ajax({
+                        url: '/' + id,
+                        type: 'DELETE',
+                        success: function(result) {
+                            if (JSON.parse(result).success === "true") {
+                                console.log("Successfully deleted.");
+                                window.location.replace("/maker");
+                            } else {
+                                $.notify("Experience couldn't be deleted.", "error");
+                            }
+                        },
+                        error: function(result) {
                             $.notify("Experience couldn't be deleted.", "error");
                         }
-                    },
-                    error: function(result) {
-                        $.notify("Experience couldn't be deleted.", "error");
-                    }
-                });
+                    });
+                }
             }
 
             /**
@@ -817,19 +819,19 @@
             });
 
             function deleteScene() {
-                console.log("Meoooowwwww");
-                $.ajax({
-                    url: '/' + id + '/' + currentSceneId + '/edit',
-                    type: 'DELETE',
-                    success: function(result) {
-                        console.log("Successfully deleted.");
-                        $.notify("Scene deleted! Get rid of this notification!", "success");
-                        resetEditor();
-                    },
-                    error: function(result) {
-                        $.notify("Scene couldn't be deleted.", "error");
-                    }
-                });
+                if (confirm("Are you sure you want to delete " + currentSceneId + "?")) {
+                    $.ajax({
+                        url: '/' + id + '/' + currentSceneId + '/edit',
+                        type: 'DELETE',
+                        success: function(result) {
+                            $.notify("Scene deleted.", "success");
+                            resetEditor();
+                        },
+                        error: function(result) {
+                            $.notify("Scene couldn't be deleted.", "error");
+                        }
+                    });
+                }
             }
 
             /**
