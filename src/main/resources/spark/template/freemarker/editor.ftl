@@ -696,11 +696,14 @@
                 listScenes();
             }
 			
+			
 			 /* Handlers for saving the files */
            cmCss.on("change", function(cm, change) {
            		var code = cmCss.getValue();
            		console.log(code);
-           		$.post("/" + id + "/" + currentSceneId + "/edit?type=css", code, function(response) {
+           		console.log(typeof code);
+           		var baseUrl = "/" + id + "/" + currentSceneId + "/edit?type=";
+           		$.post(baseUrl + "css", code, function(response) {
            			console.log(response);
            		});
            		console.log(change);
