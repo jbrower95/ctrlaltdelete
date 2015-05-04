@@ -27,7 +27,6 @@ var exported_scene = {
     var taskManager = manager.getWindowWithId("taskManager");
     if (taskManager) {
       taskManager.setXHandler(function() {
-        console.log("x-ing out");
         $(this.element).remove();
         manager.removeWindow(taskManager);
         clippyAgent.speak("Muahahaha...");
@@ -35,8 +34,9 @@ var exported_scene = {
         clippyAgent.moveTo(400, 50);
         clippyAgent.play("GetArtsy");
         setTimeout(function() {
+          clippyAgent.hide();
           SceneManager.getSharedInstance().presentScene("paint");
-        }, 2000);
+        }, 3000);
       });
     } else {
       console.error("[clickthexs.js] Did not receive the task manager window.");
@@ -53,7 +53,7 @@ var exported_scene = {
     var showClippy = $.proxy(function() {
           if (clippyAgent) {
             clippyAgent.show();
-                clippyAgent.moveTo(200,200);
+            clippyAgent.moveTo(200,200);
             console.log("Playing sound 1");
             clippyAgent.speak("Looks like you're stuck inside the computer!");
             AssetManager.getSharedInstance().play(1);

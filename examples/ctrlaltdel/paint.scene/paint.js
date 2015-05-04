@@ -10,10 +10,6 @@ var exported_scene = {
       console.error("[paint.js] The window manager is missing!");
     }
 
-    if (this.exportedVariables.clippyAgent == null) {
-      console.error("[paint.js] Clippy is missing!");
-    }
-
     var manager = this.exportedVariables.windowManager;
     console.log("[paint.js] Windows in the manager:");
     console.log(manager.windows);
@@ -34,13 +30,7 @@ var exported_scene = {
     if (!this.exportedVariables['windowManager']) {
       console.error("Shit didn't transition properly.");
     }
-    if (!this.exportedVariables['clippyAgent']) {
-      console.error("Async shit didn't transition properly.");
-    }
     console.log(this.exportedVariables);
-    var clippyAgent = this.exportedVariables.clippyAgent;
-    console.log(clippyAgent);
-    clippyAgent.speak("I'm in Paint!");
 
     var paintWindow = manager.getWindowWithId("paint");
     paintWindow.setEnabled(true);
@@ -62,7 +52,7 @@ var exported_scene = {
       this.map;
       this.base;
       this.firingTimer = 0;
-      this.clippy;
+      this.clippyActor;
       this.spikes;
     }   
 
@@ -96,17 +86,17 @@ var exported_scene = {
         windows.enableBody = true;
 
         // Clippy
-        clippy = game.add.sprite(1760, 300, 'clippy');
-        game.physics.arcade.enable(clippy);
-        clippy.body.gravity.y = 300;
+        clippyActor = game.add.sprite(1760, 300, 'clippy');
+        game.physics.arcade.enable(clippyActor);
+        clippyActor.body.gravity.y = 300;
 
         // Windows Bullets
         windows = game.add.group();
-          windows.enableBody = true;
-          windows.physicsBodyType = Phaser.Physics.ARCADE;
-          windows.createMultiple(1, 'window');
-          windows.setAll('outOfBoundsKill', true);
-          windows.setAll('checkWorldBounds', true);
+        windows.enableBody = true;
+        windows.physicsBodyType = Phaser.Physics.ARCADE;
+        windows.createMultiple(1, 'window');
+        windows.setAll('outOfBoundsKill', true);
+        windows.setAll('checkWorldBounds', true);
 
         // Blue Blocks
         blueBlocks = game.add.group();
@@ -189,7 +179,7 @@ var exported_scene = {
         if (player.y == 0) {
           game.destroy();
           AssetManager.getSharedInstance().fadeOutNamed("paintparty");
-            SceneManager.getSharedInstance().presentScene("explorer95");
+          SceneManager.getSharedInstance().presentScene("explorer95");
         }
       },
       killWindow : function(win, other) {
@@ -203,8 +193,8 @@ var exported_scene = {
         game.physics.arcade.collide(player, base);
         game.physics.arcade.collide(player, blueBlocks);
         game.physics.arcade.collide(blueBlocks, base);
-        game.physics.arcade.collide(clippy, base);
-        game.physics.arcade.collide(clippy, blueBlocks);
+        game.physics.arcade.collide(clippyActor, base);
+        game.physics.arcade.collide(clippyActor, blueBlocks);
         game.physics.arcade.collide(blueBlocks, blueBlocks);
 
         game.physics.arcade.overlap(player, spikes, this.killPlayer, null, this);
@@ -248,7 +238,7 @@ var exported_scene = {
       enemyFire : function() {
         var bullet = windows.getFirstExists(false);
         if (bullet) {
-          bullet.reset(clippy.body.x,clippy.body.y);
+          bullet.reset(clippyActor.body.x,clippyActor.body.y);
           bullet.body.velocity.x = -150;
           firingTimer = game.time.now + 2000;
         }
@@ -259,7 +249,7 @@ var exported_scene = {
       var code = e.keyCode || e.which;
       if (code == 85) { // 85 == 'u'
         AssetManager.getSharedInstance().fadeOutNamed("paintparty");
-          SceneManager.getSharedInstance().presentScene("explorer95");
+        SceneManager.getSharedInstance().presentScene("explorer95");
       }
     });
 
