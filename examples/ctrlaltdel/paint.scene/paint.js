@@ -160,7 +160,7 @@ var exported_scene = {
 				player = game.add.sprite(150, 300, 'gebu');
 				game.physics.arcade.enable(player);
 				player.body.bounce.y = 0.2;
-				player.body.gravity.y = 30000;
+				player.body.gravity.y = 300;
 				player.body.collideWorldBounds = true;
 				player.animations.add('left', [0, 1, 2, 3], 10, true);
 				player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -171,15 +171,15 @@ var exported_scene = {
 				cursors = game.input.keyboard.createCursorKeys();
 			},
 			upLadder : function(player, ladder) {
-				if (cursors.up.isDown) {
+				//if (cursors.up.isDown) {
 					player.animations.play('climb');
-					player.body.velocity.y = -300;
-				} else if (cursors.down.isDown) {
+					player.body.velocity.y = -200;
+				/*} else if (cursors.down.isDown) {
 					player.animations.play('climb');
 					player.body.velocity.y = 300;
 				} else {
 					player.body.velocity.y = -5;
-				}
+				}*/
 			},
 			killWindow : function(win, other) {
 				win.kill();
