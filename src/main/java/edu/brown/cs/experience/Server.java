@@ -124,9 +124,25 @@ public class Server {
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		String newSceneName = request.queryParams("newid");
-		
-		Path oldDirectory = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
-		Path newDirectory = Paths.get(directory).resolve(experienceName).resolve(newSceneName + ".scene");
+
+		String oldScene = sceneName + ".scene";
+		String newScene = newSceneName + ".scene";
+		Path oldDirectory = Paths.get(directory).resolve(experienceName).resolve(oldScene);
+		Path newDirectory = Paths.get(directory).resolve(experienceName).resolve(newScene);
+
+		Experience exp = experiences.get(experienceName);
+		Config cfig = getConfigFromExperience(exp);
+		for (String f : cfig.files) {
+			System.out.println(f + " == " + oldScene + "/*" + " ?");
+			if (f.equals(oldScene + "/*")) {
+				System.out.println("Found equality!");
+				cfig.files.remove(f);
+				cfig.addToFiles(newScene + "/*");
+			}
+		}
+		System.out.println("New files for " + experienceName + ": " + cfig.files);
+		File file = new File(Paths.get(directory).resolve(experienceName).resolve(".config").toAbsolutePath().toString());
+		saveExperience(file, cfig, Paths.get(directory).resolve(experienceName).toAbsolutePath().toString());
 		
 		if (Files.exists(newDirectory)) {
 			response.status(400);
@@ -289,11 +305,7 @@ public class Server {
 		Experience e = experiences.get(experience);
 		
 		Optional<Scene> createdScene = e.getScenes().stream().filter(scene -> scene.getId().equals(baseName)).findAny();
-		Config cfig = new Config(e.getName(), e.getId(), e.getColor(), e.getDescription(), e.hasScoresHighToLow());
-		for (JsonElement j : e.files) {
-			String file = j.getAsString();
-			cfig.addToFiles(file);
-		}
+		Config cfig = getConfigFromExperience(e);
 		cfig.addToFiles(baseName + ".scene/*");
 		System.out.println(cfig.files);
 		saveExperience(new File(expDirectory + File.separator + ".config"),
@@ -1279,6 +1291,21 @@ public class Server {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Takes an experience, extracts information from it,
+	 * and returns the information in the form of a config file.
+	 * @param e The experience.
+	 * @return The config file made from the experience information.
+	 */
+	private Config getConfigFromExperience(Experience e) {
+		Config cfig = new Config(e.getName(), e.getId(), e.getColor(), e.getDescription(), e.hasScoresHighToLow());
+		for (JsonElement j : e.files) {
+			String file = j.getAsString();
+			cfig.addToFiles(file);
+		}
+		return cfig;
 	}
 
 	private class Config {
