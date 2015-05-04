@@ -7,7 +7,8 @@ var exported_scene = {
     },
 	onPresent : function() { 
 
-
+		var sceneReference = this;
+		
 		var scene = new THREE.Scene();
 		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 		var renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -95,9 +96,11 @@ var exported_scene = {
 		  scene.add(object);
 		  console.log("Added sandman to scene...");
 		});
-
+		this.gunPresent = false;
 		function killbill() {
-			AssetManager.getSharedInstance().playNamed('gunshot');
+			if (sceneReference.gunPresent) {
+				AssetManager.getSharedInstance().playNamed('gunshot');
+			}
 		} 
 
 		$(window).click(killbill);
@@ -149,24 +152,33 @@ var exported_scene = {
 				console.log("y: " + camera.position.y);
 				console.log("z: " + camera.position.z);
 
-				var floodLight = new THREE.AmbientLight(0x404040); 
+				/*var floodLight = new THREE.AmbientLight(0x404040); 
 				floodLight.position.set(camera.position.x+5, camera.position.y+5, camera.position.z+5);
-				scene.add(floodLight);
+				scene.add(floodLight);*/
 
 				//load the pistol.
-				var loader = new THREE.OBJLoader();
-				loader.load("killbill.scene/pistol/pistol.obj", function( object ) {
-					object.position.x = camera.position.x + 15;
-					object.position.z = camera.position.z;
-					object.position.y = camera.position.y;
-					object.scale.x = 10;
-					object.scale.y = 10;
-					object.scale.z = 10;
-
+				var loader = new THREE.OBJMTLLoader();
+				loader.load("killbill.scene/pistol/pistol.obj", "killbill.scene/pistol/pistol.mtl", function( object ) {
+					object.position.z = 10;
+					object.position.x = 15;
+					object.position.y = 10;
+					object.traverse(function(child) {
+					    if(child instanceof THREE.Mesh) {
+					      child.material.shininess = 0;
+					      //console.log(child.material);
+					    }
+				  	});
+					object.scale.x = 20;
+					object.scale.y = 20;
+					object.scale.z = 20;
+					sceneReference.gunPresent = true;
 					camera.position.z = camera.position.z + 5;
-
 					scene.add( object );
-					window.requestAnimationFrame(render);
+					console.log("Adding pistol...");
+					console.log("camera position: ");
+					camera.lookAt(object.position);
+
+					render();
 				});
 			}
 		}
