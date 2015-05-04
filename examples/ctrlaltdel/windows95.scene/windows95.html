@@ -20,13 +20,13 @@
         <table class="windowIconArea win2x3">
             <tr>
                 <td><img class="windowIcon drag folder" src="images/c_drive_icon.png" data-opens="cDrive"></td>
-                <td><img class="windowIcon drag" src="images/a_drive_icon.png"></td>
+                <td><img class="windowIcon drag folder" src="images/a_drive_icon.png" data-opens="aDrive"></td>
                 <td><img class="windowIcon drag" src="images/d_drive_icon.png"></td>
             </tr>
             <tr>
                 <td><img class="windowIcon drag folder" src="images/control_panel_icon.png"></td>
-                <td><img class="windowIcon drag folder" src="images/system_icon.png"></td>
-                <td><img class="windowIcon drag" src="images/network_icon.png"></td>
+                <td><img class="windowIcon drag folder" src="images/system_icon.png" data-opens="systemFolder"></td>
+                <td><img class="windowIcon drag folder" src="images/network_icon.png" data-opens="networkFolder"></td>
             </tr>
         </table>
     </div>
@@ -36,11 +36,11 @@
         <table class="windowIconArea win2x3">
             <tr>
                 <td><img class="windowIcon drag folder" src="images/shared_folder.png" data-opens="sharedFolder"></td>
-                <td><img class="windowIcon drag folder" src="images/tmp_folder.png"></td>
-                <td></td>
+                <td><img class="windowIcon drag folder" src="images/tmp_folder.png" data-opens="tmpFolder"></td>
+                <td><img class="windowIcon drag folder" src="images/windows_folder.png" data-opens="windowsFolder"></td>
             </tr>
             <tr>
-                <td></td>
+                <td><img class="windowIcon drag" src="images/dsktp_ico.png"></td>
                 <td></td>
                 <td></td>
             </tr>
@@ -57,6 +57,71 @@
             </tr>
             <tr>
                 <td><img class="windowIcon drag folder" src="images/paperclip_folder.png" data-opens="paperclipFolder"></td>
+                <td><img class="windowIcon drag" src="images/faded_cur.png"></td>
+                <td><img class="windowIcon drag" src="images/wrksp_aux.png"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="tmpFolder" class="hidden noselect draggable">
+        <img id="tmpFolderContent" src="images/explorer_2x3.png">
+        <table class="windowIconArea win2x3">
+            <tr>
+                <td><img class="windowIcon drag" src="images/sw4g_exe.png"></td>
+                <td><img class="windowIcon drag" src="images/jbm3_aux.png"></td>
+                <td><img class="windowIcon drag" src="images/jbmg_bak.png"></td>
+            </tr>
+            <tr>
+                <td><img class="windowIcon drag" src="images/install_bat.png"></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="windowsFolder" class="hidden noselect draggable">
+        <img id="windowsFolderContent" src="images/explorer_2x3.png">
+        <table class="windowIconArea win2x3">
+            <tr>
+                <td><img class="windowIcon drag" src="images/win32_exe.png"></td>
+                <td><img class="windowIcon drag folder" src="images/win32.png" data-opens="win32Folder"></td>
+                <td><img class="windowIcon drag folder" src="images/tmp_folder.png" data-opens="backupFolder"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="win32Folder" class="hidden noselect draggable">
+        <img id="win32FolderContent" src="images/explorer_2x4.png">
+        <table class="windowIconArea win2x4">
+            <tr>
+                <td><img class="windowIcon drag" src="images/voy3_ico.png"></td>
+                <td><img class="windowIcon drag" src="images/qtctl_dll.png"></td>
+                <td><img class="windowIcon drag" src="images/mshlp_dat.png"></td>
+                <td><img class="windowIcon drag" src="images/lvctl_dll.png"></td>
+            </tr>
+            <tr>
+                <td><img class="windowIcon drag" src="images/lvhelp_dat.png"></td>
+                <td><img class="windowIcon drag" src="images/dmngr_dat.png"></td>
+                <td><img class="windowIcon drag" src="images/bcc1_icc.png"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="backupFolder" class="hidden noselect draggable">
+        <img id="backupFolderContent" src="images/explorer_2x3.png">
+        <table class="windowIconArea win2x3">
+            <tr>
+                <td><img class="windowIcon drag" src="images/back1_aux.png"></td>
+                <td><img class="windowIcon drag" src="images/back3_aux.png"></td>
+                <td><img class="windowIcon drag" src="images/backup_ico.png"></td>
+            </tr>
+            <tr>
+                <td><img class="windowIcon drag" src="images/bpup_elf.png"></td>
                 <td></td>
                 <td></td>
             </tr>
@@ -67,8 +132,8 @@
         <img id="wordFolderContent" src="images/explorer_2x3.png">
         <table class="windowIconArea win2x3">
             <tr>
-                <td></td>
-                <td></td>
+                <td><img class="windowIcon drag" src="images/spell_aux.png"></td>
+                <td><img class="windowIcon drag" src="images/msdict.png"></td>
                 <td></td>
             </tr>
             <tr>
@@ -99,7 +164,7 @@
         <img id="powerpointFolderContent" src="images/explorer_2x3.png">
         <table class="windowIconArea win2x3">
             <tr>
-                <td></td>
+                <td><img class="windowIcon drag" src="images/shape_bak.png"></td>
                 <td></td>
                 <td></td>
             </tr>
@@ -122,6 +187,54 @@
             <tr>
                 <td><img class="windowIcon drag clippyFile" src="images/clippy_exe.png"></td>
                 <td><img class="windowIcon drag clippyFile" src="images/clippy_krn.png"></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="aDrive" class="hidden noselect draggable">
+        <img id="aDrive" src="images/explorer_2x3.png">
+        <table class="windowIconArea win2x3">
+            <tr>
+                <td><img class="windowIcon drag" src="images/y0lo_bat.png"></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="systemFolder" class="hidden noselect draggable">
+        <img id="systemFolderContent" src="images/explorer_2x3.png">
+        <table class="windowIconArea win2x3">
+            <tr>
+                <td><img class="windowIcon drag" src="images/mouse_icon.png"></td>
+                <td><img class="windowIcon drag" src="images/exp2_dat.png"></td>
+                <td><img class="windowIcon drag" src="images/exp4_dat.png"></td>
+            </tr>
+            <tr>
+                <td><img class="windowIcon drag" src="images/exp5_dat.png"></td>
+                <td><img class="windowIcon drag" src="images/acc2_bak.png"></td>
+                <td><img class="windowIcon drag" src="images/acc4_aux.png"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="networkFolder" class="hidden noselect draggable">
+        <img id="networkFolderContent" src="images/explorer_2x3.png">
+        <table class="windowIconArea win2x3">
+            <tr>
+                <td><img class="windowIcon drag" src="images/modem_icon.png"></td>
+                <td><img class="windowIcon drag" src="images/appvl_ico.png"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
                 <td></td>
             </tr>
         </table>

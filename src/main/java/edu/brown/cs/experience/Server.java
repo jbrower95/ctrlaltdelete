@@ -25,6 +25,7 @@ import javax.servlet.http.Part;
 import org.eclipse.jetty.io.EofException;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
+import org.apache.tika.io.IOUtils;
 
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -315,43 +316,45 @@ public class Server {
 		System.out.println("SceneEditHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
-		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName);
-
-		
-		
-		System.out.println(request.body());
+		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName + ".scene");
 		
 		String type = request.queryParams("type");
-		String text = request.body().substring(4);
+		String body = request.body();
 		
+		System.out.println("Body: '" + body + "'");
+		
+		String text = null;
 		if (type == null || text == null) {
 			response.status(400);
 			return GSON.toJson(false);
 		}
 		
-		/*System.out.println("Asset Modified For Scene: " + sceneName + "." + type);
+		System.out.println("Asset Modified For Scene: " + sceneName + "." + type);
 		System.out.println("Contents: " + text);
-		*/
 		
-		File file = new File(sceneDir.resolve(sceneName + "." + type).toAbsolutePath().toString());
-
-		if (file.getAbsoluteFile().exists()) {
+		
+		Path assetPath = sceneDir.resolve(sceneName + "." + type);
+		
+		if (!Files.exists(assetPath)) {
 			try {
-				System.out.println("[sceneeditor] Creating file: " + file.getAbsolutePath());
-				file.createNewFile();
+				Files.createFile(assetPath);
+				System.out.println("Creating file! " + assetPath);
 			} catch (IOException e) {
+				response.status(500);
 				e.printStackTrace();
-				System.out
-						.println("ERROR: IOException in SceneEditHandler. Couldn't create file -" + file.getPath());
 				return GSON.toJson(false);
 			}
 		}
-
+		
+		File file = new File(assetPath.toAbsolutePath().toString());
+		
 		try {
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(text);
-			bw.close();
+			System.out.println("Writing to file: " + text);
+			fw.write(text);
+			fw.flush();
+			fw.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out
@@ -403,9 +406,54 @@ public class Server {
 			senseChanges();
 			Experience experience = experiences.get(experienceName);
 
-			File inJs = new File(directory + File.separator + experience.filename + File.separator + "index.js");
-			File inHtml = new File(directory + File.separator + experience.filename + File.separator + "index.html");
-			File inCss = new File(directory + File.separator + experience.filename + File.separator + "index.css");
+			Path experiencePath = Paths.get(directory).resolve(experience.filename);
+			
+			Path templateDirectory = Paths.get("src").resolve("main").resolve("resources").resolve("static").resolve("template").resolve("main");
+			
+			Path jsPath = experiencePath.resolve("index.js");
+			Path cssPath = experiencePath.resolve("index.css");
+			Path htmlPath = experiencePath.resolve("index.html");
+			
+			Path jsTemplate = templateDirectory.resolve("index.js");
+			Path cssTemplate = templateDirectory.resolve("index.css");
+			Path htmlTemplate = templateDirectory.resolve("index.html");
+			
+			try {
+			
+				if (!Files.exists(jsPath)) {
+					//copy over js template
+					Files.createFile(jsPath);
+					FileOutputStream outStream = new FileOutputStream(new File(jsPath.toAbsolutePath().toString()));
+					Files.copy(jsTemplate, outStream);
+					outStream.close();
+				}
+				
+				if (!Files.exists(experiencePath.resolve("index.html"))) {
+					//copy over html template
+					Files.createFile(htmlPath);
+					FileOutputStream outStream = new FileOutputStream(new File(htmlPath.toAbsolutePath().toString()));
+					Files.copy(htmlTemplate, outStream);
+					outStream.close();
+				}
+				
+				if (!Files.exists(experiencePath.resolve("index.css"))) {
+					//copy over css template
+					Files.createFile(cssPath);
+					FileOutputStream outStream = new FileOutputStream(new File(cssPath.toAbsolutePath().toString()));
+					Files.copy(cssTemplate, outStream);
+					outStream.close();
+				}
+				
+			} catch (Exception e) {
+				//neeigh
+				response.status(400);
+				return GSON.toJson(ImmutableMap.of("error", "Couldn't copy over template files."));
+			}
+			
+			
+			File inJs = new File(experiencePath.resolve("index.js").toAbsolutePath().toString());
+			File inHtml = new File(experiencePath.resolve("index.html").toAbsolutePath().toString());
+			File inCss = new File(experiencePath.resolve("index.css").toAbsolutePath().toString());
 
 			String js = "";
 			String html = "";
