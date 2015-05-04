@@ -320,7 +320,7 @@ public class Server {
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Unknown experience!"));
 		}
 		
-		Path sceneDirectory = Paths.get(directory).resolve(experienceName).resolve(sceneName);
+		Path sceneDirectory = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
 		
 		try {
 			FileUtils.deleteDirectory(new File(sceneDirectory.toAbsolutePath().toString()));
