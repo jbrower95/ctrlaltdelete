@@ -367,7 +367,7 @@
 			$("#sceneIdInput").blur(sceneIdChange);
 			
 			 /* Handlers for saving the files */
-           cmCss.on("change", function(cm, change) {
+           cmCss.on("blur", function(cm) {
            		var code = cmCss.getValue();
            		var baseUrl = "/" + id + "/" + currentSceneId + "/edit?type=";
            		$.post(baseUrl + "css", code, function(response) {
@@ -378,7 +378,7 @@
                 });
 			  });
 			  
-			cmJs.on("change", function(cm, change) {
+			cmJs.on("blur", function(cm) {
 				var code = cmJs.getValue();
 				$.post("/" + id + "/" + currentSceneId + "/edit?type=js", code , function(response) {
                     $.notify("Saved!", "success");
@@ -388,7 +388,7 @@
                 });
 			  });
 			  
-			cmHtml.on("change", function(cm, change) {
+			cmHtml.on("blur", function(cm) {
 				var code = cmHtml.getValue();
 				$.post("/" + id + "/" + currentSceneId + "/edit?type=html", code, function(response) {
                     $.notify("Saved!", "success");
