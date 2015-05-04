@@ -194,7 +194,10 @@ var exported_scene = {
 		        		if (!$(this).hasClass('clippyFile')) {
 		        			if (!$(this).hasClass('folder')) {
 		        				AssetManager.getSharedInstance().playNamed("recycle");
+		        				var img_src = $(this).attr('src')
 		        				$(this).remove();
+		        				$("img[src*='"+img_src+"'").remove();
+		        				$("#recycleIcon").attr('src', "images/full_recycle_bin_w_text.png");
 		        			} else {
 		        				$(this).animate($(this).data().originalPosition, "slow");
 		        			}
@@ -205,10 +208,12 @@ var exported_scene = {
 		        			});
 		        		} else {
 		        			AssetManager.getSharedInstance().playNamed("recycle");
-		        			$(this).remove();
+		        			var img_src = $(this).attr('src')
+	        				$(this).remove();
+	        				$("img[src*='"+img_src+"'").remove();
 		        			recycleClippyFile();
+		        			$("#recycleIcon").attr('src', "images/full_recycle_bin_w_text.png");
 		        		}
-		        		$("#recycleIcon").attr('src', "images/full_recycle_bin.png");
 		        	}
 		      	},
 		      	revert : function(event, ui) {
@@ -244,7 +249,17 @@ var exported_scene = {
 					nextFolder.setTitle("Explorer");
 					nextFolder.setIcon("images/open_folder.png");
 					nextFolder.setActive(true);
-					nextFolder.moveTo(180, 100);
+					// make position sensitive to size and document's width
+				    var posX = (Math.random() * (window.innerWidth - 400)).toFixed();
+				    var posY = (Math.random() * (window.innerHeight - 400)).toFixed();
+
+				    console.log("Window info:");
+				    console.log(window.innerWidth);
+				    console.log(window.innerHeight);
+				    console.log(posX);
+				    console.log(posY);
+
+					nextFolder.moveTo(posX, posY);
 					manager.addWindow(nextFolder);
 					console.log(nextFolder);
 					refreshWindows();
