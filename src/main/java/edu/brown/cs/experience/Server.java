@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,11 +105,47 @@ public class Server {
     Spark.get("/:experience/scores", new GetScoresHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.post("/:experience/saveedit", new SaveEditedExperienceHandler());
+    Spark.post("/:experience/:scene/refactor", new SceneRefactorHandler());
     Spark.get("/:experience/lib/*", new LibHandler());
     Spark.get("/lib/*", new LibHandler());
     Spark.get("/:experience/:asset", new GameHandler());
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
     
+  }
+  
+  
+  public class SceneRefactorHandler implements Route {
+
+	@Override
+	public Object handle(Request request, Response response) {
+		
+		System.out.println("Doing refactor...");
+		String experienceName = request.params(":experience");
+		String sceneName = request.params(":scene");
+		String newSceneName = request.queryParams("newid");
+		
+		Path oldDirectory = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
+		Path newDirectory = Paths.get(directory).resolve(experienceName).resolve(newSceneName + ".scene");
+		
+		if (Files.exists(newDirectory)) {
+			response.status(400);
+			return GSON.toJson(ImmutableMap.of("error", "Error: Target scene already exists."));
+		}
+		
+		try {
+			Files.move(oldDirectory, newDirectory, StandardCopyOption.ATOMIC_MOVE);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			response.status(400);
+			return GSON.toJson(ImmutableMap.of("error", "Error: Couldn't rename scene."));
+		}
+		
+		return GSON.toJson(true);
+	}
+	  
+	  
+	  
   }
   
   /**
@@ -317,23 +354,18 @@ public class Server {
 		String text = request.body();
 		
 		
-		System.out.println("SceneEditHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		Path sceneDir = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
 		
 		String type = request.queryParams("type");
 		
-		System.out.println("Body: '" + text + "'");
-		
 		if (type == null || text == null) {
 			response.status(400);
 			return GSON.toJson(false);
 		}
 		
-		System.out.println("Asset Modified For Scene: " + sceneName + "." + type);
-		System.out.println("Contents: " + text);
-		
+		System.out.println("Updated scene " + sceneName);
 		
 		Path assetPath = sceneDir.resolve(sceneName + "." + type);
 		
@@ -352,7 +384,6 @@ public class Server {
 		
 		try {
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			System.out.println("Writing to file: " + text);
 			fw.write(text);
 			fw.flush();
 			fw.close();
@@ -1031,7 +1062,7 @@ public class Server {
       String filename = req.params(":experience");
       senseChanges();
       Experience exp = experiences.get(filename);
-
+      
       // Get data
       QueryParamsMap qm = req.queryMap();
       String oldId = sanitize(qm.value("oldId"));

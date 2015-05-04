@@ -487,7 +487,7 @@
                     <div class="settings-bar">
                         <div class="bar-block label">Scene ID</div>
                         <div class="bar-block answers">
-                            <input type="text" name="sceneId" value=""/>
+                            <input type="text" name="sceneId" id="sceneIdInput" value=""/>
                         </div>
                     </div>
 
@@ -705,10 +705,34 @@
 
             showCheckedColor(color);
             showCheckedScore(highToLow);
+            
             if (isNew === "false") {
                 listScenes();
             }
 			
+			function sceneIdChange() {
+				
+				console.log("Saving new scene name...");
+				
+				var newSceneName = $("sceneIdInput").val();
+				
+				if (newSceneName != currentSceneId) {
+					
+					//a change occurred
+					var url = "/" + id + "/" + currentSceneId + "/refactor?new=" + newSceneName;
+           		
+					$.post(url, function(response) {
+						if (response === true) {
+							//it worked
+							listScenes();
+							currentSceneId = newSceneName;
+							$("#" + currentSceneId).addClass("curr");
+						}
+					});
+				} 
+			}
+			
+			$("#sceneIdInput").blur(sceneIdChange);
 			
 			 /* Handlers for saving the files */
            cmCss.on("change", function(cm, change) {
