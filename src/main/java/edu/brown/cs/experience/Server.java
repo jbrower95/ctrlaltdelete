@@ -309,7 +309,6 @@ public class Server {
 
 	@Override
 	public Object handle(Request request, Response response) {
-		
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
 		Experience exp = experiences.getOrDefault(experienceName, null);
