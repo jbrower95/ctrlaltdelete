@@ -319,14 +319,15 @@ public class Server {
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Unknown experience!"));
 		}
 		
+		Path sceneDirectory = Paths.get(directory).resolve(experienceName).resolve(sceneName);
+		
 		try {
-			FileUtils.deleteDirectory(new File(directory + File.separator + experienceName + File.separator + sceneName));
+			FileUtils.deleteDirectory(new File(sceneDirectory.toAbsolutePath().toString()));
 			senseChanges();
 			return GSON.toJson(ImmutableMap.of("success", "true"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			response.status(404);
-			//TODO: update status code to real status code for this operation failing
+			response.status(400);
 			return GSON.toJson(ImmutableMap.of("success", "false", "error", "Deletion failed!"));
 		}
 	}

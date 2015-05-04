@@ -128,6 +128,11 @@
                     <textarea name="css" class="editor" id="css">
                     </textarea>
                 </div>
+
+                <div class="save-bar">
+                    <button class="delete button" id="sceneDelete">Delete</button>
+                    <button class="test button">Test</button>
+                </div>
             </div>
 
             <div id="generalEdit">
@@ -180,7 +185,7 @@
                 </div>
 
                 <div class="save-bar">
-                    <button class="delete button">Delete</button>
+                    <button class="delete button" id="deleteExperience">Delete</button>
                     <button class="save button">Save
                     <div class="save-info"></div>
                     </button>
@@ -792,11 +797,33 @@
             }
 
             /**
-            * Save on click of the save button.
+            * Delete experience on click.
             */
-            $(".delete").click(function() {
+            $("#deleteExperience").click(function() {
                 deleteExperience();
             });
+
+            function deleteScene() {
+                $.ajax({
+                    url: '/' + id + '/' + currentSceneId + '/edit',
+                    type: 'DELETE',
+                    success: function(result) {
+                        console.log("Successfully deleted.");
+                        $.notify("Scene deleted! Get rid of this notification!", "success");
+                    },
+                    error: function(result) {
+                        $.notify("Scene couldn't be deleted.", "error");
+                    }
+                });
+            }
+
+            /**
+            * Delete scene on click.
+            */
+            $("#deleteScene").click(function() {
+                deleteeScene();
+            });
+
         });
     </script>
 </body>
