@@ -313,17 +313,19 @@ public class Server {
 	  
 	@Override
 	public Object handle(Request request, Response response) {
+		
+		String text = request.body();
+		
+		
 		System.out.println("SceneEditHandler!");
 		String experienceName = request.params(":experience");
 		String sceneName = request.params(":scene");
-		Path sceneDir = Paths.get(directory + File.separator + experienceName + File.separator + sceneName + ".scene");
+		Path sceneDir = Paths.get(directory).resolve(experienceName).resolve(sceneName + ".scene");
 		
 		String type = request.queryParams("type");
-		String body = request.body();
 		
-		System.out.println("Body: '" + body + "'");
+		System.out.println("Body: '" + text + "'");
 		
-		String text = null;
 		if (type == null || text == null) {
 			response.status(400);
 			return GSON.toJson(false);

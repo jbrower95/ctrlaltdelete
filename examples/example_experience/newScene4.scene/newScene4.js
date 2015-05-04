@@ -4,7 +4,7 @@ var exported_scene = {
 		//TODO: perform scene initialization / do things
 	},
 	onDestroy : function() {
-		//TODO: perform some cleanup
+		//TODO: perform some cleanup //this is a test
 	},
 	preload : function() {
 		//TODO: establish any resources this scene needs. Can return a promise for async actions.
