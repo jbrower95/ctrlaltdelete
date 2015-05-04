@@ -171,15 +171,20 @@ var exported_scene = {
 				cursors = game.input.keyboard.createCursorKeys();
 			},
 			upLadder : function(player, ladder) {
-				//if (cursors.up.isDown) {
+				if (cursors.up.isDown) {
 					player.animations.play('climb');
 					player.body.velocity.y = -200;
-				/*} else if (cursors.down.isDown) {
+				} else if (cursors.down.isDown) {
 					player.animations.play('climb');
-					player.body.velocity.y = 300;
+					player.body.velocity.y = 200;
 				} else {
 					player.body.velocity.y = -5;
-				}*/
+				}
+				if (player.y == 0) {
+					game.destroy();
+					AssetManager.getSharedInstance().fadeOutNamed("paintparty");
+   					SceneManager.getSharedInstance().presentScene("explorer95");
+				}
 			},
 			killWindow : function(win, other) {
 				win.kill();
