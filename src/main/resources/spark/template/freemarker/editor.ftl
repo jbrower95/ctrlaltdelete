@@ -12,447 +12,7 @@
     <link href="http://codemirror.net/lib/codemirror.css" rel='stylesheet' type='text/css'>
     <link href="http://codemirror.net/theme/monokai.css" rel='stylesheet' type='text/css'>
 
-    <style>
-        html {
-            position: relative;
-        height: 100%;
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        top: 0;
-        overflow: hidden;
-        }
-        body {
-            background-color: #222128;
-        height: 100%;
-        position: relative;
-        padding: 0;
-        margin: 0;
-        top: 0;
-        }
-
-        hr {
-            border: 0;
-            height: 1px;
-            background-color: rgba(255,255,255,0.4);
-            margin-bottom: 2%;
-            margin-top: 2%;
-        }
-
-        .clearfix:after {
-            visibility: hidden;
-            display: block;
-            font-size: 0;
-            content: " ";
-            clear: both;
-            height: 0;
-        }
-
-        .container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar {
-            position: relative;
-            width: 25%;
-            height: 100%;
-            margin: 0;
-            float: left;
-            padding-top: 2.5%;
-            padding-bottom: 2.5%;
-            overflow: hidden;
-            box-sizing: border-box;
-            transition: background-color 0.2s;
-        }
-
-        .side-title {
-            font-family: 'Lato', sans-serif;
-            font-size: 1.5em;
-            display: block;
-            margin-bottom: 2%;
-            color: white;
-            font-weight: 800;
-            opacity: 1;
-            padding-right: 2%;
-            padding-left: 18%;
-            width: 100%;
-            background-color: rgba(0,0,0,0);
-            box-sizing: border-box;
-            transition: background-color 0.2s;
-        }
-
-        .side-title:hover {
-            cursor: pointer;
-            background-color: rgba(0,0,0,0.1);
-        }
-
-        .scene-list {
-            position: relative;
-            width: 100%;
-            height: 78%;
-            overflow: auto;
-            box-sizing: border-box;
-        }
-
-        .over {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 18%;
-            height: 100%;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .list {
-            list-style: none;
-            position: relative;
-            width: 100%;
-            height: auto;
-            overflow-x: hidden;
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        .list li {
-            font-family: 'Lato', sans-serif;
-            color: white;
-            font-size: 1.2em;
-            opacity: 1;
-            transition: background-color 0.2s;
-            padding-right: 2%;
-            padding-left: 18%;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            box-sizing: border-box;
-            background-color: rgba(0,0,0,0);
-        }
-
-        .list li#Main {
-            font-weight: 800;
-        }
-
-        .list li:hover {
-            cursor: pointer;
-            background-color: rgba(0,0,0,0.1);
-        }
-
-        .curr, .list li.curr {
-            background-color: rgba(0,0,0,0.3);
-        }
-
-        .main {
-            position: relative;
-            width: 74%;
-            height: 100%;
-            float: right;
-            padding: 2.5%;
-            box-sizing: border-box;
-            overflow: auto;
-        }
-
-        input[type=text] {
-            background-color: transparent;
-            border: 0;
-            border-bottom: 1px solid white;
-            color: white;
-            width: 100%;
-            padding-bottom: 10px;
-            transition: border 0.2s;
-            font-family: 'Lato', sans-serif;
-        }
-
-        input[type=text]:focus {
-            outline: none;
-            border-bottom: 3px solid white;
-        }
-
-        textarea {
-            background-color: transparent;
-            border: 0;
-            color: white;
-            font-family: 'Merriweather', serif;
-            position: relative;
-            width: 85%;
-            height: 100px;
-            resize: none;
-            padding: 5px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        textarea:focus {
-        outline: none;
-        opacity: 1;
-        }
-
-
-        .title {
-            font-family: 'Lato', sans-serif;
-            font-size: 2.3em;
-            display: block;
-            margin-bottom: 2%;
-        }
-
-        .description {
-            font-family: 'Merriweather', serif;
-        }
-
-        .settings {
-            position: relative;
-            width: 85%;
-            height: auto;
-            font-family: 'Merriweather', serif;
-            color: white;
-            margin-top: 5%;
-        }
-
-        .scene-settings {
-            position: relative;
-            width: 30%;
-            height: auto;
-            font-family: 'Merriweather', serif;
-            color: white;
-            margin-top: 2%;
-        }
-
-        .settings-title {
-            color: white;
-            font-family: 'Lato', sans-serif;
-            font-size: 1.8em;
-            font-weight: 700;
-        }
-
-        .settings-bar {
-            position: relative;
-            width: 100%;
-            height: auto;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-top: 4%;
-        }
-
-        .bar-block {
-            position: relative;
-            width: 50%;
-            height: auto;
-        }
-
-        .label {
-            font-size: 1.3em;
-        }
-
-        .answers, form {
-            position: relative;
-            width: 100%;
-            height: auto;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .answers.scene {
-            width: 50%;
-        }
-
-        input[type=radio] {
-            position: absolute;
-            left: -2040px;
-        }
-
-        input[type=radio] + label {
-            display: block;
-            position: relative;
-            height: auto;
-            opacity: .6;
-            transition: opacity 0.2s;
-            font-size: 1em;
-            text-align: center;
-            transition: background-color 0.2s;
-        }
-
-        input[type=radio] + label:hover {
-            cursor: pointer;
-            opacity: .9;
-        }
-
-        input[type=radio]:checked + label {
-            opacity: 1;
-        }
-
-        .save-bar {
-            position: relative;
-            width: 85%;
-            height: auto;
-            margin-top: 8%;
-            text-align: right;
-        }
-
-        .button {
-            padding: 2%;
-            padding-left: 4%;
-            padding-right: 4%;
-            width: 38.5%;
-        }
-
-        .save {
-            position: relative;
-            width: 31%;
-            padding-top: 1%;
-            padding-bottom: 1%;
-            border: 3px solid white;
-            color: white;
-            background-color: rgba(255,255,255,0);
-            font-family: 'Lato', sans-serif;
-            font-size: 1.3em;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .save:hover {
-            cursor: pointer;
-        }
-
-        .save:hover, .active {
-            background-color: rgba(255,255,255,1);
-            color: darkslategray;
-        }
-
-        .save-info {
-            position: absolute;
-            width: 100%;
-            height: auto;
-            color: white;
-            font-size: .6em;
-            top: -20px;
-            left: 0;
-            text-align: left;
-        }
-
-        .color-block {
-            position: relative;
-            height: 25px;
-            width: 100%;
-        }
-
-        label.color {
-            width: 20%;
-        }
-
-        .c00bad6 {
-        background-color: #00bad6;
-        }
-
-        .cef563d {
-        background-color: #ef563d;
-        }
-
-        .cF5C70C {
-        background-color: #F5C70C;
-        }
-
-        .cffaf00 {
-        background-color: #ffaf00;
-        }
-
-        .asset-zone {
-            position: absolute;
-            width: 100%;
-            height: 25%;
-            left: 0;
-            bottom: 0;
-            box-sizing: border-box;
-            padding: 1%;
-        }
-        
-        #asset-upload-field {
-            background-color: transparent;
-            border: 3px dashed rgba(255,255,255,0.5);
-            border-radius: 5px;
-            position: relative;
-            height: 100%;
-            width: 100%;
-            float: none;
-            color: white;
-            font-family: 'Lato', sans-serif;
-            font-size: 1.2em;
-            text-align: center;
-            box-sizing: border-box;
-            padding: 15%;
-            transition: border-color 0.2s;
-        }
-
-        #asset-upload-field:hover {
-            border-color: rgba(255,255,255,1);
-        }
-
-        .editor-bar {
-            position: relative;
-            width: 100%;
-            height: auto;
-            margin-top: 50px;
-        }
-
-        .editor-head {
-            position: relative;
-            width: 100%;
-            height: 45px;
-            font-family: 'Lato', sans-serif;
-            color: white;
-            font-size: 1.2em;
-            padding: 10px;
-            box-sizing: border-box;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .left {
-            float: left;
-            width: auto;
-            padding-left: 20px;
-        }
-
-        .right {
-            float: right;
-            width: auto;
-            padding-right: 20px;
-        }
-
-        .editor {
-            position: relative;
-            width: 100%;
-            height: 500px;
-            background-color: rgba(255,255,255,0.5);
-            box-sizing: border-box;
-            transition: height 0.2s;
-        }
-
-        .inactive {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        .back {
-            position: relative;
-            height: 20px;
-            width: auto;
-            top: 4px;
-            opacity: 1;
-            transition: opacity 0.2s;
-        }
-
-        .back:hover {
-            cursor: pointer;
-            opacity: 0.5;
-        }
-    </style>
+    <link rel="stylesheet" href="lib/css/editor.css">
     <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 </head>
 <body>
@@ -487,7 +47,7 @@
                     <div class="settings-bar">
                         <div class="bar-block label">Scene ID</div>
                         <div class="bar-block answers">
-                            <input type="text" name="sceneId" value=""/>
+                            <input type="text" name="sceneId" id="sceneIdInput" value=""/>
                         </div>
                     </div>
 
@@ -507,7 +67,15 @@
                             
                         </div>
                         <div class="right" onclick="javascript:toggleJs()">
-                            +
+                            <svg x="0px" y="0px" width="20px" onclick="javascript:toggleCss()"
+                                 height="20px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" class="minus">
+                            <g id="Layer_1">
+                                <rect x="175" width="50" height="400"/>
+                            </g>
+                            <g id="Layer_2">
+                                <rect y="175" fill="#575fcf" width="400" height="50"/>
+                            </g>
+                            </svg>
                         </div>
                     </div>
 
@@ -522,7 +90,15 @@
                             
                         </div>
                         <div class="right" onclick="javascript:toggleHtml()">
-                            +
+                            <svg x="0px" y="0px" width="20px" onclick="javascript:toggleCss()"
+                                 height="20px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" class="minus">
+                            <g id="Layer_1">
+                                <rect x="175" width="50" height="400"/>
+                            </g>
+                            <g id="Layer_2">
+                                <rect y="175" fill="#575fcf" width="400" height="50"/>
+                            </g>
+                            </svg>
                         </div>
                     </div>
 
@@ -536,8 +112,16 @@
                         <div class="left" id="scenecss">
                             
                         </div>
-                        <div class="right" onclick="javascript:toggleCss()">
-                            +
+                        <div class="right">
+                            <svg x="0px" y="0px" width="20px" onclick="javascript:toggleCss()"
+                                 height="20px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" class="minus">
+                            <g id="Layer_1">
+                                <rect x="175" width="50" height="400"/>
+                            </g>
+                            <g id="Layer_2">
+                                <rect y="175" fill="#575fcf" width="400" height="50"/>
+                            </g>
+                            </svg>
                         </div>
                     </div>
 
@@ -596,7 +180,7 @@
                 </div>
 
                 <div class="save-bar">
-
+                    <button class="delete button">Delete</button>
                     <button class="save button">Save
                     <div class="save-info"></div>
                     </button>
@@ -619,6 +203,38 @@
     <script src="http://codemirror.net/addon/edit/closebrackets.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
     <script>
+
+        // Shim jQuery to add/remove/toggle SVG classes
+        $.fn.addClassSVG = function(className) {
+          $(this).attr('class', function(index, existingClassNames) {
+            return existingClassNames + ' ' + className;
+          });
+          return this;
+        }
+
+        $.fn.removeClassSVG = function(className) {
+          $(this).attr('class', function(index, existingClassNames) {
+            var re = new RegExp(className, 'g');
+            return existingClassNames.replace(re, '');
+          });
+          return this;
+        }
+
+        $.fn.toggleClassSVG = function(className) {
+          var elClass = $(this).attr('class'),
+              re = new RegExp(className, 'g');
+          if (re.test(elClass)) {
+            $(this).removeClassSVG(className);
+          } else {
+            $(this).addClassSVG(className);
+          }
+          return this;
+        }
+
+        // Trigger transition on click
+        $('svg').on('click', function() {
+          $(this).toggleClassSVG('minus');
+        });
     	
     	//hide/show JS, CSS, and HTML.
     	function toggleJs() {
@@ -627,23 +243,23 @@
     		
     		var indicator = $(editors[0]).find("right");
     		
-    		$(editors[0]).find(".CodeMirror").toggle({duration: 200});
+    		$(editors[0]).find(".CodeMirror").slideToggle({duration: 200});
     	}
     	
     	function toggleHtml() {
     		var editors = $(".editor-bar");
     		console.log(editors);
-    		$(editors[1]).find(".CodeMirror").toggle({duration: 200});
+    		$(editors[1]).find(".CodeMirror").slideToggle({duration: 200});
     	}
     	
     	function toggleCss() {
     		var editors = $(".editor-bar");
     		console.log(editors);
-    		$(editors[2]).find(".CodeMirror").toggle({duration: 200});
+    		$(editors[2]).find(".CodeMirror").slideToggle({duration: 200});
     	}
     	
     	
-    
+        
     
     
         $(document).ready(function() {
@@ -705,10 +321,34 @@
 
             showCheckedColor(color);
             showCheckedScore(highToLow);
+            
             if (isNew === "false") {
                 listScenes();
             }
 			
+			function sceneIdChange() {
+				
+				console.log("Saving new scene name...");
+				
+				var newSceneName = $("sceneIdInput").val();
+				
+				if (newSceneName != currentSceneId) {
+					
+					//a change occurred
+					var url = "/" + id + "/" + currentSceneId + "/refactor?new=" + newSceneName;
+           		
+					$.post(url, function(response) {
+						if (response === true) {
+							//it worked
+							listScenes();
+							currentSceneId = newSceneName;
+							$("#" + currentSceneId).addClass("curr");
+						}
+					});
+				} 
+			}
+			
+			$("#sceneIdInput").blur(sceneIdChange);
 			
 			 /* Handlers for saving the files */
            cmCss.on("change", function(cm, change) {
@@ -1120,6 +760,31 @@
             */
             $(".save").click(function() {
                 saveEdit();
+            });
+
+            function deleteExperience() {
+                $.ajax({
+                    url: '/' + id,
+                    type: 'DELETE',
+                    success: function(result) {
+                        if (JSON.parse(result).success === "true") {
+                            console.log("Successfully deleted.");
+                            window.location.replace("/maker");
+                        } else {
+                            $.notify("Experience couldn't be deleted.", "error");
+                        }
+                    },
+                    error: function(result) {
+                        $.notify("Experience couldn't be deleted.", "error");
+                    }
+                });
+            }
+
+            /**
+            * Save on click of the save button.
+            */
+            $(".delete").click(function() {
+                deleteExperience();
             });
         });
     </script>
