@@ -215,31 +215,30 @@ public class Server {
 		String sceneTemplateDirectory = "src/main/resources/static/template/scene";
 		
 		try {
-			
+
 			File[] files = new File(sceneTemplateDirectory).listFiles();
-			
+
 			//copy all of the template files.
 			for (File file : files) {
-				
+
 				String fileExtension = file.getName().split("\\.")[1];
-				
+
 				String location = tentativeSpot.resolve(baseName + "." + fileExtension).toAbsolutePath().toString();
-				
+
 				InputStream inputStream = new FileInputStream(file);
 				FileOutputStream outputStream = new FileOutputStream(new File(location));
-				
+
 				byte[] input = Files.readAllBytes(file.toPath());
-				
+
 				String result = new String(input, Charset.defaultCharset());
 				result = result.replaceAll("SCENENAME", baseName);
-				
+
 				byte[] outputData = result.getBytes();
 				outputStream.write(outputData, 0, outputData.length);
-				
+
 				inputStream.close();
 				outputStream.close();
 			}
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

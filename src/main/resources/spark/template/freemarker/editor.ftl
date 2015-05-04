@@ -1082,6 +1082,10 @@
                         $(".save").html("Saved!");
                         $(".save").addClass("active");
                         oldId = id;
+                        if (isNew) {
+                            console.log("Yep.");
+                            window.location.replace("/"+id+"/editor");
+                        }
                     } else {
                         var error = responseObject.error;
                         $.notify(error, "error");
