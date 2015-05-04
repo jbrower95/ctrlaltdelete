@@ -3,7 +3,6 @@
 SceneManager.initialize("content");
 /* ------------------------------------------- */
 
-
 // Load all scenes
 // Loading returns a promise, so use .then(...) to do more stuff after.
 

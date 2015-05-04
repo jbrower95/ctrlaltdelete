@@ -364,7 +364,7 @@ public class Server {
 		
 		String type = request.queryParams("type");
 		
-		if (sceneName == "null") {
+		if (sceneName == null || sceneName.equals("null")) {
 			//special case for the 'main'.
 			sceneName = "index";
 			sceneDir = Paths.get(directory).resolve(experienceName);

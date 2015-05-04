@@ -542,6 +542,7 @@
                     cmJs.setValue(sceneJs);
                     cmHtml.setValue(sceneHtml);
                     cmCss.setValue(sceneCss);
+                    currentSceneId = null;
                 });
             }
 
