@@ -954,8 +954,8 @@ public class Server {
 	      return result.toString();
 	    } catch (IOException e) {
 	    	e.printStackTrace();
-	    	res.status(500);
-	    	return "Error! Notify the author of this story that everything is broken.";
+	    	res.status(404);
+	    	return "Error! Page not found.";
 	    }
     }
   }
