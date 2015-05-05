@@ -59,7 +59,8 @@ var cmJs = CodeMirror.fromTextArea(document.getElementById("js"), {
     styleActiveLine: true,
     matchBrackets: true,
     autoCloseBrackets: true,
-    theme: "monokai"
+    theme: "monokai",
+    gutters: ["CodeMirror - linenumbers"]
 });
 
 var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
@@ -68,7 +69,8 @@ var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
     styleActiveLine: true,
     matchBrackets: true,
     autoCloseBrackets: true,
-    theme: "monokai"
+    theme: "monokai",
+    gutters: ["CodeMirror - linenumbers"]
 });
 
 var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
@@ -78,7 +80,8 @@ var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
     matchBrackets: true,
     autoCloseBrackets: true,
     lineWrapping: true,
-    theme: "monokai"
+    theme: "monokai",
+    gutters: ["CodeMirror - linenumbers"]
 }); 
 
 /**

@@ -9,7 +9,7 @@ SceneManager.initialize("content");
 function start() {
     // To present a scene, use the following line, replacing 'sample' with
     // the id of any scene you want to present.
-    
+
     // SceneManager.getSharedInstance().presentScene('sample');
 }
 
