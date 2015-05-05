@@ -348,6 +348,7 @@ SceneManager.performSequence = function(funcs, timeouts, context) {
   * @param funcs A list of functions to perform. If the functions are indexed at (0,1,2,3...) they will be performed in that order (that is, 0 is first.)
   */
   SceneManager.performSequenceAsync = function(funcs) {
+      console.log("[scenemanager/performSequenceAsync] Remaining functions in sequence: " + funcs.length);
       return new Promise(function(resolve, reject) {
 
         if (funcs.length == 0) {
@@ -364,12 +365,16 @@ SceneManager.performSequence = function(funcs, timeouts, context) {
             return SceneManager.performSequenceAsync(funcs);
           }
 
-          Promise.resolve(toDo()).then(
-              //once this function has finished executing, recur, resolve that promise, and then resolve your current promise.
-              Promise.resolve(SceneManager.performSequenceAsync(funcs)).then(function() {
-                resolve();
-              })
-            );
+          Promise.resolve(toDo()).then(function() {
+                //once this function has finished executing, recur, resolve that promise, and then resolve your current promise.
+                Promise.resolve(SceneManager.performSequenceAsync(funcs)).then(function() {
+                  resolve();
+                }).catch(function(error) {
+                  console.error("[scenemanager/performSequenceAsync] Error: " + error);
+                  resolve();
+                });
+            }
+          );
         }
       });
   };
