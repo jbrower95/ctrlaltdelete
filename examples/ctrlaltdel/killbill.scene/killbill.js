@@ -3,7 +3,8 @@ var exported_scene = {
     preload : function() {
 
     	AssetManager.getSharedInstance().preloadNamed("killbill.scene/gunshot.mp3", "gunshot");
-
+    	AssetManager.getSharedInstance().preload(11);
+    	AssetManager.getSharedInstance().preload(12);
     },
 	onPresent : function() { 
 
@@ -18,19 +19,15 @@ var exported_scene = {
 		camera.position.set(0, 0, 100);
 		scene.add(new THREE.AreaLight( 0xffffff, 1 ));
 
-		var light = new THREE.DirectionalLight(0x888888);
+		/*var light = new THREE.DirectionalLight(0x888888);
 		light.position.set(1, 1, 1);
-		scene.add(light);
+		scene.add(light);*/
 
-		scene.add(new THREE.AmbientLight("#ffffff"));
+		//scene.add(new THREE.AmbientLight("#ffffff"));
 
-		light = new THREE.PointLight( 0xff0000, 1, 2800 );
-		light.position.set( 50, 50, 50 );
-		scene.add( light );
-
-		light = new THREE.PointLight( 0xffffff, 1, 1800 );
+		/*light = new THREE.PointLight( 0xffffff, 1, 100 );
 		light.position.set( 50, 60, 60 );
-		scene.add( light );
+		scene.add( light );*/
 
 		function de2ra(de) {
 			return de * (Math.PI / 180);
@@ -80,7 +77,8 @@ var exported_scene = {
 
 		var canvas = document.getElementById('killbillcanvas');
 		var context = document.getElementById('context2d');
-
+		var bill = null;
+		var gun = null;
 		var loader = new THREE.OBJMTLLoader();
 		loader.load( 'killbill.scene/sandman/sandman.obj', 'killbill.scene/sandman/sandman.mtl', function(object) {
 		  //console.log(object);
@@ -90,18 +88,50 @@ var exported_scene = {
 		      //console.log(child.material);
 		    }
 		  });
+		  bill = object;
 		  object.position.y = 7;
 		  object.position.x = 10;
-		  object.position.z = 10;
+		  object.position.z = -20;
 		  scene.add(object);
 		  console.log("Added sandman to scene...");
 		});
 		this.gunPresent = false;
+		this.killed = false;
+		var numShots = 0;
 		function killbill() {
 			if (sceneReference.gunPresent) {
 				AssetManager.getSharedInstance().playNamed('gunshot');
+				AssetManager.getSharedInstance().stop(11);
+				sceneReference.killed = true;
+				document.body.backgroundColor = "black";
+				$("canvas").fadeIn(100).fadeOut(100).fadeIn(100);
+				$("canvas").effect('highlight', {color: '#ff0000'});
+				numShots = numShots + 1;
+				if (numShots == 4) {
+					//it's all ogre
+					AssetManager.getSharedInstance().play(12);
+
+					var fadeOutDiv = document.createElement('div');
+					fadeOutDiv.style.backgroundColor = '#000000';
+					fadeOutDiv.style.position = 'absolute';
+					fadeOutDiv.style.width = "100%";
+					fadeOutDiv.style.height = "100%";
+					fadeOutDiv.style.left = "0";
+					fadeOutDiv.style.top = "0";
+					fadeOutDiv.style.display = "none";
+					fadeOutDiv.id = "fadeOutDiv";
+					fadeOutDiv.style.zIndex = 10000;
+					sceneReference.element.appendChild(fadeOutDiv);
+					$(fadeOutDiv).fadeIn(3000);
+
+					setTimeout(nextScene,8000);
+				}
 			}
 		} 
+
+		function nextScene() {
+			SceneManager.getSharedInstance().presentScene('theend');
+		}
 
 		$(window).click(killbill);
 
@@ -143,7 +173,6 @@ var exported_scene = {
 				camera.position.y = camera.position.y + .5;
 				render();
 				count = count + 1;
-				render();
 				window.requestAnimationFrame(introduction);
 			} else {
 				
@@ -157,20 +186,52 @@ var exported_scene = {
 				scene.add(floodLight);*/
 
 				//load the pistol.
-				var loader = new THREE.OBJMTLLoader();
-				loader.load("killbill.scene/pistol/pistol.obj", "killbill.scene/pistol/pistol.mtl", function( object ) {
-					object.position.z = 10;
-					object.position.x = 15;
-					object.position.y = 10;
+				
+			}
+		};
+
+		var billTalks = function() {
+			AssetManager.getSharedInstance().play(11);
+		};
+
+		var presentBill = function() {
+			var billAnimation = function() {
+				if (bill.position.z >= 15) {
+					return;
+				} else {
+					bill.position.z += .04;
+					render();
+					requestAnimationFrame(presentBill);
+				}
+			}
+			billAnimation();
+		};
+
+		var presentGun = function() {
+				(new THREE.OBJMTLLoader()).load("killbill.scene/1911/1911.obj", "killbill.scene/1911/1911.mtl", function( object ) {
+					object.position.z = camera.position.z-2;
+					object.position.x = camera.position.x;
+					object.position.y = camera.position.y;
 					object.traverse(function(child) {
 					    if(child instanceof THREE.Mesh) {
-					      child.material.shininess = 0;
+					      child.material.shininess = 1;
 					      //console.log(child.material);
+
+					      child.geometry.applyMatrix(new THREE.Matrix4().makeTranslation( child.position.x, child.position.y, -child.position.z ) );
 					    }
 				  	});
-					object.scale.x = 20;
-					object.scale.y = 20;
-					object.scale.z = 20;
+					object.scale.x = 1/10.0;
+					object.scale.y = 1/10.0;
+					object.scale.z = 1/10.0;
+					object.rotation.y = de2ra(180);
+					object.verticesNeedUpdate = true;
+					object.elementsNeedUpdate = true;
+					object.morphTargetsNeedUpdate = true;
+					object.uvsNeedUpdate = true;
+					object.normalsNeedUpdate = true;
+					object.colorsNeedUpdate = true;
+					object.tangentsNeedUpdate = true;
+					gun = object;
 					sceneReference.gunPresent = true;
 					camera.position.z = camera.position.z + 5;
 					scene.add( object );
@@ -178,12 +239,17 @@ var exported_scene = {
 					console.log("camera position: ");
 					camera.lookAt(object.position);
 
+					light = new THREE.PointLight( 0xff0000, 1, 2800 );
+					light.position.set(bill.position.x, bill.position.y, bill.position.z);
+					scene.add( light );
+
 					render();
 				});
-			}
-		}
+		};
 
-		introduction();
+
+		SceneManager.performSequence([introduction, billTalks, presentBill, presentGun], [0,7000,6000,28000,25000]);
+//		introduction();
 	},
 	onDestroy: function() {
 

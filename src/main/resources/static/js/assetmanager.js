@@ -119,6 +119,16 @@ AssetManager.prototype.play = function(soundID) {
     this.sounds[soundID-1].play();
 };
 
+AssetManager.prototype.stop = function(soundID) {
+
+    if (!this.sounds[soundID-1]) {
+        console.error("[assetmanager/play] Error: Tried to play non-loaded sound: " + soundID);
+        return;
+    }
+
+    this.sounds[soundID-1].stop();
+};
+
 //stops a sound.
 AssetManager.prototype.stopNamed = function(soundID) {
     if (!this.namedSounds[soundID]) {
