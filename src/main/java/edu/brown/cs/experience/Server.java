@@ -46,6 +46,10 @@ import com.google.gson.JsonParseException;
 import edu.brown.cs.joengelm.sqldb.Database;
 
 public class Server {
+	
+  //If this is set to true, any assets will be served w/out respect to the whitelist.
+  private static final boolean SECURITY_DISABLED = true;
+  
   Map<String, Experience> experiences = new ConcurrentHashMap<>();
   private final static Gson GSON = new Gson();
   private final String directory;
@@ -100,7 +104,6 @@ public class Server {
     Spark.post("/:experience", new AssetUploadHandler());
     Spark.delete("/:experience", new DeleteExperienceHandler());
     Spark.put("/:experience/newscene", new SceneTemplateHandler());
-    
     Spark.get("/:experience/play", new PlayHandler());
     Spark.post("/:experience/scores", new PostScoresHandler());
     Spark.get("/:experience/scores", new GetScoresHandler());
@@ -113,6 +116,7 @@ public class Server {
     Spark.get("/:experience/:scene/:asset", new SceneContentHandler());
     
   }
+  
   
   
   public class SceneRefactorHandler implements Route {
@@ -166,9 +170,6 @@ public class Server {
 		
 		return GSON.toJson(true);
 	}
-	  
-	  
-	  
   }
   
   /**
@@ -856,6 +857,11 @@ public class Server {
    */
   public boolean experienceCanAccessAsset(Experience experience,
     String scene, String asset) {
+	  
+	  if (SECURITY_DISABLED) {
+		  return true;
+	  }
+	  
     String sceneDirectory = scene;
 
     Path filename = FileSystems.getDefault()
@@ -890,6 +896,11 @@ public class Server {
    */
   public boolean experienceCanAccessAsset(Experience experience,
     String asset) {
+	  
+	  if (SECURITY_DISABLED) {
+		  return true;
+	  }
+	  
     // note: the cwd (current working directory) is the experience directory.
     Path filename = FileSystems.getDefault().getPath("", asset);
     System.out.println("Determining accessibility of asset " + asset);

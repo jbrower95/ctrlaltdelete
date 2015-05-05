@@ -341,6 +341,44 @@ SceneManager.performSequence = function(funcs, timeouts, context) {
 
 
 /**
+  * Performs a sequence of functions immediately, or waiting until the promise that they return resolves.
+  *
+  * Allows for in-order execution of asynchronous functions.
+  *
+  * @param funcs A list of functions to perform. If the functions are indexed at (0,1,2,3...) they will be performed in that order (that is, 0 is first.)
+  */
+  SceneManager.performSequenceAsync = function(funcs) {
+      return new Promise(function(resolve, reject) {
+
+        if (funcs.length == 0) {
+          //no more work to be done!
+          resolve();
+        } else {
+          //there is work to be done.
+          //pick off a function
+          toDo = funcs.shift();
+
+          if (!(toDo instanceof Function)) {
+            //this is an error
+            console.log("[scenemanager.js/warning] performSequenceAsync: Skipping element " + toDo + " - Not a function. This is non fatal.");
+            return SceneManager.performSequenceAsync(funcs);
+          }
+
+          Promise.resolve(toDo()).then(
+              //once this function has finished executing, recur, resolve that promise, and then resolve your current promise.
+              Promise.resolve(SceneManager.performSequenceAsync(funcs)).then(function() {
+                resolve();
+              });
+            );
+        }
+      });
+  };
+
+
+
+
+
+/**
 *  Displays a Phantom Scene by using a stack of dependent scenes, injecting them, calling preload and then transitioning. 
 *  @return a promise to resolve these scenes.
 */
