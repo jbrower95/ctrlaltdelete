@@ -30,13 +30,10 @@
   *
   *
   *   Instance Methods:
-  *       # Presents a scene object with the given scene ID.
+  *       # Presents a scene object with the given scene ID. This returns a promise to present the scene,
+  *         as preloading the scene may return a promise.
   *     - (void) presentScene(SceneID)
   *
-  *         
-  *       # Preloads a scene. This is essentially moot until Web Workers
-  *       # are implemented for background loading.
-  *     - (void) loadScene(Scene scene)
   *
   *     Class Methods:
   *
@@ -49,10 +46,17 @@
   *
   *          + (SceneManager) SceneManager.getSharedInstance()
   *             Returns the shared scenemanager.
-  *   Constructors [DO NOT USE]:
   *
-  *       # SceneManager(contentDivID, scenes)
-  *       [see below for documentation]
+  *
+  *          + (SceneManager) SceneManager.performSequenceAsync(funcs)
+  *             Given a list of functions, performs them in order (from index 0 to funcs.length). If the functions are
+  *             asynchronous, it is guaranteed that funcs[i-1] will be completed before funcs[i] is executed (that is, they
+  *             will be executed inorder)
+  *
+  *
+  *          + (SceneManager) SceneManager.performSequence(funcs,timeouts) 
+  *             Given a list of functions, performs them in order (from index 0 to funcs.length). They are spaced apart
+  *             using the intervals specified in timeouts (an array of numbers). 
   *
   */
 
@@ -428,14 +432,13 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
             var possiblyPromise = rs.preload();
 
             if (possiblyPromise) {
-
               Promise.resolve(possiblyPromise).then(function() {
               //recur with the new, reduced stack.
                 Promise.resolve(manager.resolvePhantomDependencies(sceneName, sceneStack)).then(function() {
-                  resolve();
-                }).catch(function(){
-                  resolve();
-                });
+                    resolve();
+                  }).catch(function(){
+                    resolve();
+                  });
               });
             }
           }
