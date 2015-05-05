@@ -71,6 +71,9 @@ ul {
     width: 100%;
     height: auto;
     position: relative;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
     display: flex;
     flex-direction: row;
     justify-content: center;
