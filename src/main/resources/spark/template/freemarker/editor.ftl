@@ -132,7 +132,7 @@
                     <span class="settings-title">Settings</span>
 
                     <div class="settings-bar">
-                        <div class="bar-block label">ID (this is your path)</div>
+                        <div class="bar-block label">ID (this is your URL)</div>
                         <div class="bar-block answers">
                             <input type="text" name="id" value="${id}"/>
                         </div>

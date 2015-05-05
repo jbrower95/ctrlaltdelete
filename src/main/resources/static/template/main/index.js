@@ -1,3 +1,9 @@
+/** This is your MAIN SCENE.
+* Here, you'll load all of your individual scenes, and start off the experience
+* with whichever one you choose. You can also customize it in different ways:
+* provide a base HTML template, some javascript handlers for the entire experience, etc.
+*/
+
 
 /* Do not touch, initializes the scenemanager. */
 SceneManager.initialize("content");
@@ -16,6 +22,6 @@ function start() {
 // Load all scenes
 // Loading returns a promise, so use .then(...) to do more stuff after.
 
-//Scene.load('sample.scene/sample.js')
-//Scene.load('sample.scene/sample.js').then( function() { console.log('yo'); })
+//Scene.load('sample.scene/sample.js');
+//Scene.load('sample.scene/sample.js').then(start);
 
