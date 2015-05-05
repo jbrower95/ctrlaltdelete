@@ -238,9 +238,10 @@ function Scene(jsFile) {
       //this happens synchronously
       manager.registerScene(this);
       resolve();
-    }, scene_reference)).fail($.proxy(function(){
-      console.error("[scene.js] Couldn't load scene: " + jsFile + ". Experienced a network error.");
-      eject();
+    }, scene_reference)).fail($.proxy(function(jqxhr, settings, exception){
+      console.error("[scene.js] Couldn't load scene: " + jsFile + ". This is probably a syntax error.");
+      console.error("[scene.js/EXCEPTION] " + exception);
+      reject();
     }, scene_reference));
   }, this));
 }

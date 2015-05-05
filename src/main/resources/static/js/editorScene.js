@@ -59,7 +59,8 @@ var cmJs = CodeMirror.fromTextArea(document.getElementById("js"), {
     styleActiveLine: true,
     matchBrackets: true,
     autoCloseBrackets: true,
-    theme: "monokai"
+    theme: "monokai",
+    gutters: ["CodeMirror - linenumbers"]
 });
 
 var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
@@ -68,7 +69,8 @@ var cmHtml = CodeMirror.fromTextArea(document.getElementById("html"), {
     styleActiveLine: true,
     matchBrackets: true,
     autoCloseBrackets: true,
-    theme: "monokai"
+    theme: "monokai",
+    gutters: ["CodeMirror - linenumbers"]
 });
 
 var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
@@ -78,8 +80,27 @@ var cmCss = CodeMirror.fromTextArea(document.getElementById("css"), {
     matchBrackets: true,
     autoCloseBrackets: true,
     lineWrapping: true,
-    theme: "monokai"
+    theme: "monokai",
+    gutters: ["CodeMirror - linenumbers"]
 }); 
+
+/**
+* Replaces all the old ids in the editors
+* with the new id.
+*/
+function replaceIdInEditors(oldId, newId) {
+  console.log("Replacing " + oldId + " with " + newId);
+
+  var re = new RegExp(oldId, 'g');
+
+  var js = cmJs.getValue().replace(re, newId);
+  var html = cmHtml.getValue().replace(re, newId);
+  var css = cmCss.getValue().replace(re, newId);
+
+  cmJs.setValue(js);
+  cmHtml.setValue(html);
+  cmCss.setValue(css);
+}
 
 /**
 * Refactors on id change for scenes.
@@ -101,6 +122,7 @@ function sceneIdChange() {
     $.post(url, function(response) {
         //it worked
         listScenes();
+        replaceIdInEditors(currentSceneId, newSceneName);
         currentSceneId = newSceneName;
         $("#" + currentSceneId).addClass("curr");
         changeHeaders(currentSceneId);
@@ -186,7 +208,7 @@ function fillNewScene() {
           var css = result.scene.css;
           var scene = "New Scene";
           currentSceneId = id;
-          fillFields(scene, id, js, html, css);
+          fillFields(id, js, html, css);
           listScenes().then(function() {
             console.log(id);
             console.log(document.getElementById(id));

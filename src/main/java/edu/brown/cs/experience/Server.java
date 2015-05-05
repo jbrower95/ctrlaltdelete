@@ -132,14 +132,20 @@ public class Server {
 
 		Experience exp = experiences.get(experienceName);
 		Config cfig = getConfigFromExperience(exp);
+		String found = null;
 		for (String f : cfig.files) {
 			System.out.println(f + " == " + oldScene + "/*" + " ?");
 			if (f.equals(oldScene + "/*")) {
 				System.out.println("Found equality!");
-				cfig.files.remove(f);
-				cfig.addToFiles(newScene + "/*");
+				found = f;
 			}
 		}
+
+		if (found != null) {
+			cfig.files.remove(found);
+			cfig.addToFiles(newScene + "/*");
+		}
+		
 		System.out.println("New files for " + experienceName + ": " + cfig.files);
 		File file = new File(Paths.get(directory).resolve(experienceName).resolve(".config").toAbsolutePath().toString());
 		saveExperience(file, cfig, Paths.get(directory).resolve(experienceName).toAbsolutePath().toString());
