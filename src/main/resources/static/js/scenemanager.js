@@ -431,8 +431,11 @@ SceneManager.prototype.resolvePhantomDependencies = function(sceneName, sceneSta
 
               Promise.resolve(possiblyPromise).then(function() {
               //recur with the new, reduced stack.
-                manager.resolvePhantomDependencies(sceneName, sceneStack);
-                resolve();
+                Promise.resolve(manager.resolvePhantomDependencies(sceneName, sceneStack)).then(function() {
+                  resolve();
+                }).catch(function(){
+                  resolve();
+                });
               });
             }
           }

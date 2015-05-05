@@ -129,7 +129,7 @@ var exported_scene = {
     } 
 
     function nextScene() {
-      SceneManager.getSharedInstance().presentScene('theend');
+      SceneManager.getSharedInstance().presentScene('credits');
     }
 
     $(window).click(killbill);
@@ -248,15 +248,14 @@ var exported_scene = {
 
 
     SceneManager.performSequence([introduction, billTalks, presentBill, presentGun], [0,7000,6000,28000,25000]);
-//    introduction();
+    //    introduction();
   },
   onDestroy: function() {
-
+    $(window).unbind('click');
   },
   getHTML : function() {
     return "killbill.scene/killbill.html"
   }
-
 };
 
 

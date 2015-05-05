@@ -60,6 +60,7 @@ var exported_scene = {
         });
       };
       
+      //test case for performSequenceAsync
       SceneManager.performSequenceAsync([asyncFunctionOne, asyncFunctionTwo]).then(function() {
         console.log("Done! state: " + state);
         if (state == 2) {
