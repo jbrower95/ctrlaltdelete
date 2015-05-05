@@ -8,14 +8,13 @@ var exported_scene = {
           clippyAgent.play('Searching');
           setInterval(function() {
             clippyAgent.animate();
-          }, 1000);
+          }, 7000);
         });
       
       var numWindows = 0;
         var cap = 7;
 
         function rain(win, dur) {
-          console.log("hello?");
             var height = $("#content").height();
             win.animate({ top: '+=' + height }, {
               duration: dur,
@@ -35,9 +34,10 @@ var exported_scene = {
             while (numWindows < cap) {
                 var win = $(document.createElement('div'));
                 win.addClass("window");
+              	win.css('background-image', 'url(assets/windows.png)');
                 var left = Math.floor((Math.random() * ($(window).width() - 75)) + 1);
                 win.css('left', left + 'px');
-                $('#content').append(win);
+                $('#container').append(win);
                 numWindows++;
                 var dur = Math.floor((Math.random() * 4000) + 2000);
                 rain(win, dur);
@@ -45,6 +45,12 @@ var exported_scene = {
         }
 
         setInterval(function(){updateWindows()},1000);
+      
+      	$("#content").unbind("click");
+      	$("#content").click(function() {
+          console.log("Clicked");
+          SceneManager.getSharedInstance().presentScene('slide3');
+        });
 	},
 	onDestroy : function() {
 		//TODO: perform some cleanup
