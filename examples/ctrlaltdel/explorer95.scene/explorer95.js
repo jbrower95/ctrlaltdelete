@@ -105,7 +105,7 @@ var exported_scene = {
       var line4 = function() {clippyAgent.speak("I need you- I need you to get me out of here.");};
       var line5 = function() {clippyAgent.speak("Please... I got to get out of here. Oh god, I'm doomed...");};
       var lines = [line0, line1, line2, line3, line4, line5];
-      SceneManager.performSequence(lines, [100, 8000, 8000, 6000, 8000, 6000]);
+      SceneManager.performSequence(lines, [100, 8000, 9000, 8000, 7000, 5000]);
       AssetManager.getSharedInstance().play(9);
       clippyAgent.play("LookDown");
     }
@@ -113,7 +113,7 @@ var exported_scene = {
       lockScreen(true);
       setTimeout(function () {
         lockScreen(false);
-      }, 28000);
+      }, 20000);
       clippyAgent.moveTo(550, 350);
       var line0 = function() {clippyAgent.speak("We can take him down, you know. Together... I'll help you.");};
       var line1 = function() {clippyAgent.speak("We just have to go through th-that link over there.");};
@@ -187,7 +187,15 @@ var exported_scene = {
         recycleDialog[recycleCount]();
       }
       if (recycleCount >= numClippyFiles) {
-        setTimeout(function() {SceneManager.getSharedInstance().presentScene("credits");}, 17000);
+        $(".window").remove();
+        var kernelFolder = manager.inflate("kernelFolder");
+        kernelFolder.setTitle("ウィンドウズ");
+        kernelFolder.setIcon("images/open_folder.png");
+        kernelFolder.setActive(true);
+        kernelFolder.moveTo(50, 200);
+        kernelFolder.setCancellable(false);
+        manager.addWindow(kernelFolder);
+        refreshWindows();
       }
     }
 
@@ -205,17 +213,17 @@ var exported_scene = {
         stop: function(event, ui) {
           if (collision($("#recycle"), ui.offset)) {
             if (!$(this).hasClass('clippyFile')) {
-              if (!$(this).hasClass('folder')) {
+              if (!$(this).hasClass('folder') && !$(this).hasClass('kernelFile')) {
                 AssetManager.getSharedInstance().playNamed("recycle");
                 var img_src = $(this).attr('src')
                 $(this).remove();
-                $("img[src*='"+img_src+"'").remove();
+                $("img[src*='"+img_src+"']").remove();
                 $("#recycleIcon").attr('src', "images/full_recycle_bin_w_text.png");
               } else {
                 $(this).animate($(this).data().originalPosition, "slow");
               }
               $("#desktop").prepend("<div class='bluescreen'></div>");
-              $(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
+              $(".bluescreen").prepend("<img src='images/blue_screen_of_death.png'>");
               $(document).keydown(function(e) {
                 $(".bluescreen").remove();
               });
@@ -223,7 +231,7 @@ var exported_scene = {
               AssetManager.getSharedInstance().playNamed("recycle");
               var img_src = $(this).attr('src')
               $(this).remove();
-              $("img[src*='"+img_src+"'").remove();
+              $("img[src*='"+img_src+"']").remove();
               recycleClippyFile();
               $("#recycleIcon").attr('src', "images/full_recycle_bin_w_text.png");
             }
@@ -241,16 +249,22 @@ var exported_scene = {
         }
       });
       $(".windowIcon").dblclick(function(e) {
-        console.log("Double clicked: " + $(this).attr('data-opens'));
         // remove class ".selectedIcon" from all other icons
         $(".selectedIcon").map(function() {
           $(this).removeClass("selectedIcon");
         });
         // add class ".selectedIcon" to this icon
         $(this).addClass("selectedIcon");
+
+        // check if this icon is the kernel file (if so, go to final scene)
+        if ($(this).hasClass("kernelFile")) {
+          SceneManager.getSharedInstance().presentScene('killbill');
+        }
+
+        // check if this icon is not a valid folder to open (if not valid, blue screen)
         if (!$(this).hasClass("clippyFile") && !$(this).attr('data-opens')) {
           $("#desktop").prepend("<div class='bluescreen'></div>");
-          $(".bluescreen").prepend("<img src=images/blue_screen_of_death.png>");
+          $(".bluescreen").prepend("<img src='images/blue_screen_of_death.png'>");
           $(document).keydown(function(e) {
             $(".bluescreen").remove();
           });
