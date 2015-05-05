@@ -32,13 +32,12 @@ img.vwave {
 }
 
 .window {
-	background:url('/assets/windows.png');
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
 	width: 75px;
-	height: 56px;
+	height: 65px;
 	position: absolute;
 	top: -56;
 	left: 0;

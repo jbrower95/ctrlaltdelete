@@ -34,9 +34,10 @@ var exported_scene = {
             while (numWindows < cap) {
                 var win = $(document.createElement('div'));
                 win.addClass("window");
+              	win.css('background-image', 'url(assets/windows.png)');
                 var left = Math.floor((Math.random() * ($(window).width() - 75)) + 1);
                 win.css('left', left + 'px');
-                $('#content').append(win);
+                $('#container').append(win);
                 numWindows++;
                 var dur = Math.floor((Math.random() * 4000) + 2000);
                 rain(win, dur);
