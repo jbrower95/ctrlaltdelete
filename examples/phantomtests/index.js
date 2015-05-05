@@ -12,7 +12,7 @@
 *
 */
 SceneManager.initialize("content");
-Scene.load("a.scene/a.js", startGame);
+Scene.load("a.scene/a.js").then(startGame);
 Scene.load("b.scene/b.js");
 Scene.load("c.scene/c.js");
 Scene.load("d.scene/d.js");
