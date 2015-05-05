@@ -1,18 +1,13 @@
-/* TODO: style the elements for slide3. */
-
-/* 
-
-#selectAnId {
-	
-	attr1: val1;
-	attr2: val2;
-	...
+#container {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  padding: 5%;
+  box-sizing: border-box;
 }
 
-.selectAClass {
-	attr1: val1;
-	attr2: val2;
-	...
+h1 {
+  font-family: 'Lato', sans-serif;
+  font-size: 6em;
+  color: white;
 }
-
-*/
