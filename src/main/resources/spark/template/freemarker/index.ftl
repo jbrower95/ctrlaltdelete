@@ -49,7 +49,7 @@
         .nav {
             position: relative;
             height: 100%;
-            width: 45%;
+            width: 20%;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -182,7 +182,6 @@
 	<body>
 		<div class="head">
             <div class="nav">
-                <h1 class="bold">Experience</h1>
                 <h1 class="active"><a href="/">Play</a></h1>
                 <h1><a href="/maker">Make</a></h1>
             </div>

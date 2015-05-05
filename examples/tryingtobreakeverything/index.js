@@ -3,7 +3,16 @@
 SceneManager.initialize("content");
 /* ------------------------------------------- */
 
-jhgjhgjhgjkgkjhgjkgjkgkjgkjgjgjkgkgjk
+/**
+* Presents the first scene, by that scene's id.
+*/
+function start() {
+    // To present a scene, use the following line, replacing 'sample' with
+    // the id of any scene you want to present.
+
+    // SceneManager.getSharedInstance().presentScene('sample');
+}
+
 // Load all scenes
 // Loading returns a promise, so use .then(...) to do more stuff after.
 
