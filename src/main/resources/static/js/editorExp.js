@@ -13,6 +13,8 @@ if (isNew === "false") {
     oldId = id;
 } else {
     oldId = null;
+    $("#deleteExperience").css('display', 'none');
+    $("#generalEdit .test").css('display', 'none');
 }
 var color = $(".sidebar").attr('id');
 var description = $("textarea[name='experienceDesc']").val();
