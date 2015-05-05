@@ -1,7 +1,10 @@
 var exported_scene = {
 	id : "slide1",
 	onPresent : function() {
-		//TODO: perform scene initialization / do things
+		$("#content").click(function() {
+          console.log("Clicked");
+          SceneManager.getSharedInstance().presentScene('slide2');
+        });
 	},
 	onDestroy : function() {
 		//TODO: perform some cleanup

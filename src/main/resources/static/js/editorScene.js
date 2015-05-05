@@ -124,6 +124,9 @@ function sceneIdChange() {
         listScenes();
         replaceIdInEditors(currentSceneId, newSceneName);
         currentSceneId = newSceneName;
+        saveCss();
+        saveHtml();
+        saveJs();
         $("#" + currentSceneId).addClass("curr");
         changeHeaders(currentSceneId);
         $.notify("Remember to change your scene ID anywhere you reference this scene!", "warning");
@@ -152,46 +155,51 @@ function changeHeaders(newSceneId) {
 $("#sceneIdInput").blur(sceneIdChange);
 
  /* Handlers for saving the files */
+ function saveCss() {
+  var code = cmCss.getValue();
+  var baseUrl = "/" + id + "/" + currentSceneId + "/edit?type=";
+  $.post(baseUrl + "css", code, function(response) {
+    $.notify("Saved!", "success");
+        console.log("Update succeeded! (css)");
+  }).fail(function(){
+      $.notify("Couldn't save CSS.", "error");
+  });
+}
+
+function saveJs() {
+  var code = cmJs.getValue();
+  $.post("/" + id + "/" + currentSceneId + "/edit?type=js", code , function(response) {
+        $.notify("Saved!", "success");
+    console.log("Update succeeded! (js).");
+  }).fail(function(){
+      $.notify("Couldn't save Javascript.", "error");
+  });
+}
+
+function saveHtml() {
+  var code = cmHtml.getValue();
+  $.post("/" + id + "/" + currentSceneId + "/edit?type=html", code, function(response) {
+        $.notify("Saved!", "success");
+    console.log("Updated succeeded! (html)");
+  }).fail(function() {
+    $.notify("Couldn't save HTML.", "error");
+  });
+}
 
  /**
 * Saves CSS on blur.
 */
- cmCss.on("blur", function(cm) {
-      var code = cmCss.getValue();
-      var baseUrl = "/" + id + "/" + currentSceneId + "/edit?type=";
-      $.post(baseUrl + "css", code, function(response) {
-        $.notify("Saved!", "success");
-            console.log("Update succeeded! (css)");
-      }).fail(function(){
-            $.notify("Couldn't save CSS.", "error");
-        });
-});
+ cmCss.on("blur", saveCss);
 
 /**
 * Saves JS on blur.
 */
-cmJs.on("blur", function(cm) {
-  var code = cmJs.getValue();
-  $.post("/" + id + "/" + currentSceneId + "/edit?type=js", code , function(response) {
-            $.notify("Saved!", "success");
-        console.log("Update succeeded! (js).");
-      }).fail(function(){
-            $.notify("Couldn't save Javascript.", "error");
-        });
-});
+cmJs.on("blur", saveJs);
 
 /**
 * Saves HTML on blur.
 */
-cmHtml.on("blur", function(cm) {
-  var code = cmHtml.getValue();
-  $.post("/" + id + "/" + currentSceneId + "/edit?type=html", code, function(response) {
-            $.notify("Saved!", "success");
-        console.log("Updated succeeded! (html)");
-      }).fail(function() {
-            $.notify("Couldn't save HTML.", "error");
-        });
-});
+cmHtml.on("blur", saveHtml);
 
 /**
 * Fillds new scene info.

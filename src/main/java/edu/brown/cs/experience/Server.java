@@ -1170,6 +1170,7 @@ public class Server {
           }
 
 		  config.addToFiles("*");
+		  config.addToFiles("assets/*");
 
           saveExperience(cfig, config, dirPath);
           System.out.println("Experience saved!");
