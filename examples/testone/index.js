@@ -17,5 +17,5 @@ function start() {
 // Loading returns a promise, so use .then(...) to do more stuff after.
 
 //Scene.load('sample.scene/sample.js')
-Scene.load('newScene1.scene/newScene1.js').then(start)
+Scene.load('newScene1.scene/newScene1.js').then(start);
 
