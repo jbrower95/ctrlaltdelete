@@ -215,7 +215,7 @@ function Scene(jsFile) {
 
       //isHTMLFile.exec() just runs the regular expression. This is not running arbitrary code.
 
-      if (isHTMLFile.exec(this.getHTML()) != null) {
+      if (this.getHTML && isHTMLFile.exec(this.getHTML()) != null) {
         console.log("[scene.js] Loading HTML from external file - " + this.getHTML());
 
         //we have to load this because it's the location of an html file.

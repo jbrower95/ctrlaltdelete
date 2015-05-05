@@ -80,7 +80,7 @@
 	  	}
 
 	  	 p {
-	  	 	margin-top: 0;
+	  	 	margin-top: 30px;
 	  	 	font-family: 'Merriweather', serif;
 	  	 	font-size: 1.3em;
 	  	 	line-height: 1.5em;
