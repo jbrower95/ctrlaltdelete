@@ -1,0 +1,46 @@
+#container {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  padding: 5%;
+  box-sizing: border-box;
+  z-index: -1;
+}
+
+img {
+  width: 250px;
+  height: auto;
+  position: absolute;
+  z-index: 2;
+}
+
+img.bill {
+  height: 250px;
+  width: auto;
+  left: 200px;
+  top: 300px;
+}
+
+img.w95 {
+  left: 900px;
+  top: 240px;
+}
+
+img.vwave {
+  left: 550px;
+  top: 50px;
+}
+
+.window {
+	background:url('assets/windows.png');
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 75px;
+	height: 56px;
+	position: absolute;
+	top: -56;
+	left: 0;
+	z-index: 0;
+}
