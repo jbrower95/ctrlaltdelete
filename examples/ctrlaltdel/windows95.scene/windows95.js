@@ -2,6 +2,8 @@ var exported_scene = {
   id : "windows95",
   preload : function() {
     console.log("Initializing windows 95...");
+
+    // Remove any inflated windows from the desktop.
     $(".window").remove();
 
     var desktop = document.createElement("div");
@@ -59,12 +61,13 @@ var exported_scene = {
     return new Promise($.proxy(function(resolve, reject) { 
       if (!this.exportedVariables.clippyAgent) {
         console.log("[windows95.js] Loading Clippy.");
+        console.log(clippy);
         clippy.load('Clippy', $.proxy(function(agent) {
-            console.log("Loaded clippy!");
-            console.log(this);
-            this.exportedVariables.clippyAgent = agent;
-            resolve();
-            }, this));
+          console.log("Loaded clippy!");
+          console.log(this);
+          this.exportedVariables.clippyAgent = agent;
+          resolve();
+          }, this));
       } else {
         console.log("[windows95.js] No need to load Clippy.");
         resolve();
