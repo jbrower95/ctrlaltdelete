@@ -78,7 +78,34 @@ var exported_scene = {
         });
 
         this.searchContent("#credits").click(function() {
-            SceneManager.getSharedInstance().presentScene("credits");
+            console.log("Loading credits");
+            console.log("Transitioning...");
+            AssetManager.getSharedInstance().playNamed("button ding");
+            console.log("Stopping audio...");
+
+            var curtain = document.createElement("div");
+            curtain.style.position = "absolute";
+            curtain.style.left = 0;
+            curtain.style.top = 0;
+            curtain.style.width = "100%";
+            curtain.style.height = "100%";
+            curtain.style.backgroundColor = "#000000";
+            curtain.style.opacity = 0;
+            curtain.style.zIndex = 10;
+
+
+            document.body.style.backgroundImage = "";
+            var sound = document.getElementById("backgroundMusic");
+
+            document.getElementById('content').appendChild(curtain);
+
+            var fadeOut = 6000;
+
+            AssetManager.getSharedInstance().fadeOutNamed("main menu music");
+            $(curtain).animate({opacity: 1}, fadeOut, function() {
+                AssetManager.getSharedInstance().stopNamed("main menu music");
+                SceneManager.getSharedInstance().presentScene("credits");
+            });
         });
 
         var sound = this.searchContent("#backgroundMusic");
