@@ -85,6 +85,28 @@
 	  	 	font-size: 1.3em;
 	  	 	line-height: 1.5em;
 	  	 }
+
+	  	 .over {
+	  	 	position: absolute;
+	  	 	left: 40px;
+	  	 	padding-top: 5.9%;
+	  	 	height: 100%;
+	  	 	box-sizing: border-box;
+	  	 	width: auto;
+	  	 }
+
+	  	 .back {
+	  	 	position: relative;
+	  	 	height: 40px;
+	  	 	width: auto;
+		    opacity: 1;
+		    transition: opacity 0.2s;
+		}
+
+		.back:hover {
+		    cursor: pointer;
+		    opacity: 0.5;
+		}
 	  </style>
 	
 	  <!--[if lt IE 9]>
@@ -94,6 +116,9 @@
 	
 	<body>
 		<div class="container" style="background-color:#${color}">
+			<div class="over">
+                <a href="/"><img class="back" src="lib/images/left.svg"></a>
+            </div>
 		  	<h1>${title}</h1>
 		  	<p>${description}</p>
 
