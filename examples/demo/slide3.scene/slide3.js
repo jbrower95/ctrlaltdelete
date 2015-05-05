@@ -4,7 +4,7 @@ var exported_scene = {
 		$("#content").unbind("click");
       	$("#content").click(function() {
           console.log("Clicked");
-          SceneManager.getSharedInstance().presentScene('slide4');
+          SceneManager.getSharedInstance().presentScene('slide5');
         });
 	},
 	onDestroy : function() {
