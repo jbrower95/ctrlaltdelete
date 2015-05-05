@@ -1,9 +1,9 @@
-/* #00bad6 - darkturquoise 
-		#ef563d - tomato
-		#F5C70C - gold
-		#ffaf00 - orange
-		#222128 - darkslategrey
-	 */
+/* #00bad6 - darkturquoise
+        #ef563d - tomato
+        #F5C70C - gold
+        #ffaf00 - orange
+        #222128 - darkslategrey
+        */
 html, body {
   padding: 0;
   margin: 0;
@@ -75,6 +75,27 @@ html, body {
 .head h1.active {
   opacity: 1; }
 
+.new_experience {
+  position: relative;
+  padding: 1%;
+  padding-left: 2%;
+  padding-right: 2%;
+  border: 3px solid white;
+  width: auto;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0);
+  color: white;
+  font-family: 'Lato', sans-serif;
+  font-size: 1.3em;
+  font-weight: 700;
+  -webkit-transition: background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s, color 0.2s; }
+
+.new_experience:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #222128; }
+
 .container {
   position: relative;
   margin: 0 auto;
@@ -84,16 +105,7 @@ html, body {
   padding-left: 10%;
   padding-right: 10%;
   box-sizing: border-box;
-  font-family: 'Merriweather', serif;
-  overflow: hidden; }
-
-.container:after {
-  visibility: hidden;
-  display: block;
-  font-size: 0;
-  content: " ";
-  clear: both;
-  height: 0; }
+  font-family: 'Merriweather', serif; }
 
 .block {
   min-height: 0;
@@ -141,22 +153,27 @@ html, body {
 .block:hover {
   opacity: 0.8; }
 
-.turq {
-  background-color: #00bad6; }
-
-.tomato {
-  background-color: #ef563d; }
-
-.gold {
-  background-color: #F5C70C; }
-
-.orange {
-  background-color: orange; }
-
 h1 {
   font-size: 1.8em;
   font-weight: 400;
   font-family: 'Lato', sans-serif; }
+
+.new {
+  background-color: rgba(255, 255, 255, 0);
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s; }
+
+.new-overlay {
+  box-sizing: border-box;
+  border: 15px solid white;
+  background-color: transparent; }
+
+.new-overlay:hover {
+  opacity: 1; }
+
+.new:hover {
+  opacity: 1;
+  background-color: white; }
 
 .head h1.bold {
   font-weight: 800;
@@ -171,4 +188,9 @@ a {
   color: white;
   text-decoration: none; }
 
-/*# sourceMappingURL=index.css.map */
+img {
+  position: relative;
+  width: 25%;
+  height: auto; }
+
+/*# sourceMappingURL=makerIndex.css.map */
