@@ -1,13 +1,13 @@
 var exported_scene = {
 	id : "SCENENAME",
 	onPresent : function() {
-		//TODO: perform scene initialization / do things
+		//TODO: This will run when the scene is presented, after preload finishes. Add any relevant javascript for your scene!
 	},
 	onDestroy : function() {
-		//TODO: perform some cleanup
+		//TODO: Get rid of any handlers/elements you created that you don't want to continue into the next scenes.
 	},
 	preload : function() {
-		//TODO: establish any resources this scene needs. Can return a promise for async actions.
+		//TODO: Load in any resources this scene needs. If you want this to be asynchronous, have it return a promise.
 	}, 
 	
 	/* If this scene follows another scene and doesn't need its own HTML, uncomment 'requires'*/
