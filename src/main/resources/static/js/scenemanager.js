@@ -368,7 +368,7 @@ SceneManager.performSequence = function(funcs, timeouts, context) {
               //once this function has finished executing, recur, resolve that promise, and then resolve your current promise.
               Promise.resolve(SceneManager.performSequenceAsync(funcs)).then(function() {
                 resolve();
-              });
+              })
             );
         }
       });
